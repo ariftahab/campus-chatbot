@@ -1,11 +1,13 @@
 """PDF'leri okur, parçalara böler, FAISS indeksini ve BM25 için parça listesini diske kaydeder.
 
-Kullanım: python ingest.py
-Chat ve eval, indeks yoksa ya da PDF'ler değiştiyse bunu otomatik çağırır.
+Kullanım: python ingest.py [EXP-ID]   (varsayılan: config.PRODUCTION_EXPERIMENT)
+Sohbet ve deney betikleri, indeks yoksa bunu otomatik çağırır.
 """
 import hashlib
 import json
 import re
+import time
+from datetime import datetime
 from pathlib import Path
 
 import pdfplumber
@@ -15,9 +17,6 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 import config
-
-MANIFEST_FILE = config.INDEX_DIR / "manifest.json"
-CHUNKS_FILE = config.INDEX_DIR / "chunks.json"
 
 ARTICLE_RE = re.compile(r"^(?:MADDE|Madde)\s*(\d+)\s*[-–]")
 SECTION_RE = re.compile(r"^\S+\s+BÖLÜM$")
@@ -147,11 +146,11 @@ def parse_calendar(path, title):
     return docs
 
 
-def split_long(docs):
-    """MAX_CHUNK_CHARS'ı aşan maddeleri fıkra sınırlarından böler, her parçaya başlık ekler."""
+def split_structural(docs, cfg):
+    """chunk_size'ı aşan maddeleri fıkra sınırlarından böler, her parçaya başlık ekler."""
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=config.MAX_CHUNK_CHARS,
-        chunk_overlap=config.CHUNK_OVERLAP,
+        chunk_size=cfg.chunk_size,
+        chunk_overlap=cfg.chunk_overlap,
         separators=["\n(", "\n", ". ", " "],
         keep_separator="start",
     )
@@ -164,7 +163,7 @@ def split_long(docs):
         label = m["title"]
         if "madde" in m:
             label += f" - Madde {m['madde']}" + (f" ({m['heading']})" if m["heading"] else "")
-        if len(doc.page_content) <= config.MAX_CHUNK_CHARS:
+        if len(doc.page_content) <= cfg.chunk_size:
             out.append(Document(page_content=f"{label}\n{doc.page_content}", metadata=m))
             continue
         for part_no, part in enumerate(splitter.split_text(doc.page_content), start=1):
@@ -173,7 +172,30 @@ def split_long(docs):
     return out
 
 
-def load_documents():
+def read_pages(path, parser):
+    """Her sayfanın ham metnini döndürür. pypdf yolu ilk prototipteki PyPDFLoader'ın aynısıdır."""
+    if parser == "pypdf":
+        from langchain_community.document_loaders import PyPDFLoader
+        return [d.page_content for d in PyPDFLoader(str(path)).load()]
+    if parser == "pdfplumber":
+        with pdfplumber.open(path) as pdf:
+            return [page.extract_text() or "" for page in pdf.pages]
+    raise ValueError(f"Bilinmeyen pdf_parser: {parser}")
+
+
+def load_recursive(cfg):
+    """Sabit boyutlu parçalama (ilk prototipin yöntemi): sayfa metinleri karakter sayısına göre bölünür."""
+    splitter = RecursiveCharacterTextSplitter(chunk_size=cfg.chunk_size, chunk_overlap=cfg.chunk_overlap)
+    pages = []
+    for path in sorted(config.DATA_DIR.glob("*.pdf")):
+        title, _ = _doc_info(path)
+        for page_no, text in enumerate(read_pages(path, cfg.pdf_parser), start=1):
+            pages.append(Document(page_content=text, metadata={
+                "source": path.name, "title": title, "kind": "sayfa", "page": page_no}))
+    return splitter.split_documents(pages)
+
+
+def load_structural(cfg):
     docs = []
     for path in sorted(config.DATA_DIR.glob("*.pdf")):
         title, kind = _doc_info(path)
@@ -185,76 +207,99 @@ def load_documents():
         elif kind == "mevzuat":
             docs.extend(parse_regulation(path, title))
         else:
-            with pdfplumber.open(path) as pdf:
-                for page_no, page in enumerate(pdf.pages, start=1):
-                    docs.append(Document(page_content=page.extract_text() or "",
-                                         metadata={"source": path.name, "title": title,
-                                                   "kind": "genel", "page": page_no}))
-    chunks = split_long(docs)
+            for page_no, text in enumerate(read_pages(path, "pdfplumber"), start=1):
+                docs.append(Document(page_content=text, metadata={
+                    "source": path.name, "title": title, "kind": "genel", "page": page_no}))
+    return split_structural(docs, cfg)
+
+
+def load_documents(cfg):
+    if cfg.chunking == "recursive":
+        chunks = load_recursive(cfg)
+    elif cfg.chunking == "structural":
+        chunks = load_structural(cfg)
+    else:
+        raise ValueError(f"Bilinmeyen chunking: {cfg.chunking}")
     for i, chunk in enumerate(chunks):
         chunk.metadata["chunk_id"] = i  # FAISS ve BM25 sonuçlarını eşleştirmek için
     return chunks
 
 
 # --- İndeks ---
+# Her yapılandırmanın indeksi vectorstore/<parmak izi>/ altında ayrı tutulur; deneyler arasında
+# geçiş yaparken indeksler birbirini ezmez.
 
-def get_embeddings():
+def get_embeddings(cfg):
     return HuggingFaceEmbeddings(
-        model_name=config.EMBEDDING_MODEL,
-        encode_kwargs={"normalize_embeddings": True},
+        model_name=cfg.embedding_model,
+        encode_kwargs={"normalize_embeddings": cfg.normalize_embeddings},
     )
 
 
-def _fingerprint():
-    """PDF'lerin ve parçalamayı etkileyen ayarların özeti; değişirse indeks yeniden kurulur."""
+def fingerprint(cfg):
+    """PDF içerikleri + indeks parametreleri + belge ayarları + bu dosyanın kaynak kodu."""
     h = hashlib.sha256()
     for path in sorted(config.DATA_DIR.glob("*.pdf")):
         h.update(path.name.encode())
         h.update(path.read_bytes())
-    settings = [config.EMBEDDING_MODEL, config.MAX_CHUNK_CHARS, config.CHUNK_OVERLAP, config.DOCUMENTS]
+    settings = [cfg.index_params(), config.DOCUMENTS]
     h.update(json.dumps(settings, sort_keys=True, ensure_ascii=False).encode())
-    h.update(Path(__file__).read_bytes())  # parçalama kodu değişirse de yeniden kur
-    return h.hexdigest()
+    h.update(Path(__file__).read_bytes())
+    return h.hexdigest()[:16]
 
 
-def index_is_current():
-    if not (MANIFEST_FILE.exists() and CHUNKS_FILE.exists()):
-        return False
-    manifest = json.loads(MANIFEST_FILE.read_text(encoding="utf-8"))
-    return manifest.get("fingerprint") == _fingerprint()
+def index_dir(cfg):
+    return config.INDEX_ROOT / fingerprint(cfg)
 
 
-def build_index(embeddings=None):
-    print("PDF'ler okunuyor ve parçalanıyor...")
-    chunks = load_documents()
+def build_index(cfg, embeddings=None):
+    out = index_dir(cfg)
+    print(f"PDF'ler okunuyor ve parçalanıyor ({cfg.pdf_parser}, {cfg.chunking})...")
+    started = time.perf_counter()
+    chunks = load_documents(cfg)
     if not chunks:
         raise SystemExit(f"Hata: '{config.DATA_DIR}' klasöründe PDF bulunamadı.")
-    print(f"{len(chunks)} parça oluşturuldu. Embedding'ler hesaplanıyor ({config.EMBEDDING_MODEL})...")
-    embeddings = embeddings or get_embeddings()
+    print(f"{len(chunks)} parça oluşturuldu. Embedding'ler hesaplanıyor ({cfg.embedding_model})...")
+    embeddings = embeddings or get_embeddings(cfg)
     store = FAISS.from_documents(chunks, embeddings)
-    config.INDEX_DIR.mkdir(exist_ok=True)
-    store.save_local(str(config.INDEX_DIR))
-    CHUNKS_FILE.write_text(
+    build_seconds = time.perf_counter() - started
+
+    out.mkdir(parents=True, exist_ok=True)
+    store.save_local(str(out))
+    (out / "chunks.json").write_text(
         json.dumps([{"page_content": c.page_content, "metadata": c.metadata} for c in chunks],
                    ensure_ascii=False, indent=1),
         encoding="utf-8",
     )
-    MANIFEST_FILE.write_text(json.dumps({"fingerprint": _fingerprint(), "chunks": len(chunks)}), encoding="utf-8")
-    print(f"İndeks kaydedildi: {config.INDEX_DIR}")
-    return store, chunks
+    manifest = {
+        "fingerprint": fingerprint(cfg),
+        "index_params": cfg.index_params(),
+        "chunks": len(chunks),
+        "avg_chunk_chars": round(sum(len(c.page_content) for c in chunks) / len(chunks), 1),
+        "build_seconds": round(build_seconds, 1),
+        "created": datetime.now().isoformat(timespec="seconds"),
+    }
+    (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"İndeks kaydedildi: {out}")
+    return store, chunks, manifest
 
 
-def load_index():
-    """Kayıtlı indeksi yükler; yoksa veya eskiyse yeniden kurar."""
-    embeddings = get_embeddings()
-    if not index_is_current():
-        print("İndeks yok ya da PDF'ler/ayarlar değişmiş, yeniden kuruluyor.")
-        return build_index(embeddings)
-    store = FAISS.load_local(str(config.INDEX_DIR), embeddings, allow_dangerous_deserialization=True)
-    raw = json.loads(CHUNKS_FILE.read_text(encoding="utf-8"))
+def load_index(cfg):
+    """Yapılandırmanın indeksini yükler; yoksa kurar. (store, chunks, manifest) döndürür."""
+    embeddings = get_embeddings(cfg)
+    out = index_dir(cfg)
+    if not (out / "manifest.json").exists():
+        print("Bu yapılandırma için indeks yok (ya da PDF'ler/kod değişmiş), kuruluyor.")
+        return build_index(cfg, embeddings)
+    store = FAISS.load_local(str(out), embeddings, allow_dangerous_deserialization=True)
+    raw = json.loads((out / "chunks.json").read_text(encoding="utf-8"))
     chunks = [Document(page_content=c["page_content"], metadata=c["metadata"]) for c in raw]
-    return store, chunks
+    manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+    return store, chunks, manifest
 
 
 if __name__ == "__main__":
-    build_index()
+    import sys
+    exp_id = sys.argv[1] if len(sys.argv) > 1 else config.PRODUCTION_EXPERIMENT
+    print(f"Yapılandırma: {exp_id}")
+    build_index(config.RagConfig.from_dict(config.load_experiment(exp_id)["params"]))

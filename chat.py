@@ -2,6 +2,7 @@
 import os
 import sys
 
+import config
 from rag import RagBot, source_label, tr_lower
 
 EXIT_COMMANDS = {"çık", "çik", "cık", "cik", "exit", "quit", "q"}
@@ -14,8 +15,8 @@ def main():
         print("Hata: GOOGLE_API_KEY .env dosyasında bulunamadı.")
         return 1
 
-    print("Asistan hazırlanıyor (modeller yükleniyor)...")
-    bot = RagBot.from_index()
+    print(f"Asistan hazırlanıyor (yapılandırma: {config.PRODUCTION_EXPERIMENT}, modeller yükleniyor)...")
+    bot = RagBot.from_config(config.production_config())
     print("Hazır. Çıkmak için 'çık', yeni konuya geçmek için 'yeni' yazın.")
 
     while True:

@@ -1,5 +1,9 @@
-"""Hibrit getirme (FAISS + BM25), reranker ve Gemini ile cevap üretimi."""
+"""Getirme (vektör / BM25 / hibrit + isteğe bağlı reranker) ve Gemini ile cevap üretimi.
+
+Tüm davranış bir config.RagConfig ile belirlenir; bkz. experiments/configs/.
+"""
 import re
+import unicodedata
 from datetime import date
 
 from langchain_core.messages import AIMessage, HumanMessage
@@ -13,6 +17,7 @@ import ingest
 
 def tr_lower(text):
     """Türkçe'ye uygun küçük harf: 'I' -> 'ı', 'İ' -> 'i' (str.lower bunu yanlış yapar)."""
+    text = unicodedata.normalize("NFC", text)
     return text.replace("I", "ı").replace("İ", "i").lower()
 
 
@@ -31,50 +36,79 @@ def source_label(doc):
     return f"{m['title']}, s. {m['page']}"
 
 
-class HybridRetriever:
-    """Vektör + BM25 sonuçlarını RRF ile birleştirir, varsa reranker ile yeniden sıralar."""
+class Retriever:
+    """cfg.retrieval'a göre vektör, BM25 ya da ikisinin RRF birleşimi; varsa reranker ile yeniden sıralar."""
 
-    def __init__(self, store, chunks):
+    def __init__(self, cfg, store, chunks):
+        self.cfg = cfg
         self.store = store
         self.chunks = chunks
         self.bm25 = BM25Okapi([tokenize(c.page_content) for c in chunks])
         self.reranker = None
-        if config.RERANKER_MODEL:
+        if cfg.reranker_model:
             from sentence_transformers import CrossEncoder
-            self.reranker = CrossEncoder(config.RERANKER_MODEL, max_length=config.RERANKER_MAX_LENGTH)
+            self.reranker = CrossEncoder(cfg.reranker_model, max_length=cfg.reranker_max_length)
 
-    def _vector_ids(self, query):
-        return [d.metadata["chunk_id"] for d in self.store.similarity_search(query, k=config.VECTOR_K)]
+    def _vector_ids(self, query, k):
+        return [d.metadata["chunk_id"] for d in self.store.similarity_search(query, k=k)]
 
-    def _bm25_ids(self, query):
+    def _bm25_ids(self, query, k):
         scores = self.bm25.get_scores(tokenize(query))
         ranked = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
-        return [i for i in ranked[:config.BM25_K] if scores[i] > 0]
+        return [i for i in ranked[:k] if scores[i] > 0]
+
+    def rank(self, query, depth=10):
+        """Parçaların sıralı listesini döndürür (en az `depth` uzunluğunda, mümkünse).
+
+        LLM'e bunun ilk final_k elemanı gider; değerlendirme ise sıralamanın tamamına bakar.
+        """
+        cfg = self.cfg
+        if cfg.retrieval == "vector":
+            ids = self._vector_ids(query, max(cfg.vector_k, depth))
+        elif cfg.retrieval == "bm25":
+            ids = self._bm25_ids(query, max(cfg.bm25_k, depth))
+        elif cfg.retrieval == "hybrid":
+            # Reciprocal Rank Fusion: iki listede de üst sıralarda olan parçalar öne çıkar.
+            fused = {}
+            for ranked in (self._vector_ids(query, cfg.vector_k), self._bm25_ids(query, cfg.bm25_k)):
+                for rank, chunk_id in enumerate(ranked):
+                    fused[chunk_id] = fused.get(chunk_id, 0) + 1 / (cfg.rrf_k + rank)
+            ids = sorted(fused, key=fused.get, reverse=True)
+        else:
+            raise ValueError(f"Bilinmeyen retrieval: {cfg.retrieval}")
+
+        if self.reranker:
+            # İlk rerank_candidates aday yeniden sıralanır, geri kalanlar sırasını korur.
+            head, tail = ids[:cfg.rerank_candidates], ids[cfg.rerank_candidates:]
+            scores = self.reranker.predict([(query, self.chunks[i].page_content) for i in head])
+            head = [head[j] for j in sorted(range(len(head)), key=lambda j: scores[j], reverse=True)]
+            ids = head + tail
+        return [self.chunks[i] for i in ids]
 
     def search(self, query):
-        # Reciprocal Rank Fusion: iki listede de üst sıralarda olan parçalar öne çıkar.
-        fused = {}
-        for ids in (self._vector_ids(query), self._bm25_ids(query)):
-            for rank, chunk_id in enumerate(ids):
-                fused[chunk_id] = fused.get(chunk_id, 0) + 1 / (60 + rank)
-        ranked = sorted(fused, key=fused.get, reverse=True)
-
-        if not self.reranker:
-            return [self.chunks[i] for i in ranked[:config.FINAL_K]]
-        candidates = [self.chunks[i] for i in ranked[:config.RERANK_CANDIDATES]]
-        scores = self.reranker.predict([(query, c.page_content) for c in candidates])
-        order = sorted(range(len(candidates)), key=lambda i: scores[i], reverse=True)
-        return [candidates[i] for i in order[:config.FINAL_K]]
+        return self.rank(query)[:self.cfg.final_k]
 
 
-REWRITE_SYSTEM = (
-    "Sana bir sohbet geçmişi ve kullanıcının son sorusu verilecek. Son soruyu, geçmişi görmeden de "
-    "anlaşılabilecek bağımsız bir soru olarak yeniden yaz (ör. 'peki bunun son günü ne?' -> "
-    "'Bahar dönemi ders kayıtlarının son günü ne?'). Soruyu cevaplama; sadece yeniden yazılmış soruyu "
-    "döndür. Soru zaten bağımsızsa aynen döndür."
-)
+# --- Prompt'lar ---
+# Sürümler silinmez; eski deneylerin tekrar üretilebilmesi için yenisi yeni anahtarla eklenir.
 
-ANSWER_SYSTEM = """Sen Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) öğrencilerine yardım eden bir asistansın.
+# İlk prototipin (prototip-chat.py) prompt'u, girinti dahil birebir.
+_V1_TEMPLATE = """
+    Sen bir üniversite asistan chatbotusun. 
+    Sana verilen 'Bağlam'ı kullanarak 'Soru'ya cevap ver. 
+    Eğer cevap 'Bağlam' içinde yoksa, "Bu konuda bilgim yok." de. 
+    Cevaplarını sadece verilen bağlama dayandır, dışarıdan bilgi ekleme.
+
+    Bağlam:
+    {context}
+
+    Soru:
+    {input}
+
+    Cevap:
+    """
+
+_V2_SYSTEM = """Sen Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) öğrencilerine yardım eden bir asistansın.
 
 Kurallar:
 - Yalnızca aşağıdaki "Bağlam" bölümündeki bilgilere dayanarak cevap ver. Dışarıdan bilgi ekleme, tahmin yürütme.
@@ -88,49 +122,80 @@ Bağlam:
 {context}"""
 
 
+def _format_v1(docs):
+    # create_stuff_documents_chain varsayılanı: parça metinleri boş satırla birleştirilir.
+    return "\n\n".join(d.page_content for d in docs)
+
+
+def _format_v2(docs):
+    return "\n\n".join(f"[{source_label(d)}]\n{d.page_content}" for d in docs)
+
+
+PROMPTS = {
+    "v1_prototip": {
+        "template": ChatPromptTemplate.from_template(_V1_TEMPLATE),
+        "format": _format_v1,
+        "history": False,
+    },
+    "v2_kaynakli": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V2_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,
+        "history": True,
+    },
+}
+
+REWRITE_SYSTEM = (
+    "Sana bir sohbet geçmişi ve kullanıcının son sorusu verilecek. Son soruyu, geçmişi görmeden de "
+    "anlaşılabilecek bağımsız bir soru olarak yeniden yaz (ör. 'peki bunun son günü ne?' -> "
+    "'Bahar dönemi ders kayıtlarının son günü ne?'). Soruyu cevaplama; sadece yeniden yazılmış soruyu "
+    "döndür. Soru zaten bağımsızsa aynen döndür."
+)
+
+
 class RagBot:
-    def __init__(self, retriever, llm):
+    def __init__(self, cfg, retriever, llm):
+        self.cfg = cfg
         self.retriever = retriever
         self.llm = llm
+        self.prompt = PROMPTS[cfg.prompt_version]
         self.history = []
         self.rewrite_chain = ChatPromptTemplate.from_messages([
             ("system", REWRITE_SYSTEM),
             MessagesPlaceholder("history"),
             ("human", "{question}"),
         ]) | llm
-        self.answer_chain = ChatPromptTemplate.from_messages([
-            ("system", ANSWER_SYSTEM),
-            MessagesPlaceholder("history"),
-            ("human", "{question}"),
-        ]) | llm
 
     @classmethod
-    def from_index(cls):
-        store, chunks = ingest.load_index()
+    def from_config(cls, cfg):
+        store, chunks, _ = ingest.load_index(cfg)
         # max_retries düşük: kota dolduğunda (429) kullanıcı dakikalarca beklemesin.
-        llm = ChatGoogleGenerativeAI(model=config.LLM_MODEL, temperature=config.LLM_TEMPERATURE, max_retries=2)
-        return cls(HybridRetriever(store, chunks), llm)
+        llm = ChatGoogleGenerativeAI(model=cfg.llm_model, temperature=cfg.llm_temperature, max_retries=2)
+        return cls(cfg, Retriever(cfg, store, chunks), llm)
 
     def reset(self):
         self.history = []
 
     def retrieve(self, question):
-        """Geçmişe göre soruyu bağımsız hale getirip ilgili parçaları döndürür."""
+        """Geçmiş varsa soruyu bağımsız hale getirip ilgili parçaları döndürür."""
         history = self.history[-config.HISTORY_MESSAGES:]
         query = question
-        if history:
+        if history and self.prompt["history"]:
             query = self.rewrite_chain.invoke({"history": history, "question": question}).text.strip()
         return query, self.retriever.search(query)
 
     def ask(self, question):
         query, docs = self.retrieve(question)
-        context = "\n\n".join(f"[{source_label(d)}]\n{d.page_content}" for d in docs)
-        answer = self.answer_chain.invoke({
-            "history": self.history[-config.HISTORY_MESSAGES:],
-            "question": question,
-            "context": context,
-            "no_answer": config.NO_ANSWER,
-            "today": date.today().strftime("%d.%m.%Y"),
-        }).text.strip()
+        variables = {"input": question, "context": self.prompt["format"](docs)}
+        if self.prompt["history"]:
+            variables.update({
+                "history": self.history[-config.HISTORY_MESSAGES:],
+                "no_answer": config.NO_ANSWER,
+                "today": date.today().strftime("%d.%m.%Y"),
+            })
+        answer = (self.prompt["template"] | self.llm).invoke(variables).text.strip()
         self.history += [HumanMessage(question), AIMessage(answer)]
         return {"answer": answer, "query": query, "docs": docs}

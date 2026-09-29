@@ -1,0 +1,29 @@
+{
+  "id": "EXP-010",
+  "baslik": "Prompt: prototip → kaynaklı system prompt (v2)",
+  "ust_deney": "EXP-009",
+  "neden": "Prototip prompt'u tüm talimatı ve bağlamı tek bir kullanıcı mesajına koyuyordu, parçaların hangi belgeden geldiği LLM'e söylenmiyordu. v2: talimatlar system mesajında; her parça \"[Belge, Madde N, s. X]\" etiketiyle veriliyor; kaynak gösterimi zorunlu; kapsam/istisna notlarının belirtilmesi ve bugünün tarihi ekli; konuşma geçmişi destekleniyor. Getirme metrikleri değişmez; etki yalnız cevap değerlendirmesiyle (--llm) ölçülebilir.",
+  "hipotez": "Cevap doğruluğu artar (özellikle kapsam dışı ve istisna içeren sorularda).",
+  "birincil_metrik": "answer_acc",
+  "beklenen_yon": "artis",
+  "params": {
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural",
+    "chunk_size": 1500,
+    "chunk_overlap": 150,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "hybrid",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 5,
+    "llm_model": "gemini-2.5-flash",
+    "llm_temperature": 0.3,
+    "prompt_version": "v2_kaynakli"
+  },
+  "notlar": ""
+}

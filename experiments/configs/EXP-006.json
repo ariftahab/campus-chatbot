@@ -1,0 +1,29 @@
+{
+  "id": "EXP-006",
+  "baslik": "Yapısal bölmede overlap: 200 → 150 karakter",
+  "ust_deney": "EXP-005",
+  "neden": "Overlap yalnız eşiği aşan maddeler bölünürken kullanılır; bölünmeler fıkra sınırlarından yapıldığı için büyük bir overlap'e gerek olmadığı düşünüldü. Amaç tekrar eden metni azaltmak.",
+  "hipotez": "Bölmeler fıkra sınırından yapıldığı için overlap'in sıralamaya etkisi olmaz.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "degisim_yok",
+  "params": {
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural",
+    "chunk_size": 1500,
+    "chunk_overlap": 150,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "vector",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": null,
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 10,
+    "llm_model": "gemini-2.5-flash",
+    "llm_temperature": 0.3,
+    "prompt_version": "v1_prototip"
+  },
+  "notlar": ""
+}

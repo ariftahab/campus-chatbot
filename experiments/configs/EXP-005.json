@@ -1,0 +1,29 @@
+{
+  "id": "EXP-005",
+  "baslik": "Yapısal bölme eşiği: 1000 → 1500 karakter",
+  "ust_deney": "EXP-004",
+  "neden": "bge-m3 uzun metni okuyabildiği için maddeleri 1000 karakterde bölmek artık gerekli değil. Eşiği yükseltmek daha az maddenin bölünmesi (bir hükmün bütün kalması) demek; karşılığında parçalar uzar ve LLM'e giden bağlam büyür.",
+  "hipotez": "Daha az madde bölündüğü için bağlam bütünlüğü artar; MRR@10 artar.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "artis",
+  "params": {
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural",
+    "chunk_size": 1500,
+    "chunk_overlap": 200,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "vector",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": null,
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 10,
+    "llm_model": "gemini-2.5-flash",
+    "llm_temperature": 0.3,
+    "prompt_version": "v1_prototip"
+  },
+  "notlar": ""
+}

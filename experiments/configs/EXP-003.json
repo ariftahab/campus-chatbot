@@ -1,0 +1,29 @@
+{
+  "id": "EXP-003",
+  "baslik": "Embedding normalizasyonu: kapalı → açık (kosinüs)",
+  "ust_deney": "EXP-002",
+  "neden": "Prototipte vektörler normalize edilmeden FAISS L2 uzaklığıyla aranıyordu. paraphrase-MiniLM ve bge-m3 kosinüs benzerliğiyle eğitilmiş modellerdir; L2 uzaklığı vektör uzunluğundan etkilenir. Bir sonraki deneyde embedding modeli değişeceği için normalizasyonun etkisi önce ayrı ölçülüyor.",
+  "hipotez": "Kosinüs benzerliği modelin eğitim hedefiyle uyumlu olduğu için MRR@10 artar.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "artis",
+  "params": {
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "normalize_embeddings": true,
+    "retrieval": "vector",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": null,
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 10,
+    "llm_model": "gemini-2.5-flash",
+    "llm_temperature": 0.3,
+    "prompt_version": "v1_prototip"
+  },
+  "notlar": ""
+}

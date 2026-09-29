@@ -1,0 +1,29 @@
+{
+  "id": "EXP-001",
+  "baslik": "PDF okuyucu: pypdf → pdfplumber",
+  "ust_deney": "EXP-000",
+  "neden": "pypdf bu PDF'lerde kelimelerin içine boşluk ekliyor (\"ö ğretim\", \"ortala ması\", \"Yüksekö ğretim\"). Bozuk kelimeler hem embedding'in hem de anahtar kelime aramasının kelimeyi tanımasını engeller. pdfplumber aynı sayfalarda temiz metin veriyor.",
+  "hipotez": "Daha temiz metin, sorgu ile ilgili parça arasındaki benzerliği artırır; MRR@10 artar.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "artis",
+  "params": {
+    "pdf_parser": "pdfplumber",
+    "chunking": "recursive",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "normalize_embeddings": false,
+    "retrieval": "vector",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": null,
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 10,
+    "llm_model": "gemini-2.5-flash",
+    "llm_temperature": 0.3,
+    "prompt_version": "v1_prototip"
+  },
+  "notlar": ""
+}

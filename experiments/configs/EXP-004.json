@@ -1,0 +1,29 @@
+{
+  "id": "EXP-004",
+  "baslik": "Embedding modeli: MiniLM → bge-m3",
+  "ust_deney": "EXP-003",
+  "neden": "paraphrase-multilingual-MiniLM-L12-v2 en fazla 128 token okuyor; 1000 karakterlik Türkçe bir parça bu sınırı aşar ve parçanın sonu embedding'e hiç girmez. BAAI/bge-m3 çok dilli, Türkçe'de daha güçlü ve 8192 token okuyabiliyor. Karşılığında model daha büyük (568M parametre) ve embedding daha yavaş.",
+  "hipotez": "Parçanın tamamı temsil edildiği ve model daha güçlü olduğu için MRR@10 artar.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "artis",
+  "params": {
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "vector",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": null,
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 10,
+    "llm_model": "gemini-2.5-flash",
+    "llm_temperature": 0.3,
+    "prompt_version": "v1_prototip"
+  },
+  "notlar": ""
+}

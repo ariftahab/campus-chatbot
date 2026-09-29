@@ -1,0 +1,29 @@
+{
+  "id": "EXP-000",
+  "baslik": "İlk prototip (referans)",
+  "ust_deney": null,
+  "neden": "İlk çalışan sistem (main dalındaki prototip-chat.py) sonraki tüm deneylerin karşılaştırma noktasıdır. PyPDFLoader (pypdf) ile sayfa metni, RecursiveCharacterTextSplitter 1000/200, paraphrase-multilingual-MiniLM-L12-v2 embedding (normalize edilmemiş, FAISS L2), yalnız vektör araması, ilk 10 parça LLM'e, Gemini 2.5 Flash sıcaklık 0,3, prototipin prompt'u birebir. `vector_k`, `bm25_k`, `rrf_k`, `reranker_max_length`, `rerank_candidates` bu yapılandırmada etkisizdir; sonraki deneylerle aynı değerde sabit tutulur.",
+  "hipotez": "Referans ölçüm; hipotez yok.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "degisim_yok",
+  "params": {
+    "pdf_parser": "pypdf",
+    "chunking": "recursive",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "normalize_embeddings": false,
+    "retrieval": "vector",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": null,
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 10,
+    "llm_model": "gemini-2.5-flash",
+    "llm_temperature": 0.3,
+    "prompt_version": "v1_prototip"
+  },
+  "notlar": ""
+}
