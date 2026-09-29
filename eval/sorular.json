@@ -1,0 +1,35 @@
+[
+  {"soru": "Güz yarıyılında dersler ne zaman başlıyor?", "kaynak": "akademik-takvim.pdf", "bolum": "EĞİTİM-ÖĞRETİM - GÜZ", "beklenen": ["29 Eylül"]},
+  {"soru": "Bahar dönemi bütünleme sınavları hangi tarihlerde?", "kaynak": "akademik-takvim.pdf", "bolum": "EĞİTİM-ÖĞRETİM - BAHAR", "beklenen": ["29 Haziran", "3 Temmuz"]},
+  {"soru": "Güz dönemi final sınavları ne zaman bitiyor?", "kaynak": "akademik-takvim.pdf", "bolum": "EĞİTİM-ÖĞRETİM - GÜZ", "beklenen": ["16 Ocak"]},
+  {"soru": "Bahar yarıyılında ders ekleme-bırakma ne zaman?", "kaynak": "akademik-takvim.pdf", "bolum": "EĞİTİM-ÖĞRETİM - BAHAR", "beklenen": ["23", "27 Şubat"]},
+  {"soru": "Yaz okulu ders kayıtları ne zaman yapılacak?", "kaynak": "akademik-takvim.pdf", "bolum": "YAZ", "beklenen": ["9 Temmuz"]},
+  {"soru": "Güz dönemindeki tek-çift sınavları ne zaman?", "kaynak": "akademik-takvim.pdf", "bolum": "EĞİTİM-ÖĞRETİM - GÜZ", "beklenen": ["7 Şubat"]},
+  {"soru": "Güz dönemi için kurum içi ve kurum dışı yatay geçiş başvuruları hangi tarihlerde?", "kaynak": "akademik-takvim.pdf", "bolum": "ÖĞRENCİ KABULÜNE", "beklenen": ["14", "20 Temmuz"]},
+  {"soru": "Zorunlu yabancı dil muafiyet sınavı hangi gün yapılacak?", "kaynak": "akademik-takvim.pdf", "bolum": "YABANCI DİL", "beklenen": ["26 Eylül"]},
+  {"soru": "Erasmus için yabancı dil yeterlik sınavı ne zaman?", "kaynak": "akademik-takvim.pdf", "bolum": "YABANCI DİL", "beklenen": ["17 Ekim"]},
+  {"soru": "Dereceye giren öğrenciler için ödül töreni ne zaman?", "kaynak": "akademik-takvim.pdf", "bolum": "BAHAR", "beklenen": ["6 Ağustos"]},
+
+  {"soru": "Kaydımı en fazla kaç dönem dondurabilirim?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 23, "beklenen": ["iki|2", "dört|4"]},
+  {"soru": "Kayıt dondurduğum süre azami öğrenim süresinden sayılır mı?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 23, "beklenen": ["sayılmaz"]},
+  {"soru": "Kaydımı sildirirsem ödediğim harç iade edilir mi?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 21, "beklenen": ["edilmez"]},
+  {"soru": "Diplomamı kaybedersem ne yapmalıyım?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 18, "beklenen": ["ikinci nüsha"]},
+  {"soru": "Hazırlık sınıfında en fazla kaç yıl okunabilir?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 13, "beklenen": ["iki yıl|2 yıl"]},
+  {"soru": "Dönem başında kayıt olduktan sonra ders bırakırsam ödediğim katkı payı geri verilir mi?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 12, "beklenen": ["edilmez|verilmez|hayır"]},
+  {"soru": "Özel öğrencilere diploma verilir mi?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 9, "beklenen": ["verilmez|hayır"]},
+  {"soru": "Üniversitenin öğretim dili nedir?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 3, "beklenen": ["Türkçe"]},
+  {"soru": "Hastalık nedeniyle izin almak için ne gerekiyor?", "kaynak": "ogrenci-kayıt-yonerge.pdf", "madde": 25, "beklenen": ["sağlık raporu"]},
+
+  {"soru": "Kurumlar arası yatay geçiş için not ortalamam en az kaç olmalı?", "kaynak": "yatay-gecis-yonergesi.pdf", "madde": 8, "beklenen": ["60"]},
+  {"soru": "Yatay geçişte değerlendirme puanı nasıl hesaplanıyor?", "kaynak": "yatay-gecis-yonergesi.pdf", "madde": 14, "beklenen": ["0,8|0.8|%80|yüzde seksen"]},
+  {"soru": "Lisans programlarında hangi yarıyıllara yatay geçiş yapılamaz?", "kaynak": "yatay-gecis-yonergesi.pdf", "madde": 5, "beklenen": ["ilk iki", "son iki"]},
+  {"soru": "Kaydı dondurulmuş bir öğrenci yatay geçiş yapabilir mi?", "kaynak": "yatay-gecis-yonergesi.pdf", "madde": 5, "beklenen": ["engel|yapabilir|evet"]},
+  {"soru": "Bahar döneminde merkezi yerleştirme puanıyla yatay geçiş yapılabilir mi?", "kaynak": "yatay-gecis-yonergesi.pdf", "madde": 9, "beklenen": ["edilmez|yapılamaz|hayır"]},
+  {"soru": "Yatay geçiş başvurusunda hangi belgeler isteniyor?", "kaynak": "yatay-gecis-yonergesi.pdf", "madde": 13, "beklenen": ["transkript|not dökümü", "öğrenci belgesi"]},
+  {"soru": "Açık öğretimden örgün öğretime yatay geçiş için not ortalaması kaç olmalı?", "kaynak": "yatay-gecis-yonergesi.pdf", "madde": 5, "beklenen": ["80"]},
+  {"soru": "Yatay geçiş ve intibak komisyonu en az kaç kişiden oluşur?", "kaynak": "yatay-gecis-yonergesi.pdf", "madde": 6, "beklenen": ["3|üç"]},
+
+  {"soru": "Yemekhanede öğle yemeği ücreti ne kadar?", "cevapsiz": true},
+  {"soru": "Kütüphane hafta sonu kaçta kapanıyor?", "cevapsiz": true},
+  {"soru": "Tıp fakültesinde güz dönemi dersleri ne zaman başlıyor?", "beklenen": ["hariç|kapsamaz|kapsamında değil|bilgim yok"]}
+]
