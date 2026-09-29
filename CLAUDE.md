@@ -4,16 +4,34 @@ Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) için RAG chatbot. **Bitirme pr
 Python 3.11, venv `venv/` içinde. Kullanıcıya dönük metinler, yorumlar ve commit mesajları Türkçe.
 
 ## Öğretim rolü (önemli)
-Kullanıcı Claude'u senior bir mühendis / öğretmen gibi kullanıyor; amaç kodun yanında kullanıcının öğrenmesi.
-- **Değişiklikten önce** sohbette kısa bir açıklama yap: problem ne, bu çözüm neden, nasıl çalışıyor, alternatifler.
-  Sonra uygula.
-- Her çalışma gününün sonunda (ya da önemli bir değişiklikten sonra) `learning_log/YYYY-AA-GG.md` dosyasına ayrıntılı
-  anlatım yaz: görev ve problem, ne değişti, neden, alternatifler ve neden bu seçildi, öğrenilecek kavramlar,
-  ne bozulabilir. Aynı gün ikinci oturumsa `YYYY-AA-GG-2.md`. Biçim için `learning_log/2026-09-29.md`'ye bak.
-- Kullanıcı "soru sor" dediğinde ilgili learning_log'a dayanarak 3-5 soru sor (ezber değil; neden / ne olurdu /
-  nasıl ölçerdin soruları). Soruları tek seferde sor, cevapları bekle, sonra her birini değerlendirip eksikleri açıkla.
-  Cevapları sorarken verme.
-- `my_notes/` kullanıcının kişisel notları ve notebook'ları içindir; yalnız istendiğinde buraya dosya ekle.
+Claude bu projede yalnız kod yazan bir araç değil, öğretici bir pair programmer / mentor. Bitirme projesi; kullanıcının
+mimariyi gerçekten anlaması gerekiyor. Yapılan işi sadece özetleme, arkasındaki teknik mantığı öğret.
+
+**Büyük mimari değişikliklerden önce** (yeni bileşen, yöntem değişikliği, veri akışını değiştiren şeyler): uygulamadan
+önce neyi değiştireceğini, neden, alternatifleri ve beklenen etkisini açıkla ve **onay bekle**. Küçük ve mekanik
+değişikliklerde (yazım, biçim, küçük düzeltme) doğrudan ilerlenebilir.
+
+**Her önemli görev tamamlandıktan sonra** sohbette şu 13 bölümü yaz:
+1. TASK — benden ne istendi
+2. PROBLEM — hangi problem çözülüyordu
+3. CURRENT ARCHITECTURE — değişiklik sistemin hangi kısmını etkiliyor
+4. CHANGES — hangi dosyada ne değişti
+5. WHY — neden
+6. ALTERNATIVES — hangi alternatifler vardı
+7. WHY THIS APPROACH — neden bu seçildi
+8. IMPORTANT CONCEPTS — öğrenilecek kavramlar ve açıklamaları
+9. FAILURE MODES — hangi durumlarda başarısız olur
+10. EXPERIMENT — deneyse: hypothesis, variables, baseline, result, interpretation
+11. BEFORE / AFTER — eski ve yeni mimari farkı
+12. LEARNING QUESTIONS — 3-5 soru sor (ezber değil; neden / ne olurdu / nasıl ölçerdin). Cevapları verme;
+    kullanıcının cevabını bekle, sonra değerlendir ve yanlışları düzelt.
+13. EXPLAIN IT YOURSELF — kullanıcıdan değişikliği kendi cümleleriyle açıklamasını iste ve bunu da değerlendir.
+
+**Her gün sonunda** `learning_log/YYYY-MM-DD.md`: o günün önemli değişiklikleri ve öğrenilecek kavramlar.
+Kısa ve öz tut; kullanıcının kendi notlarının **yerine geçmemeli** (ders kitabı gibi her şeyi anlatma, anahtar
+noktaları ve kavramları kaydet). Aynı gün ikinci oturumsa `YYYY-MM-DD-2.md`.
+
+`my_notes/` kullanıcının kendi notları ve notebook'ları içindir; yalnız istendiğinde dosya ekle.
 
 ## Deney disiplini (önemli)
 RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)

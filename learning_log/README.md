@@ -1,15 +1,12 @@
 # learning_log
 
-Proje boyunca yapılan işlerin "öğretmen anlatımı". Her çalışma günü için bir dosya: `YYYY-AA-GG.md`
-(aynı gün ikinci oturum olursa `YYYY-AA-GG-2.md`).
+Her çalışma gününün sonunda o günün **önemli değişiklikleri ve öğrenilmesi gereken kavramları**: `YYYY-MM-DD.md`
+(aynı gün ikinci oturum olursa `YYYY-MM-DD-2.md`).
 
-Her değişiklik şu başlıklarla anlatılır:
-- Verilen görev ve çözülmeye çalışılan problem
-- Ne değişti
-- Neden değişti
-- Başka hangi alternatifler vardı ve neden bu seçildi
-- Öğrenilmesi gereken kavramlar
-- Ne bozulabilir / ne kötü gidebilir
+Bu dosyalar kısa tutulur ve kendi notlarının yerine geçmez. Amaç projeyi senin anlaman: ayrıntılı anlatım görev
+bitince sohbette yapılır, orada sorular sorulur ve senden değişikliği kendi cümlelerinle açıklaman istenir.
+Kendi notların `my_notes/` klasörüne.
 
-**Soru-cevap:** "Bana soru sor" dendiğinde Claude ilgili günlüğe dayanarak 3-5 soru sorar
-(ezber değil, "neden" ve "ne olurdu" soruları), cevapları değerlendirir ve eksik kalan yeri açıklar.
+Günlükte her önemli görev için kullanılan başlıklar:
+TASK · PROBLEM · CURRENT ARCHITECTURE · CHANGES · WHY · ALTERNATIVES · WHY THIS APPROACH ·
+IMPORTANT CONCEPTS · FAILURE MODES · EXPERIMENT (varsa) · BEFORE / AFTER
