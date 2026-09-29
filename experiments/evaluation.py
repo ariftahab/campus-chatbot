@@ -114,7 +114,9 @@ def verdict(metric, delta, p, expected):
     """Önceden tanımlı karar kuralı (experiment_log.md başında açıklanır)."""
     better = METRIC_DIRECTION[metric]
     if abs(delta) < NO_CHANGE_EPS:
-        outcome, observed = "Değişim yok", "degisim_yok"
+        observed = "degisim_yok"
+        # Ortalama aynı kalıp bazı sorular iyileşip bazıları kötüleşmiş olabilir.
+        outcome = "Değişim yok" if p >= 1.0 else "Ortalamada değişim yok (bazı sorularda sıra değişti)"
     else:
         observed = "artis" if delta > 0 else "azalis"
         good = (delta > 0) == (better > 0)
@@ -156,7 +158,9 @@ def environment(cfg):
     import torch
     return {
         "git_commit": _git("rev-parse", "HEAD"),
-        "git_dirty": bool(_git("status", "--porcelain")),
+        # Koşucunun kendi çıktıları (sonuçlar, günlük) "commit edilmemiş değişiklik" sayılmaz.
+        "git_dirty": bool(_git("status", "--porcelain", "--", ".", ":!experiments/results",
+                               ":!experiments/experiment_log.md")),
         "python": platform.python_version(),
         "platform": platform.platform(),
         "cpu": platform.processor(),
