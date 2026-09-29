@@ -23,15 +23,32 @@ değişikliklerde (yazım, biçim, küçük düzeltme) doğrudan ilerlenebilir.
 9. FAILURE MODES — hangi durumlarda başarısız olur
 10. EXPERIMENT — deneyse: hypothesis, variables, baseline, result, interpretation
 11. BEFORE / AFTER — eski ve yeni mimari farkı
-12. LEARNING QUESTIONS — 3-5 soru sor (ezber değil; neden / ne olurdu / nasıl ölçerdin). Cevapları verme;
-    kullanıcının cevabını bekle, sonra değerlendir ve yanlışları düzelt.
-13. EXPLAIN IT YOURSELF — kullanıcıdan değişikliği kendi cümleleriyle açıklamasını iste ve bunu da değerlendir.
+12. LEARNING QUESTIONS — 3-5 soru sor. Cevapları verme; kullanıcının cevabını bekle, sonra değerlendir ve düzelt.
+    Sorular **kendi başına anlaşılır** olmalı: iç kodlar (Y01, EXP-008, "Madde 8/2") ve daha önce açıklanmamış
+    kavramlar kullanılmaz; her soru o görevde anlatılan bir kavramın ne işe yaradığını sorar.
+(13. EXPLAIN IT YOURSELF — kullanıcının isteğiyle şimdilik kaldırıldı.)
 
-**Her gün sonunda** `learning_log/YYYY-MM-DD.md`: o günün önemli değişiklikleri ve öğrenilecek kavramlar.
-Kısa ve öz tut; kullanıcının kendi notlarının **yerine geçmemeli** (ders kitabı gibi her şeyi anlatma, anahtar
-noktaları ve kavramları kaydet). Aynı gün ikinci oturumsa `YYYY-MM-DD-2.md`.
+Kullanıcı bir öğrenci ve öğrenmeye açık; **amaç projeyi hızla bitirmek değil, kullanıcının öğrenmesi**. Ne yapıldığını,
+hangi kavramların kullanıldığını ve ne işe yaradıklarını anlatmaya öncelik ver. Kullanıcı "şu günün log'una dokunma"
+derse dokunma.
+
+**Her gün sonunda** `learning_log/YYYY-MM-DD.md`: kullanıcının **ders çalışır gibi okuyabileceği** study notes.
+Yoğun, ansiklopedik metin yazma. Biçim için `learning_log/2026-09-29.md`'ye bak:
+- Büyük resim (pipeline diyagramı + bir örnek sorunun gerçek yolculuğu)
+- Concept kartları: **Nedir? → Basit örnek → Bizim projede (projeden ölçülmüş gerçek sayılar) → Dikkat**
+- Kısa deney tablosu ve 2-3 ana ders
+Kullanıcının kendi notlarının yerine geçmemeli; amaç anlamasını sağlamak. Aynı gün ikinci oturumsa `YYYY-MM-DD-2.md`.
+
+**Dil / terim kuralı:** Cümleler Türkçe, **teknik terimler İngilizce** ve çevrilmeden: branch, commit, push, chunk,
+chunking, embedding, token, retrieval, reranker, vector store, index, pipeline, baseline, hypothesis, evaluation,
+dataset, context, latency, prompt, hash, fingerprint vb. ("dal", "parçalama", "getirme", "gecikme" gibi çeviriler
+kullanılmaz.) Sohbet, learning_log, experiment log ve deney başlıkları için geçerli.
 
 `my_notes/` kullanıcının kendi notları ve notebook'ları içindir; yalnız istendiğinde dosya ekle.
+
+**Notion sync:** `tools/notion_sync.py` learning_log ve experiment log'u Notion block'larına çevirip Notion API ile gönderir;
+`.github/workflows/notion-sync.yml` bu dosyalar değişen her push'ta çalışır (secret'lar: `NOTION_TOKEN`,
+`NOTION_PARENT_PAGE_ID`). Yeni bir Markdown biçimi kullanılırsa (ör. yeni block türü) çeviricinin desteklediğinden emin ol.
 
 ## Deney disiplini (önemli)
 RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)
@@ -44,7 +61,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Kod önce commit edilir, sonra `python -m experiments.run EXP-XXX` koşulur. Sonuç dosyası commit hash'ini kaydeder;
   `git_dirty: true` sonuçlar tekrar üretilebilir sayılmaz.
 - Sonuç yorumu config'in `notlar` alanına yazılır. Beklenen iyileşme çıkmadıysa bu da açıkça yazılır.
-- `experiments/experiment_log.md` elle düzenlenmez, `python -m experiments.report` ile üretilir.
+- `experiments/experiment_log.md` elle düzenlenmez, `python -m experiments.report` ile üretilir. Log **kısa** kalmalı:
+  setup (hyperparameter) tablosu, results tablosu ve deney başına tek satır (`kisa_not`). Ayrıntılar `results/*.json` içinde.
 - `eval/sorular.json` değişirse veri seti hash'i değişir ve eski sonuçlarla karşılaştırma geçersiz olur.
   Soru eklemek gerekiyorsa sürümü artır ve referans zinciri yeniden koşulmalı.
 - Commit mesajları ayrıntılı olmalı (ne, neden, sayısal sonuç); tezde kaynak olarak kullanılacak.
