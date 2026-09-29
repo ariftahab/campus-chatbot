@@ -1,14 +1,21 @@
 # TODO
 
-## Veri kapsamı: üniversitenin tüm bilgileri
+## Sıra
 
-Hedef: Chatbot, BAİBÜ'nün sitesindeki bütün bilgileri kapsayacak. Şu an sadece 3 PDF var.
+1. [ ] **PDF'ler:** Sitedeki tüm yönergeler, yönetmelikler ve mevzuat `data/` içine eklenecek (çok sayıda PDF).
+2. [ ] **UI:** Chatbot için bir arayüz yazılacak (terminal yerine).
+3. [ ] **Ders programları (en son):** Sitenin ders programı bölümünde her dönemin programı yayınlanıyor; her dönem başı
+       linkteki dosya da data'ya eklenecek. Tablo yapısı yüzünden en zor kısım.
+4. [ ] Diğer bilgiler (duyurular, birim sayfaları, iletişim...). Gerekirse **web scraping**.
 
-- [ ] Sitedeki **tüm yönergeler, yönetmelikler ve mevzuat** `data/` içine eklenecek.
-- [ ] **Ders programları:** Sitenin ders programı bölümünde her dönemin ders programı yayınlanıyor. Her dönem başında
-      yeni program yayınlandığında linkteki dosya da data'ya eklenecek.
-- [ ] Diğer bilgiler (duyurular, birim sayfaları, iletişim, akademik takvimin yeni yılları...) eklenecek.
-- [ ] Bunları toplamak için gerekirse **web scraping** yapılacak.
+## PDF'leri eklemeden önce bilinmesi gerekenler
+
+- Şu an `config.DOCUMENTS`'ta olmayan bir PDF eklenirse: başlık = dosya adı; içinde "Madde N-" satırları varsa madde madde
+  chunk'lanır, yoksa sayfa sayfa. Yani dosya adları anlamlı olmalı (ör. `lisans-egitim-ogretim-yonetmeligi.pdf`).
+- **Corpus değişince eski deney sonuçları yeni sonuçlarla karşılaştırılamaz.** Şu an koşucu sadece evaluation dataset'in
+  hash'ini kontrol ediyor, PDF'lerin (corpus) hash'ini karşılaştırmada kontrol etmiyor. PDF'ler eklendikten sonra:
+  (a) koşucuya corpus hash kontrolü eklenmeli, (b) yeni corpus ile baseline yeniden koşulmalı.
+- Yeni belgeler için evaluation dataset'e soru eklenmeli (yoksa yeni belgelerde sistemin nasıl çalıştığı ölçülmez).
 
 ## Bu plan mimariyi nasıl etkiler? (uygulamadan önce konuşulacak)
 
