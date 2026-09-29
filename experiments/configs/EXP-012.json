@@ -1,0 +1,29 @@
+{
+  "id": "EXP-012",
+  "baslik": "Takip: reranker varken hibrit → yalnız vektör (EXP-007 kararının sınanması)",
+  "ust_deney": "EXP-008",
+  "neden": "EXP-007'de hibrit aramanın MRR@10'a ölçülebilir katkısı olmadı ama reranker (EXP-008) hibrit aday listesinin üzerine eklendi. Reranker varken BM25'in gerekli olup olmadığı ölçülmemişti; bu deney EXP-008'den yalnız getirme yöntemini vektöre çevirir. BM25 kaldırılırsa sistem sadeleşir.",
+  "hipotez": "Reranker'a giden 8 aday vektör aramasında da ilgili parçayı içerdiği için sonuç değişmez.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "degisim_yok",
+  "params": {
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural",
+    "chunk_size": 1500,
+    "chunk_overlap": 150,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "vector",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 10,
+    "llm_model": "gemini-2.5-flash",
+    "llm_temperature": 0.3,
+    "prompt_version": "v1_prototip"
+  },
+  "notlar": ""
+}
