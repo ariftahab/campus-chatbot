@@ -244,7 +244,8 @@ def fingerprint(cfg):
         h.update(path.read_bytes())
     settings = [cfg.index_params(), config.DOCUMENTS]
     h.update(json.dumps(settings, sort_keys=True, ensure_ascii=False).encode())
-    h.update(Path(__file__).read_bytes())
+    # Satır sonları normalize edilir: git'in CRLF/LF dönüşümü aynı kod için farklı parmak izi üretmesin.
+    h.update(Path(__file__).read_bytes().replace(b"\r\n", b"\n"))
     return h.hexdigest()[:16]
 
 
