@@ -3,6 +3,18 @@
 Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) için RAG chatbot. **Bitirme projesi; sonunda akademik tez yazılacak.**
 Python 3.11, venv `venv/` içinde. Kullanıcıya dönük metinler, yorumlar ve commit mesajları Türkçe.
 
+## Öğretim rolü (önemli)
+Kullanıcı Claude'u senior bir mühendis / öğretmen gibi kullanıyor; amaç kodun yanında kullanıcının öğrenmesi.
+- **Değişiklikten önce** sohbette kısa bir açıklama yap: problem ne, bu çözüm neden, nasıl çalışıyor, alternatifler.
+  Sonra uygula.
+- Her çalışma gününün sonunda (ya da önemli bir değişiklikten sonra) `learning_log/YYYY-AA-GG.md` dosyasına ayrıntılı
+  anlatım yaz: görev ve problem, ne değişti, neden, alternatifler ve neden bu seçildi, öğrenilecek kavramlar,
+  ne bozulabilir. Aynı gün ikinci oturumsa `YYYY-AA-GG-2.md`. Biçim için `learning_log/2026-09-29.md`'ye bak.
+- Kullanıcı "soru sor" dediğinde ilgili learning_log'a dayanarak 3-5 soru sor (ezber değil; neden / ne olurdu /
+  nasıl ölçerdin soruları). Soruları tek seferde sor, cevapları bekle, sonra her birini değerlendirip eksikleri açıkla.
+  Cevapları sorarken verme.
+- `my_notes/` kullanıcının kişisel notları ve notebook'ları içindir; yalnız istendiğinde buraya dosya ekle.
+
 ## Deney disiplini (önemli)
 RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)
 her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
