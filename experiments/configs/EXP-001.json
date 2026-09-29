@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": ""
+  "notlar": "MRR@10 0,564 → 0,584 (+0,020, Wilcoxon p=0,72): anlamlı değil. Değişim iki yönlü: Hit@1 arttı (0,444 → 0,481) ama Hit@5 (0,741 → 0,667) ve bağlam isabeti (0,815 → 0,778) düştü; 9 sorunun sırası değişti (Y01 ve Y04 ilk 10'dan çıktı, K03 girdi). Sonuç: metin temizliği tek başına sabit boyutlu parçalamada belirgin bir getirme kazancı sağlamadı; hipotez desteklenmedi. pdfplumber'ın asıl katkısı yapısal parçalamayı (tablo okuma) mümkün kılmasıdır; EXP-002 buna dayanır."
 }

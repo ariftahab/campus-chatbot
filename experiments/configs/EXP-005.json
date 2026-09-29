@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": ""
+  "notlar": "MRR@10 0,920 → 0,938 (+0,018, p=0,56) anlamlı değil; 3 soru değişti (K01 ve Y04 iyileşti, Y02 geriledi). Parça sayısı 90 → 74, LLM'e giden bağlam 8.708 → 10.835 karakter (+%24). Getirme kalitesinde belirgin bir fark yok, bağlam maliyeti arttı. Hipotez desteklenmedi."
 }

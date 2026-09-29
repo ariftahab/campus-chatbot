@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": ""
+  "notlar": "MRR@10 0,584 → 0,716 (+0,132, p=0,22) anlamlı değil; ancak bağlam isabeti 0,778 → 1,000 ile anlamlı arttı (McNemar p=0,031). LLM'e giden 10 parçada artık her sorunun cevabı var; ilk 10'da bulunamayan soru sayısı 6'dan 0'a indi. Bazı sorular geriledi (K01 1→7, K04 1→8, K05 1→4). Olası açıklama: bu sorularda madde parçaları uzun ve MiniLM'nin 128 token sınırı parçanın sonunu görmüyor. Bu sorular EXP-004'te (bge-m3) düzeliyor, bu da açıklamayı destekliyor. Parça sayısı 68 → 90."
 }

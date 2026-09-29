@@ -1,0 +1,722 @@
+{
+ "id": "EXP-003",
+ "calisma_zamani": "2026-09-29T18:57:28",
+ "dataset": {
+  "surum": "2.0",
+  "hash": "fbab400da1f4cc72",
+  "n_getirme": 27,
+  "n_toplam": 30
+ },
+ "params": {
+  "pdf_parser": "pdfplumber",
+  "chunking": "structural",
+  "chunk_size": 1000,
+  "chunk_overlap": 200,
+  "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+  "normalize_embeddings": true,
+  "retrieval": "vector",
+  "vector_k": 15,
+  "bm25_k": 15,
+  "rrf_k": 60,
+  "reranker_model": null,
+  "reranker_max_length": 512,
+  "rerank_candidates": 8,
+  "final_k": 10,
+  "llm_model": "gemini-2.5-flash",
+  "llm_temperature": 0.3,
+  "prompt_version": "v1_prototip"
+ },
+ "degisen_parametreler": {
+  "normalize_embeddings": [
+   false,
+   true
+  ]
+ },
+ "index": {
+  "fingerprint": "329fd8e57b64da6d",
+  "index_params": {
+   "pdf_parser": "pdfplumber",
+   "chunking": "structural",
+   "chunk_size": 1000,
+   "chunk_overlap": 200,
+   "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+   "normalize_embeddings": true
+  },
+  "chunks": 90,
+  "avg_chunk_chars": 676.1,
+  "build_seconds": 3.1,
+  "created": "2026-09-29T18:46:18"
+ },
+ "environment": {
+  "git_commit": "0a47d1d3b0561877f82aca2adcd7b044690557dc",
+  "git_dirty": false,
+  "python": "3.11.9",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "cpu": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "cpu_count": 20,
+  "torch_device": "cpu",
+  "packages": {
+   "torch": "2.9.0",
+   "sentence-transformers": "5.1.2",
+   "transformers": "4.57.1",
+   "faiss-cpu": "1.12.0",
+   "rank-bm25": "0.2.2",
+   "pdfplumber": "0.11.9",
+   "pypdf": "6.1.3",
+   "langchain-core": "1.0.4",
+   "langchain-community": "0.4.1",
+   "langchain-text-splitters": "1.0.0",
+   "langchain-huggingface": "1.0.1",
+   "langchain-google-genai": "3.0.1",
+   "scipy": "1.16.3"
+  },
+  "model_revisions": {
+   "embedding": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+   "reranker": null
+  }
+ },
+ "retrieval": {
+  "metrics": {
+   "mrr@10": 0.6545,
+   "hit@1": 0.4444,
+   "hit@3": 0.8148,
+   "hit@5": 0.9259,
+   "hit@10": 1,
+   "context_hit": 1,
+   "context_chars": 8094.6,
+   "latency_ms": 21.1,
+   "latency_ms_median": 20.5
+  },
+  "per_question": [
+   {
+    "id": "T01",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 9790,
+    "latency_ms": 19.9,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.1",
+     "akademik-takvim.pdf s.1",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.12"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T02",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 9089,
+    "latency_ms": 19.6,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.1",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13",
+     "akademik-takvim.pdf s.1",
+     "yatay-gecis-yonergesi.pdf s.2 m.6"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T03",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 9041,
+    "latency_ms": 19.5,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.1",
+     "yatay-gecis-yonergesi.pdf s.3 m.7",
+     "akademik-takvim.pdf s.2",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.26"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T04",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 9689,
+    "latency_ms": 20.6,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.1",
+     "akademik-takvim.pdf s.1",
+     "yatay-gecis-yonergesi.pdf s.3 m.9",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T05",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 8966,
+    "latency_ms": 19.5,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.12",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.10",
+     "akademik-takvim.pdf s.1",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T06",
+    "rank": 4,
+    "rr": 0.25,
+    "context_hit": 1,
+    "context_chars": 8120,
+    "latency_ms": 20.1,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.1",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13",
+     "akademik-takvim.pdf s.1",
+     "ogrenci-kayıt-yonerge.pdf s.1 m.4"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T07",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 8263,
+    "latency_ms": 22.1,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.2",
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "yatay-gecis-yonergesi.pdf s.5 m.13",
+     "yatay-gecis-yonergesi.pdf s.3 m.7"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T08",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 9396,
+    "latency_ms": 22.1,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.2",
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13",
+     "ogrenci-kayıt-yonerge.pdf s.1 m.3"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T09",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 8210,
+    "latency_ms": 24.1,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13",
+     "akademik-takvim.pdf s.2",
+     "yatay-gecis-yonergesi.pdf s.5 m.12"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "T10",
+    "rank": 7,
+    "rr": 0.14285714285714285,
+    "context_hit": 1,
+    "context_chars": 9259,
+    "latency_ms": 24.4,
+    "top5": [
+     "akademik-takvim.pdf s.2",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.12",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.19",
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.1"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 1
+   },
+   {
+    "id": "K01",
+    "rank": 4,
+    "rr": 0.25,
+    "context_hit": 1,
+    "context_chars": 7998,
+    "latency_ms": 23.0,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23",
+     "yatay-gecis-yonergesi.pdf s.3 m.7",
+     "akademik-takvim.pdf s.2",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.26"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "K02",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6541,
+    "latency_ms": 22.8,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.12",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.10",
+     "yatay-gecis-yonergesi.pdf s.3 m.7"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "K03",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5133,
+    "latency_ms": 21.9,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.4 m.21",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.12",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.22",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.11"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "K04",
+    "rank": 9,
+    "rr": 0.1111111111111111,
+    "context_hit": 1,
+    "context_chars": 8325,
+    "latency_ms": 20.1,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.4 m.22",
+     "yatay-gecis-yonergesi.pdf s.4 m.11",
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "yatay-gecis-yonergesi.pdf s.1 m.1",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.14"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 1
+   },
+   {
+    "id": "K05",
+    "rank": 4,
+    "rr": 0.25,
+    "context_hit": 1,
+    "context_chars": 9642,
+    "latency_ms": 20.3,
+    "top5": [
+     "akademik-takvim.pdf s.1",
+     "akademik-takvim.pdf s.2",
+     "akademik-takvim.pdf s.1",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13",
+     "yatay-gecis-yonergesi.pdf s.2 m.5"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "K06",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6173,
+    "latency_ms": 21.9,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.2 m.12",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.21",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.22",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.27"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "K07",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 6651,
+    "latency_ms": 19.5,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.3 m.14",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.9",
+     "ogrenci-kayıt-yonerge.pdf s.1 m.6",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.18",
+     "yatay-gecis-yonergesi.pdf s.2 m.5"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "K08",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 7291,
+    "latency_ms": 20.0,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.1 m.3",
+     "ogrenci-kayıt-yonerge.pdf s.1 m.8",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.14",
+     "yatay-gecis-yonergesi.pdf s.2 m.5"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "K09",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 4888,
+    "latency_ms": 19.6,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.5 m.31",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.25",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.26",
+     "yatay-gecis-yonergesi.pdf s.6 m.16",
+     "yatay-gecis-yonergesi.pdf s.6 m.16"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "Y01",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 8602,
+    "latency_ms": 19.7,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "yatay-gecis-yonergesi.pdf s.5 m.14",
+     "yatay-gecis-yonergesi.pdf s.1 m.4",
+     "yatay-gecis-yonergesi.pdf s.3 m.9",
+     "yatay-gecis-yonergesi.pdf s.5 m.14"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "Y02",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 7630,
+    "latency_ms": 19.8,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.5 m.14",
+     "ogrenci-kayıt-yonerge.pdf s.1 m.8",
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "yatay-gecis-yonergesi.pdf s.3 m.9",
+     "yatay-gecis-yonergesi.pdf s.1 m.4"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "Y03",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 8733,
+    "latency_ms": 19.8,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "yatay-gecis-yonergesi.pdf s.3 m.7",
+     "yatay-gecis-yonergesi.pdf s.4 m.11",
+     "yatay-gecis-yonergesi.pdf s.3 m.8"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "Y04",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 7455,
+    "latency_ms": 23.2,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.4 m.11",
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "yatay-gecis-yonergesi.pdf s.5 m.12",
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "Y05",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 9319,
+    "latency_ms": 23.5,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.3 m.9",
+     "yatay-gecis-yonergesi.pdf s.3 m.9",
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "akademik-takvim.pdf s.2",
+     "yatay-gecis-yonergesi.pdf s.3 m.7"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "Y06",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6832,
+    "latency_ms": 21.1,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.5 m.13",
+     "yatay-gecis-yonergesi.pdf s.5 m.13",
+     "akademik-takvim.pdf s.2",
+     "yatay-gecis-yonergesi.pdf s.5 m.14",
+     "yatay-gecis-yonergesi.pdf s.1 m.2"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "Y07",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 9427,
+    "latency_ms": 21.1,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.14",
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "yatay-gecis-yonergesi.pdf s.3 m.8"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   },
+   {
+    "id": "Y08",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 8091,
+    "latency_ms": 20.5,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.5 m.14",
+     "yatay-gecis-yonergesi.pdf s.2 m.6",
+     "yatay-gecis-yonergesi.pdf s.2 m.6",
+     "yatay-gecis-yonergesi.pdf s.5 m.14",
+     "yatay-gecis-yonergesi.pdf s.3 m.8"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1
+   }
+  ]
+ },
+ "llm": null,
+ "karsilastirma": {
+  "ust_deney": "EXP-002",
+  "ayni_veri_seti": true,
+  "metrikler": {
+   "mrr@10": {
+    "once": 0.7158,
+    "sonra": 0.6545,
+    "fark": -0.0614,
+    "test": "Wilcoxon",
+    "p": 0.06110093043955169
+   },
+   "hit@1": {
+    "once": 0.5556,
+    "sonra": 0.4444,
+    "fark": -0.1111,
+    "test": "McNemar (kesin)",
+    "p": 0.25,
+    "kotulesen": 3,
+    "iyilesen": 0
+   },
+   "hit@3": {
+    "once": 0.8519,
+    "sonra": 0.8148,
+    "fark": -0.037,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 1,
+    "iyilesen": 0
+   },
+   "hit@5": {
+    "once": 0.8889,
+    "sonra": 0.9259,
+    "fark": 0.037,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 1
+   },
+   "hit@10": {
+    "once": 1,
+    "sonra": 1,
+    "fark": 0,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 0
+   },
+   "context_hit": {
+    "once": 1,
+    "sonra": 1,
+    "fark": 0,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 0
+   },
+   "context_chars": {
+    "once": 8436.2222,
+    "sonra": 8094.5926,
+    "fark": -341.6296,
+    "test": "Wilcoxon",
+    "p": 0.009996388475979442
+   },
+   "latency_ms": {
+    "once": 21.0481,
+    "sonra": 21.1,
+    "fark": 0.0519,
+    "test": "Wilcoxon",
+    "p": 0.5164879578989415
+   }
+  },
+  "karar": {
+   "metrik": "mrr@10",
+   "beklenen_yon": "artis",
+   "sonuc": "Sayısal kötüleşme (istatistiksel olarak anlamlı değil)",
+   "hipotez": "Doğrulanmadı"
+  },
+  "degisen_sorular": [
+   {
+    "id": "T06",
+    "once": 3,
+    "sonra": 4
+   },
+   {
+    "id": "T08",
+    "once": 1,
+    "sonra": 2
+   },
+   {
+    "id": "K01",
+    "once": 7,
+    "sonra": 4
+   },
+   {
+    "id": "K04",
+    "once": 8,
+    "sonra": 9
+   },
+   {
+    "id": "K07",
+    "once": 1,
+    "sonra": 2
+   },
+   {
+    "id": "K09",
+    "once": 1,
+    "sonra": 2
+   },
+   {
+    "id": "Y04",
+    "once": 2,
+    "sonra": 3
+   }
+  ]
+ }
+}

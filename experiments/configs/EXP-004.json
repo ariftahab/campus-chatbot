@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": ""
+  "notlar": "Zincirdeki en büyük ve anlamlı tek kazanç: MRR@10 0,654 → 0,920 (+0,266, Wilcoxon p=0,0015), Hit@1 0,444 → 0,852 (McNemar p=0,003), Hit@3 ve Hit@5 1,000. 16 soru iyileşti, 1 soru (Y07 1→2) geriledi; EXP-002'de gerileyen uzun madde soruları (K01, K04, K05) düzeldi. Bedeli: getirme gecikmesi ~21 ms → ~83 ms (sorgu embedding'i), indeks kurulumu ~1 dk, model ~2,2 GB."
 }

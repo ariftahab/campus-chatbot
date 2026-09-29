@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": ""
+  "notlar": "Reranker varken BM25'i kaldırmak hiçbir sorunun sırasını değiştirmedi (MRR@10 1,000). Gecikme farkı (~4,7 sn'ye karşı ~5,5 sn) reranker süresinin gürültüsü içinde kalıyor; BM25'in kendi maliyeti ihmal edilebilir düzeyde. Bu sette BM25'in katkısı ne tek başına (EXP-007) ne de reranker ile (EXP-012) gösterilebildi. Bu yapılandırma daha sade ve aynı sonucu veriyor. Üretimdeki hibrit yöntemin korunması bu veriyle desteklenmiyor; karar kullanıcıya bırakıldı."
 }

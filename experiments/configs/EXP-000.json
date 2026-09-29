@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": ""
+  "notlar": "27 sorudan 5'inde (T07, K03, K07, K08, Y03) ilgili parça ilk 10'da yok; bu sorularda LLM'e cevabı içeren metin hiç ulaşmıyor (bağlam isabeti 0,815). Kanıtların hepsi en az bir parçada mevcut, yani kayıplar parçalamanın cevabı bölmesinden değil sıralamadan kaynaklanıyor. Önceki (madde numarasına dayalı) ölçüt prototipin bu zayıflığını gösteremiyordu."
 }

@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": ""
+  "notlar": "Bağlam uzunluğu 10.678 → 5.448 karakter (−%49, Wilcoxon p<0,001); bağlam isabeti 1,000'de kaldı. Hipotez doğrulandı. Gecikmedeki 4.724 → 5.340 ms farkı ölçüm gürültüsüdür, çünkü final_k getirme hesaplamasını değiştirmez (bkz. EXP-006 notu)."
 }

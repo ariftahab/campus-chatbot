@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": ""
+  "notlar": "Beklendiği gibi hiçbir sorunun sırası değişmedi; parça sayısı 74 → 73. Gecikmedeki 79 → 73 ms düşüş (Wilcoxon p=0,006) hesaplamadaki bir değişiklikten değil ölçüm gürültüsünden kaynaklanıyor, çünkü overlap getirme hesaplamasını etkilemez. Bu, gecikme için yapılan anlamlılık testlerinin aynı hesaplamaya sahip yapılandırmalar arasında yanıltıcı olabileceğini gösteriyor. Gecikme farkları yalnız büyüklük mertebesi olarak (ör. ms'ye karşı saniye) yorumlanmalıdır."
 }

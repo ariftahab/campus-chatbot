@@ -25,5 +25,5 @@
     "llm_temperature": 0.3,
     "prompt_version": "v2_kaynakli"
   },
-  "notlar": ""
+  "notlar": "Getirme metrikleri beklendiği gibi EXP-009 ile aynı. Birincil metrik (cevap doğruluğu) henüz ölçülmedi. Gemini ücretsiz kotası günde 20 istek; karşılaştırma için hem EXP-009 hem EXP-010'un `--llm` ile koşulması gerekiyor (her biri 30 istek). Hipotez beklemede."
 }
