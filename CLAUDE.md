@@ -45,11 +45,6 @@ dataset, context, latency, prompt, hash, fingerprint vb. ("dal", "parçalama", "
 kullanılmaz.) Sohbet, learning_log, experiment log ve deney başlıkları için geçerli.
 
 `my_notes/` kullanıcının kendi notları ve notebook'ları içindir; yalnız istendiğinde dosya ekle.
-
-**Notion sync:** `tools/notion_sync.py` learning_log ve experiment log'u Notion block'larına çevirip Notion API ile gönderir;
-`.github/workflows/notion-sync.yml` bu dosyalar değişen her push'ta çalışır (secret'lar: `NOTION_TOKEN`,
-`NOTION_PARENT_PAGE_ID`). Yeni bir Markdown biçimi kullanılırsa (ör. yeni block türü) çeviricinin desteklediğinden emin ol.
-
 ## Deney disiplini (önemli)
 RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)
 her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
