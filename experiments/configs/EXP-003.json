@@ -1,6 +1,6 @@
 {
   "id": "EXP-003",
-  "baslik": "Embedding normalizasyonu: kapalı → açık (kosinüs)",
+  "baslik": "Normalize embeddings: kapalı → açık",
   "ust_deney": "EXP-002",
   "neden": "Prototipte vektörler normalize edilmeden FAISS L2 uzaklığıyla aranıyordu. paraphrase-MiniLM ve bge-m3 kosinüs benzerliğiyle eğitilmiş modellerdir; L2 uzaklığı vektör uzunluğundan etkilenir. Bir sonraki deneyde embedding modeli değişeceği için normalizasyonun etkisi önce ayrı ölçülüyor.",
   "hipotez": "Kosinüs benzerliği modelin eğitim hedefiyle uyumlu olduğu için MRR@10 artar.",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "Beklenenin tersi: MRR@10 0,716 → 0,654 (−0,062, Wilcoxon p=0,061), Hit@1 0,556 → 0,444; 7 soru geriledi, 0 soru iyileşti. Hipotez doğrulanmadı. Anlamlılık sınırına yakın bir kötüleşme: bu sette MiniLM için ham L2 sıralaması kosinüsten daha iyi. Olası (doğrulanmamış) açıklama: MiniLM'de normalizasyon katmanı yok ve vektör uzunluğu içerikle ilgili bilgi taşıyor olabilir. Normalizasyon yine de zincirde açık bırakıldı; EXP-011 bu kararın bge-m3 için bir etkisi olmadığını gösterdi."
+  "notlar": "Beklenenin tersi: MRR@10 0,716 → 0,654 (−0,062, Wilcoxon p=0,061), Hit@1 0,556 → 0,444; 7 soru geriledi, 0 soru iyileşti. Hipotez doğrulanmadı. Anlamlılık sınırına yakın bir kötüleşme: bu sette MiniLM için ham L2 sıralaması kosinüsten daha iyi. Olası (doğrulanmamış) açıklama: MiniLM'de normalizasyon katmanı yok ve vektör uzunluğu içerikle ilgili bilgi taşıyor olabilir. Normalizasyon yine de zincirde açık bırakıldı; EXP-011 bu kararın bge-m3 için bir etkisi olmadığını gösterdi.",
+  "kisa_not": "Hypothesis ✗: MiniLM'de MRR düştü (p=0,06)."
 }

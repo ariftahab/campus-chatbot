@@ -1,6 +1,6 @@
 {
   "id": "EXP-001",
-  "baslik": "PDF okuyucu: pypdf → pdfplumber",
+  "baslik": "PDF parser: pypdf → pdfplumber",
   "ust_deney": "EXP-000",
   "neden": "pypdf bu PDF'lerde kelimelerin içine boşluk ekliyor (\"ö ğretim\", \"ortala ması\", \"Yüksekö ğretim\"). Bozuk kelimeler hem embedding'in hem de anahtar kelime aramasının kelimeyi tanımasını engeller. pdfplumber aynı sayfalarda temiz metin veriyor.",
   "hipotez": "Daha temiz metin, sorgu ile ilgili parça arasındaki benzerliği artırır; MRR@10 artar.",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "MRR@10 0,564 → 0,584 (+0,020, Wilcoxon p=0,72): anlamlı değil. Değişim iki yönlü: Hit@1 arttı (0,444 → 0,481) ama Hit@5 (0,741 → 0,667) ve bağlam isabeti (0,815 → 0,778) düştü; 9 sorunun sırası değişti (Y01 ve Y04 ilk 10'dan çıktı, K03 girdi). Sonuç: metin temizliği tek başına sabit boyutlu parçalamada belirgin bir getirme kazancı sağlamadı; hipotez desteklenmedi. pdfplumber'ın asıl katkısı yapısal parçalamayı (tablo okuma) mümkün kılmasıdır; EXP-002 buna dayanır."
+  "notlar": "MRR@10 0,564 → 0,584 (+0,020, Wilcoxon p=0,72): anlamlı değil. Değişim iki yönlü: Hit@1 arttı (0,444 → 0,481) ama Hit@5 (0,741 → 0,667) ve bağlam isabeti (0,815 → 0,778) düştü; 9 sorunun sırası değişti (Y01 ve Y04 ilk 10'dan çıktı, K03 girdi). Sonuç: metin temizliği tek başına sabit boyutlu parçalamada belirgin bir getirme kazancı sağlamadı; hipotez desteklenmedi. pdfplumber'ın asıl katkısı yapısal parçalamayı (tablo okuma) mümkün kılmasıdır; EXP-002 buna dayanır.",
+  "kisa_not": "Anlamlı fark yok; bazı sorular iyileşti, bazıları kötüleşti. Asıl faydası structural chunking'i mümkün kılması."
 }

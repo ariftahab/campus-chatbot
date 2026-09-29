@@ -1,6 +1,6 @@
 {
   "id": "EXP-012",
-  "baslik": "Takip: reranker varken hibrit → yalnız vektör (EXP-007 kararının sınanması)",
+  "baslik": "Kontrol: reranker + vector (BM25 yok)",
   "ust_deney": "EXP-008",
   "neden": "EXP-007'de hibrit aramanın MRR@10'a ölçülebilir katkısı olmadı ama reranker (EXP-008) hibrit aday listesinin üzerine eklendi. Reranker varken BM25'in gerekli olup olmadığı ölçülmemişti; bu deney EXP-008'den yalnız getirme yöntemini vektöre çevirir. BM25 kaldırılırsa sistem sadeleşir.",
   "hipotez": "Reranker'a giden 8 aday vektör aramasında da ilgili parçayı içerdiği için sonuç değişmez.",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "Reranker varken BM25'i kaldırmak hiçbir sorunun sırasını değiştirmedi (MRR@10 1,000). Gecikme farkı (~4,7 sn'ye karşı ~5,5 sn) reranker süresinin gürültüsü içinde kalıyor; BM25'in kendi maliyeti ihmal edilebilir düzeyde. Bu sette BM25'in katkısı ne tek başına (EXP-007) ne de reranker ile (EXP-012) gösterilebildi. Bu yapılandırma daha sade ve aynı sonucu veriyor. Üretimdeki hibrit yöntemin korunması bu veriyle desteklenmiyor; karar kullanıcıya bırakıldı."
+  "notlar": "Reranker varken BM25'i kaldırmak hiçbir sorunun sırasını değiştirmedi (MRR@10 1,000). Gecikme farkı (~4,7 sn'ye karşı ~5,5 sn) reranker süresinin gürültüsü içinde kalıyor; BM25'in kendi maliyeti ihmal edilebilir düzeyde. Bu sette BM25'in katkısı ne tek başına (EXP-007) ne de reranker ile (EXP-012) gösterilebildi. Bu yapılandırma daha sade ve aynı sonucu veriyor. Üretimdeki hibrit yöntemin korunması bu veriyle desteklenmiyor; karar kullanıcıya bırakıldı.",
+  "kisa_not": "Değişmedi: BM25'in katkısı reranker ile de gösterilemedi."
 }

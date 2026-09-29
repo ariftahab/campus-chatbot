@@ -1,6 +1,6 @@
 {
   "id": "EXP-011",
-  "baslik": "Takip: bge-m3 ile normalizasyon kapalı (EXP-003 kararının sınanması)",
+  "baslik": "Kontrol: bge-m3 + normalize kapalı",
   "ust_deney": "EXP-004",
   "neden": "EXP-003'te normalizasyon MiniLM'de MRR@10'u düşürdü (p=0,061) ama zincirde açık bırakıldı, çünkü bge-m3 kosinüs benzerliğiyle kullanılmak üzere tasarlanmış. Bu karar bge-m3 için ölçülmemişti; bu deney EXP-004'ten yalnız normalizasyonu kapatarak kararın bge-m3 için doğru olup olmadığını sınar.",
   "hipotez": "bge-m3 normalize vektörlerle eğitildiği için normalizasyonu kapatmak sıralamayı değiştirmez ya da kötüleştirir.",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "Sıralama hiçbir soruda değişmedi. Nedeni ölçüldü: bge-m3'ün sentence-transformers yapılandırmasında (modules.json) çıkışta zaten bir Normalize katmanı var; MiniLM'de yok. Yani normalize_embeddings parametresi bge-m3 için etkisiz, EXP-003'teki kararın bge-m3 zincirine bir etkisi olmadı. Bulgu: normalizasyonun etkisi modele bağlı ve yalnız MiniLM'de (olumsuz yönde) görüldü."
+  "notlar": "Sıralama hiçbir soruda değişmedi. Nedeni ölçüldü: bge-m3'ün sentence-transformers yapılandırmasında (modules.json) çıkışta zaten bir Normalize katmanı var; MiniLM'de yok. Yani normalize_embeddings parametresi bge-m3 için etkisiz, EXP-003'teki kararın bge-m3 zincirine bir etkisi olmadı. Bulgu: normalizasyonun etkisi modele bağlı ve yalnız MiniLM'de (olumsuz yönde) görüldü.",
+  "kisa_not": "Değişmedi: bge-m3 zaten kendi içinde normalize ediyor, parametre etkisiz."
 }

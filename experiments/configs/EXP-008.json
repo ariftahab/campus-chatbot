@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "Bütün sorularda ilgili parça 1. sırada (MRR@10 = Hit@1 = 1,000). Fark +0,062 ama p=0,10: anlamlı değil, çünkü yalnız 3 soru değişebilirdi (T01, K04, Y02; üçü de iyileşti, kötüleşen yok). Tavan etkisi: set bu yapılandırmalar için artık ayırt edici değil; daha zor ve daha çok soru gerekiyor. Bedeli çok büyük: getirme gecikmesi ~78 ms → ~4,7 sn (CPU, yaklaşık 60 kat)."
+  "notlar": "Bütün sorularda ilgili parça 1. sırada (MRR@10 = Hit@1 = 1,000). Fark +0,062 ama p=0,10: anlamlı değil, çünkü yalnız 3 soru değişebilirdi (T01, K04, Y02; üçü de iyileşti, kötüleşen yok). Tavan etkisi: set bu yapılandırmalar için artık ayırt edici değil; daha zor ve daha çok soru gerekiyor. Bedeli çok büyük: getirme gecikmesi ~78 ms → ~4,7 sn (CPU, yaklaşık 60 kat).",
+  "kisa_not": "Tüm sorularda doğru chunk 1. sırada ama anlamlı değil (ceiling effect). Latency ~60 kat arttı."
 }

@@ -1,6 +1,6 @@
 {
   "id": "EXP-000",
-  "baslik": "İlk prototip (referans)",
+  "baslik": "Baseline (prototip)",
   "ust_deney": null,
   "neden": "İlk çalışan sistem (main dalındaki prototip-chat.py) sonraki tüm deneylerin karşılaştırma noktasıdır. PyPDFLoader (pypdf) ile sayfa metni, RecursiveCharacterTextSplitter 1000/200, paraphrase-multilingual-MiniLM-L12-v2 embedding (normalize edilmemiş, FAISS L2), yalnız vektör araması, ilk 10 parça LLM'e, Gemini 2.5 Flash sıcaklık 0,3, prototipin prompt'u birebir. `vector_k`, `bm25_k`, `rrf_k`, `reranker_max_length`, `rerank_candidates` bu yapılandırmada etkisizdir; sonraki deneylerle aynı değerde sabit tutulur.",
   "hipotez": "Referans ölçüm; hipotez yok.",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "27 sorudan 5'inde (T07, K03, K07, K08, Y03) ilgili parça ilk 10'da yok; bu sorularda LLM'e cevabı içeren metin hiç ulaşmıyor (bağlam isabeti 0,815). Kanıtların hepsi en az bir parçada mevcut, yani kayıplar parçalamanın cevabı bölmesinden değil sıralamadan kaynaklanıyor. Önceki (madde numarasına dayalı) ölçüt prototipin bu zayıflığını gösteremiyordu."
+  "notlar": "27 sorudan 5'inde (T07, K03, K07, K08, Y03) ilgili parça ilk 10'da yok; bu sorularda LLM'e cevabı içeren metin hiç ulaşmıyor (bağlam isabeti 0,815). Kanıtların hepsi en az bir parçada mevcut, yani kayıplar parçalamanın cevabı bölmesinden değil sıralamadan kaynaklanıyor. Önceki (madde numarasına dayalı) ölçüt prototipin bu zayıflığını gösteremiyordu.",
+  "kisa_not": "27 sorunun 5'inde doğru chunk ilk 10'da yok; MiniLM chunk'ların ortalama %64'ünü görüyor (128 token sınırı)."
 }

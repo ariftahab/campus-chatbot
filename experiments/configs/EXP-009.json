@@ -1,6 +1,6 @@
 {
   "id": "EXP-009",
-  "baslik": "LLM'e giden parça sayısı: 10 → 5",
+  "baslik": "final_k: 10 → 5",
   "ust_deney": "EXP-008",
   "neden": "Reranker'dan sonra ilgili parça büyük olasılıkla ilk sıralarda; 10 parça göndermek gereksiz bağlam, daha yüksek token maliyeti ve LLM'in ilgisiz metinle dikkatinin dağılması riski demek. Sıralama metrikleri bu değişiklikten etkilenmez; ölçülmek istenen bağlam uzunluğu ve bağlam isabeti.",
   "hipotez": "Bağlam uzunluğu belirgin azalır; bağlam isabeti korunur.",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "Bağlam uzunluğu 10.678 → 5.448 karakter (−%49, Wilcoxon p<0,001); bağlam isabeti 1,000'de kaldı. Hipotez doğrulandı. Gecikmedeki 4.724 → 5.340 ms farkı ölçüm gürültüsüdür, çünkü final_k getirme hesaplamasını değiştirmez (bkz. EXP-006 notu)."
+  "notlar": "Bağlam uzunluğu 10.678 → 5.448 karakter (−%49, Wilcoxon p<0,001); bağlam isabeti 1,000'de kaldı. Hipotez doğrulandı. Gecikmedeki 4.724 → 5.340 ms farkı ölçüm gürültüsüdür, çünkü final_k getirme hesaplamasını değiştirmez (bkz. EXP-006 notu).",
+  "kisa_not": "Context %49 kısaldı, context hit 1,00'da kaldı."
 }

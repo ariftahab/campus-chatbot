@@ -1,6 +1,6 @@
 {
   "id": "EXP-006",
-  "baslik": "Yapısal bölmede overlap: 200 → 150 karakter",
+  "baslik": "chunk_overlap: 200 → 150",
   "ust_deney": "EXP-005",
   "neden": "Overlap yalnız eşiği aşan maddeler bölünürken kullanılır; bölünmeler fıkra sınırlarından yapıldığı için büyük bir overlap'e gerek olmadığı düşünüldü. Amaç tekrar eden metni azaltmak.",
   "hipotez": "Bölmeler fıkra sınırından yapıldığı için overlap'in sıralamaya etkisi olmaz.",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "Beklendiği gibi hiçbir sorunun sırası değişmedi; parça sayısı 74 → 73. Gecikmedeki 79 → 73 ms düşüş (Wilcoxon p=0,006) hesaplamadaki bir değişiklikten değil ölçüm gürültüsünden kaynaklanıyor, çünkü overlap getirme hesaplamasını etkilemez. Bu, gecikme için yapılan anlamlılık testlerinin aynı hesaplamaya sahip yapılandırmalar arasında yanıltıcı olabileceğini gösteriyor. Gecikme farkları yalnız büyüklük mertebesi olarak (ör. ms'ye karşı saniye) yorumlanmalıdır."
+  "notlar": "Beklendiği gibi hiçbir sorunun sırası değişmedi; parça sayısı 74 → 73. Gecikmedeki 79 → 73 ms düşüş (Wilcoxon p=0,006) hesaplamadaki bir değişiklikten değil ölçüm gürültüsünden kaynaklanıyor, çünkü overlap getirme hesaplamasını etkilemez. Bu, gecikme için yapılan anlamlılık testlerinin aynı hesaplamaya sahip yapılandırmalar arasında yanıltıcı olabileceğini gösteriyor. Gecikme farkları yalnız büyüklük mertebesi olarak (ör. ms'ye karşı saniye) yorumlanmalıdır.",
+  "kisa_not": "Beklendiği gibi ranking değişmedi."
 }

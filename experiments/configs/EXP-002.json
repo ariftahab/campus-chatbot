@@ -1,6 +1,6 @@
 {
   "id": "EXP-002",
-  "baslik": "Parçalama: sabit boyut → yapısal (madde / takvim tablosu)",
+  "baslik": "Chunking: recursive → structural",
   "ust_deney": "EXP-001",
   "neden": "Sabit 1000 karakterlik bölme, maddeleri ortasından keser ve bir parçaya birden fazla konunun parçalarını koyar; takvimde tarih ile etkinlik farklı parçalara düşebilir. Yapısal parçalamada her yönetmelik maddesi (başlığıyla) bir parçadır, eşiği aşan maddeler fıkra sınırlarından bölünür ve her parçaya \"Belge - Madde N (başlık)\" eklenir; takvimde her tablo (ör. Bahar Yarıyılı) bir parçadır. Bu deneyde eşik ve overlap prototipteki gibi 1000/200 bırakıldı.",
   "hipotez": "Parçalar tek bir konuya odaklandığı için ilgili parça daha üst sıraya çıkar; MRR@10 artar.",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v1_prototip"
   },
-  "notlar": "MRR@10 0,584 → 0,716 (+0,132, p=0,22) anlamlı değil; ancak bağlam isabeti 0,778 → 1,000 ile anlamlı arttı (McNemar p=0,031). LLM'e giden 10 parçada artık her sorunun cevabı var; ilk 10'da bulunamayan soru sayısı 6'dan 0'a indi. Bazı sorular geriledi (K01 1→7, K04 1→8, K05 1→4). Olası açıklama: bu sorularda madde parçaları uzun ve MiniLM'nin 128 token sınırı parçanın sonunu görmüyor. Bu sorular EXP-004'te (bge-m3) düzeliyor, bu da açıklamayı destekliyor. Parça sayısı 68 → 90."
+  "notlar": "MRR@10 0,584 → 0,716 (+0,132, p=0,22) anlamlı değil; ancak bağlam isabeti 0,778 → 1,000 ile anlamlı arttı (McNemar p=0,031). LLM'e giden 10 parçada artık her sorunun cevabı var; ilk 10'da bulunamayan soru sayısı 6'dan 0'a indi. Bazı sorular geriledi (K01 1→7, K04 1→8, K05 1→4). Olası açıklama: bu sorularda madde parçaları uzun ve MiniLM'nin 128 token sınırı parçanın sonunu görmüyor. Bu sorular EXP-004'te (bge-m3) düzeliyor, bu da açıklamayı destekliyor. Parça sayısı 68 → 90.",
+  "kisa_not": "Context hit 0,78 → 1,00 (anlamlı): doğru chunk artık her soruda LLM'e ulaşıyor."
 }

@@ -1,6 +1,6 @@
 {
   "id": "EXP-010",
-  "baslik": "Prompt: prototip → kaynaklı system prompt (v2)",
+  "baslik": "Prompt: v1 → v2 (system prompt + citation)",
   "ust_deney": "EXP-009",
   "neden": "Prototip prompt'u tüm talimatı ve bağlamı tek bir kullanıcı mesajına koyuyordu, parçaların hangi belgeden geldiği LLM'e söylenmiyordu. v2: talimatlar system mesajında; her parça \"[Belge, Madde N, s. X]\" etiketiyle veriliyor; kaynak gösterimi zorunlu; kapsam/istisna notlarının belirtilmesi ve bugünün tarihi ekli; konuşma geçmişi destekleniyor. Getirme metrikleri değişmez; etki yalnız cevap değerlendirmesiyle (--llm) ölçülebilir.",
   "hipotez": "Cevap doğruluğu artar (özellikle kapsam dışı ve istisna içeren sorularda).",
@@ -25,5 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v2_kaynakli"
   },
-  "notlar": "Getirme metrikleri beklendiği gibi EXP-009 ile aynı. Birincil metrik (cevap doğruluğu) henüz ölçülmedi. Gemini ücretsiz kotası günde 20 istek; karşılaştırma için hem EXP-009 hem EXP-010'un `--llm` ile koşulması gerekiyor (her biri 30 istek). Hipotez beklemede."
+  "notlar": "Getirme metrikleri beklendiği gibi EXP-009 ile aynı. Birincil metrik (cevap doğruluğu) henüz ölçülmedi. Gemini ücretsiz kotası günde 20 istek; karşılaştırma için hem EXP-009 hem EXP-010'un `--llm` ile koşulması gerekiyor (her biri 30 istek). Hipotez beklemede.",
+  "kisa_not": "Answer accuracy henüz ölçülmedi (Gemini günlük kotası)."
 }
