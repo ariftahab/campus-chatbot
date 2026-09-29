@@ -30,13 +30,11 @@ def _load(folder):
 def _fmt(value, metric=None):
     if value is None:
         return "–"
-    if isinstance(value, bool) or value is None:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
         return str(value)
     if metric in ("context_chars", "latency_ms", "latency_ms_median"):
         return f"{value:,.0f}".replace(",", ".")
-    if isinstance(value, float):
-        return f"{value:.3f}".replace(".", ",")
-    return str(value)
+    return f"{float(value):.3f}".replace(".", ",")  # ortalaması tam 1 olan metrikler de 1,000 görünsün
 
 
 def _fmt_delta(value, metric):
