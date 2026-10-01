@@ -25,6 +25,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v2_kaynakli"
   },
-  "notlar": "",
-  "kisa_not": ""
+  "notlar": "Getirme metrikleri beklendiği gibi EXP-010 ile aynı (MRR@10 1,000, Hit@1 1,000, bağlam isabeti 1,000); LLM değişikliği retrieval'ı etkilemez. Model API listesinde doğrulandı, tek istekli smoke test başarılı. Birincil metrik (answer_acc) henüz ölçülmedi: EXP-010 ve EXP-013'ün --llm ile koşulması gerekiyor. Hipotez beklemede.",
+  "kisa_not": "Retrieval aynı; answer_acc henüz ölçülmedi."
 }

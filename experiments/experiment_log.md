@@ -1,10 +1,10 @@
 # Experiment Log
 
-> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-010**. Ayrıntılar: `experiments/results/EXP-*.json`.
+> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-013**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
 **Dataset:** `eval/sorular.json` v2.0 — 27 cevaplı soru (+3 kapsam dışı). Bir chunk, kaynakta birebir geçen evidence cümlesini içeriyorsa relevant sayılır.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
-**Sabit parametreler:** `vector_k=15`, `bm25_k=15`, `rrf_k=60`, `reranker_max_length=512`, `rerank_candidates=8`, `llm_model=gemini-2.5-flash`, `llm_temperature=0.3`
+**Sabit parametreler:** `vector_k=15`, `bm25_k=15`, `rrf_k=60`, `reranker_max_length=512`, `rerank_candidates=8`, `llm_temperature=0.3`
 
 ## 1. Setup (hyperparameters)
 
@@ -25,6 +25,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-010 | EXP-009 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v2** | 73 |
 | EXP-011 | EXP-004 | pdfplumber | structural | 1000 | 200 | bge-m3 | **✗** | vector | – | 10 | v1 | 90 |
 | EXP-012 | EXP-008 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 10 | v1 | 73 |
+| EXP-013 | EXP-010 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 73 |
 
 ## 2. Results
 
@@ -43,6 +44,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-010 | Prompt: v1 → v2 (system prompt + citation) | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.4 s | answer acc.: ölçülmedi | beklemede |
 | EXP-011 | Kontrol: bge-m3 + normalize kapalı | 0.920 | 0.852 | 1.000 | 1.000 | 8708 | 90 ms | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
 | EXP-012 | Kontrol: reranker + vector (BM25 yok) | 1.000 | 1.000 | 1.000 | 1.000 | 10793 | 5.5 s | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
+| EXP-013 | LLM: gemini-2.5-flash → gemini-3.1-flash-lite | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.4 s | answer acc.: ölçülmedi | beklemede |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -61,3 +63,4 @@ Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı deği
 - **EXP-010:** Answer accuracy henüz ölçülmedi (Gemini günlük kotası).
 - **EXP-011:** Değişmedi: bge-m3 zaten kendi içinde normalize ediyor, parametre etkisiz.
 - **EXP-012:** Değişmedi: BM25'in katkısı reranker ile de gösterilemedi.
+- **EXP-013:** Retrieval aynı; answer_acc henüz ölçülmedi.
