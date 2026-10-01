@@ -87,6 +87,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 ## Notlar
 - LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. Ücretsiz kota günde 20 istek (gemini-2.5-flash);
   `--llm` değerlendirmesi 30 istek sürer, günlere bölünmesi gerekebilir.
-- Donanım yalnız CPU; reranker sorgu başına birkaç saniye ekler.
+- Donanım: NVIDIA RTX 4050 Laptop (6 GB). torch CUDA build'i (`2.9.0+cu128`) kurulu; embedding ve reranker GPU'da
+  çalışır. 2026-10-01'e kadar CPU build kuruluydu: EXP-000..013 CPU ile koşuldu, `latency_ms` karşılaştırılamaz.
+  GPU, CPU ile birebir aynı sıralamayı veriyor (EXP-013 ile 27/27 soru doğrulandı).
 - `langchain-core` 1.0.4'e sabit; yükseltme diğer langchain paketleriyle uyumu bozabilir.
 - Eski tek dosyalık prototip `main` dalında ve `yedek-oncesi` etiketinde (`prototip-chat.py`); EXP-000 onu yeniden üretir.
