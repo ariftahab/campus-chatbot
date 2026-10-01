@@ -14,7 +14,9 @@
 | 6 | `device` parametresi, deneylerin yeniden numaralandırılması | EXP-014 = GPU, EXP-015 = corpus | `a0f687f` |
 | 7 | EXP-014 koşuldu (CPU → GPU) | Latency 5,4 sn → 0,37 sn, sıralama birebir aynı | `fbf0177` |
 | 8 | EXP-015 koşuldu (3 → 139 belge) | MRR@10 1,00 → 0,86 | `4607190` |
-| 9 | Regex genişletme + fallback kodu yazıldı | **Commit edilmedi, deney koşulmadı** (aşağıda) | — |
+| 9 | Regex genişletme + fallback kodu, corpus v3 (kopyasız) | Kod commit edildi | `a899135` |
+| 10 | EXP-016 koşuldu (regex genişletme) | Retrieval değişmedi (beklenen) | `4bd87f6` |
+| 11 | Onay kuralı CLAUDE.md'ye yazıldı | Her deneyden önce gerekçe + onay | `91d70f2` |
 
 ---
 
@@ -111,7 +113,7 @@ Eski EXP-014'ün henüz sonucu yoktu, yani bir sonuç değiştirilmiş olmadı.
 4. **Reranker penceresi dar:** Bir soruda (T01) ilgili chunk RRF'te 9. sıradaydı. Reranker'a yalnız ilk 8 aday gittiği için onu hiç göremedi.
 5. **Değerlendirme seti eksik etiketliyor:** Değerlendirme yalnız sorunun "kaynak" belgesini doğru sayıyor. K08'de ("Öğretim dili nedir?") öne geçen chunk "Üniversitenin eğitim-öğretim dili Türkçedir" diyor; bu doğru bir cevap, sadece başka bir yönetmelikte geçiyor. K04 (diploma kaybı) de benzer. Yani 6 kötüleşmenin **2'si gerçek hata değil**, eksik etiket (false negative).
 
-## 7. Yarım kalan iş (commit edilmedi)
+## 7. Regex genişletme ve fallback kodu (commit `a899135`)
 
 `ingest.py` ve `config.py`'de şu değişiklikler duruyor (`git status`'ta `M` olarak görünüyor):
 
@@ -126,7 +128,29 @@ Eski EXP-014'ün henüz sonucu yoktu, yani bir sonuç değiştirilmiş olmadı.
 - **`structural_v3`:** v2'nin üstüne iyileştirilmiş fallback. Madde yapısı olmayan belge sayfa sayfa değil, bütün olarak bölünüyor; böylece sayfa sonunda cümle yarım kalmıyor.
 - Eski `structural` yolu aynen korunuyor.
 
-Bunlar için henüz deney config'i yazılmadı ve hiçbir şey koşulmadı. Bir sonraki adımda birlikte karar vereceğiz.
+Doğrulama: eski `structural` yolu EXP-014 ve EXP-015 index'leriyle birebir aynı chunk'ları üretiyor.
+Fallback iyileştirmesinin (v3) etkisi regex'ten sonra çok küçük kaldı: sadece 2 belge, 14 → 10 chunk.
+
+### Ek kopyalar ve corpus v3
+Chunk sayıları aynı olan belgelere bakınca **8 kopya çifti** daha bulundu (metin benzerliği %94-100). Hash'leri farklı olduğu
+için ilk taramada görünmemişlerdi. Dosyalar silinmedi; `corpus: v3` = v2 eksi bu 8 kopya (131 belge, `data/corpus_v3.txt`).
+v3 deneyi değerlendirme seti v2'den sonra yapılacak.
+
+## 7b. EXP-016: regex genişletme (eski sorularla)
+
+| Metrik | EXP-015 | EXP-016 |
+|---|---|---|
+| MRR@10 | 0,863 | 0,863 |
+| Hit@1 | 0,778 | 0,778 |
+| Değişen soru | — | 0 |
+
+- **Neden değişmedi:** Soruların 3 kaynak belgesi bu değişiklikten hiç etkilenmiyor; değişen 16 belgenin hepsi distractor.
+  "Regex işe yaramadı" demek **değil**, "bu soru setiyle ölçülemiyor" demek. Faydası v2 setiyle ölçülecek.
+- **Latency artefaktı:** Sonuçta 407 → 2220 ms görünüyor ama bu ölçüm hatası. İki model 4,4 GB VRAM kullanıyor (kart 6 GB);
+  index'i kuran aynı süreçte retrieval ölçülünce VRAM doluyor ve Windows belleği sistem RAM'ine taşıyor.
+  Ayrı süreçte ölçünce ~400 ms çıkıyor.
+- **Ek bilgi:** Index fingerprint'i `ingest.py`'nin kaynak kodunu da içeriyor. Bu yüzden `ingest.py` her değiştiğinde
+  (eski yollar aynı kalsa bile) tüm index'ler yeniden kuruluyor.
 
 ## 8. Karar bekleyen konular
 
