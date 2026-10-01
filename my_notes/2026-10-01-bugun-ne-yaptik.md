@@ -218,3 +218,34 @@ Etkisi ayrı bir deneyle ölçülecek (LLM kotası harcar).
   Aynı bilgiyi başka kelimelerle veren chunk'ları yakalayamıyor. Gerçek performans ölçülenden biraz daha iyi.
 - **Bozuk okunan bir PDF var.** `lisansüstü eğitim öğretim.pdf` çok sütunlu ve metni karışık okunuyor;
   reranker bu chunk'ı bir soruda 1. sıraya koydu.
+
+---
+
+## 10. Gece: prompt deneyi ve kopyasız corpus
+
+| Deney | Ne değişti | Sonuç |
+|---|---|---|
+| EXP-017 (tamamlandı) | Baseline'ın LLM cevapları da ölçüldü | Cevap doğruluğu **0,896** (77 soru) |
+| EXP-018 | Prompt v2 → v3_kapsam | 0,896 → 0,883, anlamlı değil |
+| EXP-019 | Kopya belgeler çıkarıldı (139 → 131) | MRR aynı (0,852); context'teki kopya tekrarı **31 → 0** |
+
+**Prompt deneyi neden "doğrulanmadı" çıktı?** Değişen 3 sorudan yalnız biri prompt'un etkisiydi ve o bir iyileşmeydi.
+"Açık öğretimden örgün öğretime yatay geçiş için not ortalaması kaç olmalı?" sorusunda v3, BAİBÜ yönergesine göre 80 ile
+YÖK yönetmeliğine göre 90'ı ayrı ayrı verdi. Diğer ikisinden biri anahtar kelime eşleşmesi hatası ("iade edilmemektedir"
+cevabında "edilmez" aranıyor), diğeri Gemini'nin boş döndürdüğü cevap.
+
+**Kopyasız corpus'ta ortalama neden değişmedi ama iki soru neden çok değişti?** Doğru chunk RRF listesinde 8-10. sırada,
+yani reranker'ın baktığı ilk 8 adayın tam sınırında duruyordu. Kopyalar çıkınca liste bir-iki sıra kaydı:
+- "Güz yarıyılında dersler ne zaman başlıyor?" → pencereye girdi → 9. sıradan **1.'ye** çıktı.
+- "Yatay geçiş hangi dönemlerde yapılamaz?" → pencereden çıktı → 1. sıradan **10.'ya** düştü.
+
+### Açık konular (sonraki oturum)
+1. **Reranker penceresini büyütmek** (`rerank_candidates` 8 → 15 gibi): iki deneyde darboğaz olarak göründü, GPU'da ucuz.
+2. **Öğrenci dili** sorunu (MRR 0,75): çözüm seçenekleri (sorguyu yeniden yazma, eşanlamlı genişletme...) konuşulacak.
+3. **Cevap değerlendirmesi:** anahtar kelime yöntemi bazı doğru cevapları yanlış sayıyor. LLM-as-judge düşünülebilir.
+   Boş cevap da ayrıca işaretlenmeli.
+4. **Bozuk okunan PDF:** `lisansüstü eğitim öğretim.pdf` çok sütunlu, pdfplumber metni karıştırıyor.
+5. **Üretim yapılandırması:** chat hâlâ EXP-014'ü kullanıyor (3 belge). 131 belgeli kopyasız corpus'a (EXP-019 ayarları)
+   ve hangi prompt'a geçileceğine birlikte karar verilecek.
+
+Bugünün öğrenilecek kavramları: `learning_log/2026-10-01.md`.
