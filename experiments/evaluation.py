@@ -166,7 +166,9 @@ def environment(cfg):
         "platform": platform.platform(),
         "cpu": platform.processor(),
         "cpu_count": os.cpu_count(),
-        "torch_device": "cuda" if torch.cuda.is_available() else "cpu",
+        "torch_device": cfg.device,  # kullanılan cihaz (config'den); CUDA'nın var olması kullanıldığı anlamına gelmez
+        "torch_version": torch.__version__,
+        "gpu": torch.cuda.get_device_name(0) if cfg.device == "cuda" else None,
         "packages": {p: _version(p) for p in KEY_PACKAGES},
         "model_revisions": {
             "embedding": model_revision(cfg.embedding_model),

@@ -15,7 +15,7 @@ LOG_FILE = config.EXPERIMENTS_DIR / "experiment_log.md"
 
 # Setup tablosunda gösterilen hyperparameter'lar (kısa ad -> RagConfig alanı)
 SETUP_COLUMNS = [
-    ("corpus", "corpus"), ("parser", "pdf_parser"), ("chunking", "chunking"), ("chunk_size", "chunk_size"),
+    ("corpus", "corpus"), ("device", "device"), ("parser", "pdf_parser"), ("chunking", "chunking"), ("chunk_size", "chunk_size"),
     ("overlap", "chunk_overlap"), ("embedding", "embedding_model"), ("normalize", "normalize_embeddings"),
     ("retrieval", "retrieval"), ("reranker", "reranker_model"), ("final_k", "final_k"), ("prompt", "prompt_version"),
     ("llm", "llm_model"),

@@ -232,6 +232,7 @@ def load_documents(cfg):
 def get_embeddings(cfg):
     return HuggingFaceEmbeddings(
         model_name=cfg.embedding_model,
+        model_kwargs={"device": cfg.device},
         encode_kwargs={"normalize_embeddings": cfg.normalize_embeddings},
     )
 

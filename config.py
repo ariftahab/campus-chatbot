@@ -55,7 +55,7 @@ def corpus_paths(name):
 
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
-PARAM_DEFAULTS = {"corpus": "v1"}
+PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu"}
 
 
 def full_params(params):
@@ -71,6 +71,7 @@ NO_ANSWER = "Bu konuda bilgim yok."
 class RagConfig:
     # Belge işleme
     corpus: str                # CORPORA anahtarı: hangi belgeler indekslenir
+    device: str                # "cpu" | "cuda": embedding ve reranker'ın çalıştığı donanım
     pdf_parser: str            # "pypdf" | "pdfplumber"
     chunking: str              # "recursive" (sabit boyut) | "structural" (madde / takvim tablosu)
     chunk_size: int            # recursive: parça boyutu; structural: bu boyutu aşan madde bölünür (karakter)
@@ -93,7 +94,7 @@ class RagConfig:
     prompt_version: str        # rag.PROMPTS anahtarı
 
     # İndeksi (parçaları ve embedding'leri) etkileyen parametreler
-    INDEX_FIELDS = ("corpus", "pdf_parser", "chunking", "chunk_size", "chunk_overlap",
+    INDEX_FIELDS = ("corpus", "device", "pdf_parser", "chunking", "chunk_size", "chunk_overlap",
                     "embedding_model", "normalize_embeddings")
 
     @classmethod
@@ -105,6 +106,8 @@ class RagConfig:
         if unknown or missing:
             raise ValueError(f"Geçersiz parametreler. Bilinmeyen: {sorted(unknown)}, eksik: {sorted(missing)}")
         cfg = cls(**params)
+        if cfg.device not in ("cpu", "cuda"):
+            raise ValueError(f"Bilinmeyen device: {cfg.device}")
         if cfg.corpus not in CORPORA:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
         if cfg.chunking == "structural" and cfg.pdf_parser != "pdfplumber":

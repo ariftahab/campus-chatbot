@@ -47,7 +47,7 @@ class Retriever:
         self.reranker = None
         if cfg.reranker_model:
             from sentence_transformers import CrossEncoder
-            self.reranker = CrossEncoder(cfg.reranker_model, max_length=cfg.reranker_max_length)
+            self.reranker = CrossEncoder(cfg.reranker_model, max_length=cfg.reranker_max_length, device=cfg.device)
 
     def _vector_ids(self, query, k):
         return [d.metadata["chunk_id"] for d in self.store.similarity_search(query, k=k)]
