@@ -11,7 +11,8 @@ mimariyi gerçekten anlaması gerekiyor. Yapılan işi sadece özetleme, arkası
 önce neyi değiştireceğini, neden, alternatifleri ve beklenen etkisini açıkla ve **onay bekle**. Küçük ve mekanik
 değişikliklerde (yazım, biçim, küçük düzeltme) doğrudan ilerlenebilir.
 
-**Her önemli görev tamamlandıktan sonra** sohbette şu 13 bölümü yaz:
+**Yalnız kullanıcı açıkça istediğinde** ("10 maddelik şeyi yaz" vb.) sohbette şu 13 bölümü yaz. Her görevden sonra
+otomatik yazılmaz; normalde kısa ve öğretici bir açıklama yeterli:
 1. TASK — benden ne istendi
 2. PROBLEM — hangi problem çözülüyordu
 3. CURRENT ARCHITECTURE — değişiklik sistemin hangi kısmını etkiliyor
@@ -70,7 +71,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Windows'ta Türkçe çıktı için `PYTHONIOENCODING=utf-8` gerekebilir.
 
 ## Mimari
-- `config.py` — yollar, `DOCUMENTS` (belge başlık/tür), `RagConfig` (tüm RAG parametreleri), `PRODUCTION_EXPERIMENT`.
+- `config.py` — yollar, `CORPORA` (belge kümeleri: v1 = 3 belge, v2 = `data/corpus_v2.txt`'deki 139 belge),
+  `DOCUMENTS` (belge başlık/tür), `RagConfig` (tüm RAG parametreleri), `PRODUCTION_EXPERIMENT`.
 - `ingest.py` — `pdf_parser` (pypdf | pdfplumber) ve `chunking` (recursive | structural). Structural: mevzuat madde madde
   ("Madde N-"), eşiği aşan maddeler fıkra sınırından bölünür; takvimde her tablo bir parça. İndeks
   `vectorstore/<parmak izi>/` altında (PDF'ler + indeks parametreleri + ingest.py kaynağı); yoksa otomatik kurulur.
