@@ -71,9 +71,9 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Windows'ta Türkçe çıktı için `PYTHONIOENCODING=utf-8` gerekebilir.
 
 ## Mimari
-- `config.py` — yollar, `CORPORA` (belge kümeleri: v1 = 3 belge, v2 = `data/corpus_v2.txt`'deki 139 belge),
+- `config.py` — yollar, `CORPORA` (belge kümeleri: v1 = 3 belge, v2 = `data/corpus_v2.txt`'deki 139 belge, v3 = v2 eksi 8 kopya, 131 belge),
   `DOCUMENTS` (belge başlık/tür), `RagConfig` (tüm RAG parametreleri), `PRODUCTION_EXPERIMENT`.
-- `ingest.py` — `pdf_parser` (pypdf | pdfplumber) ve `chunking` (recursive | structural). Structural: mevzuat madde madde
+- `ingest.py` — `pdf_parser` (pypdf | pdfplumber) ve `chunking` (recursive | structural | structural_v2: genişletilmiş madde regex'i | structural_v3: + belge bütünü fallback). Structural: mevzuat madde madde
   ("Madde N-"), eşiği aşan maddeler fıkra sınırından bölünür; takvimde her tablo bir parça. İndeks
   `vectorstore/<parmak izi>/` altında (PDF'ler + indeks parametreleri + ingest.py kaynağı); yoksa otomatik kurulur.
 - `rag.py` — `Retriever.rank()`: vector | bm25 | hybrid (RRF) + isteğe bağlı cross-encoder reranker. `PROMPTS` sürümleri.

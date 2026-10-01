@@ -39,6 +39,10 @@ DOCUMENTS = {
 CORPORA = {
     "v1": ["akademik-takvim.pdf", "ogrenci-kayıt-yonerge.pdf", "yatay-gecis-yonergesi.pdf"],
     "v2": DATA_DIR / "corpus_v2.txt",
+    # v3: v2'den içeriği neredeyse aynı 8 kopya çıkarıldı (131 belge). Kopyalar farklı kaynaklardan
+    # indirilmiş aynı yönergeler; dosya byte'ları farklı olduğu için hash kontrolünde görünmediler,
+    # metin benzerliğiyle (%94-100) bulundu. Her çiftte metni temiz okunan / adı açıklayıcı olan kaldı.
+    "v3": DATA_DIR / "corpus_v3.txt",
 }
 
 
@@ -74,6 +78,7 @@ class RagConfig:
     device: str                # "cpu" | "cuda": embedding ve reranker'ın çalıştığı donanım
     pdf_parser: str            # "pypdf" | "pdfplumber"
     chunking: str              # "recursive" (sabit boyut) | "structural" (madde / takvim tablosu)
+                               # | "structural_v2" (genişletilmiş madde deseni) | "structural_v3" (+ belge bütünü fallback)
     chunk_size: int            # recursive: parça boyutu; structural: bu boyutu aşan madde bölünür (karakter)
     chunk_overlap: int         # karakter
     # Embedding
@@ -110,7 +115,7 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen device: {cfg.device}")
         if cfg.corpus not in CORPORA:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
-        if cfg.chunking == "structural" and cfg.pdf_parser != "pdfplumber":
+        if cfg.chunking.startswith("structural") and cfg.pdf_parser != "pdfplumber":
             raise ValueError("structural parçalama pdfplumber gerektirir (takvim tabloları için).")
         return cfg
 

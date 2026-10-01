@@ -3,6 +3,7 @@
 Kullanım: python ingest.py [EXP-ID]   (varsayılan: config.PRODUCTION_EXPERIMENT)
 Sohbet ve deney betikleri, indeks yoksa bunu otomatik çağırır.
 """
+import bisect
 import hashlib
 import json
 import re
@@ -19,6 +20,16 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 import config
 
 ARTICLE_RE = re.compile(r"^(?:MADDE|Madde)\s*(\d+)\s*[-–]")
+# structural_v2: yeni eklenen belgelerdeki madde biçimleri de tanınır:
+#   "Madde 4.", "Madde 1:", "Madde–1:", "MADDE 7 (Değişik...)", "MADDE 17 − (1)" (Unicode eksi),
+#   "MADDE 17/A-" (ek madde), "MADDE1 2-" (PDF'te dipnot rakamı yapışmış), satırda tek başına "Madde 16",
+#   "Amaç Madde 1." (başlık aynı satırda; yalnız satır "Madde N." ile bitiyorsa).
+# Cümle içi atıflar ("Madde 5'te belirtilen", "Madde 12 kapsamında") bilerek eşleşmez.
+ARTICLE_RE_V2 = re.compile(
+    r"^(?:MADDE|Madde)\s*[-–—−]?\s*(?:\d\s+)?(\d+(?:/[A-Z])?)\s*(?:[-–—−.:]|\(|$)"
+    r"|^[A-ZÇĞİÖŞÜ][a-zçğıöşü]+(?:\s+[A-Za-zÇĞİÖŞÜçğıöşü]+){0,3}\s+(?:MADDE|Madde)\s*(\d+)\s*[.:]?\s*$")
+# chunking değeri -> madde başlangıcı deseni (structural_v3 = v2 deseni + iyileştirilmiş fallback)
+ARTICLE_PATTERNS = {"structural": ARTICLE_RE, "structural_v2": ARTICLE_RE_V2, "structural_v3": ARTICLE_RE_V2}
 SECTION_RE = re.compile(r"^\S+\s+BÖLÜM$")
 TERM_HEADINGS = {"GÜZ YARIYILI", "BAHAR YARIYILI", "YAZ ÖĞRETİMİ"}
 PAGE_FOOTER_RE = re.compile(r"^Sayfa:\s*\d+\s*/\s*\d+$")
@@ -42,12 +53,12 @@ def _read_lines(pdf):
     return lines
 
 
-def _is_title_line(line):
+def _is_title_line(line, article_re=ARTICLE_RE):
     """Madde başlığı mı? ("Amaç", "Kayıt dondurma" gibi kısa ve cümle sonu olmayan satır)"""
-    return len(line) <= 100 and not line.endswith((".", ",", ";", ":")) and not ARTICLE_RE.match(line)
+    return len(line) <= 100 and not line.endswith((".", ",", ";", ":")) and not article_re.match(line)
 
 
-def parse_regulation(path, title):
+def parse_regulation(path, title, article_re=ARTICLE_RE):
     """Yönetmelik/yönergeyi madde madde Document listesine çevirir."""
     with pdfplumber.open(path) as pdf:
         lines = _read_lines(pdf)
@@ -63,8 +74,8 @@ def parse_regulation(path, title):
     # Madde başlangıçları: üstünde başlık satırı varsa madde oradan başlar.
     starts = set()
     for i, (_, line) in enumerate(lines):
-        if ARTICLE_RE.match(line):
-            has_title = i > 0 and (i - 1) not in skip and _is_title_line(lines[i - 1][1])
+        if article_re.match(line):
+            has_title = i > 0 and (i - 1) not in skip and _is_title_line(lines[i - 1][1], article_re)
             starts.add(i - 1 if has_title else i)
 
     articles, current, section = [], None, ""
@@ -82,7 +93,8 @@ def parse_regulation(path, title):
     docs = []
     for a in articles:
         body = a["lines"]
-        article_line = next(l for l in body if ARTICLE_RE.match(l))
+        article_line = next(l for l in body if article_re.match(l))
+        number = next(g for g in article_re.match(article_line).groups() if g)
         docs.append(Document(
             page_content="\n".join(body),
             metadata={
@@ -90,7 +102,7 @@ def parse_regulation(path, title):
                 "title": title,
                 "kind": "mevzuat",
                 "page": a["page"],
-                "madde": int(ARTICLE_RE.match(article_line).group(1)),
+                "madde": int(number) if number.isdigit() else number,  # ek madde: "17/A"
                 "heading": body[0] if body[0] != article_line else "",
                 "section": a["section"],
             },
@@ -172,6 +184,31 @@ def split_structural(docs, cfg):
     return out
 
 
+def parse_general(path, title, cfg):
+    """Madde yapısı olmayan belge (structural_v3 fallback'i).
+
+    Eski fallback her sayfayı ayrı bölüyordu: sayfa sonunda yarım kalan cümle iki chunk'a ayrılıyor,
+    kısa sayfalar (ör. son sayfadaki iki satır) tek başına chunk oluyordu. Burada belge önce tek metin
+    olarak birleştirilir, sonra paragraf/satır/cümle sınırlarından bölünür; her chunk'ın sayfası
+    başladığı karakterin hangi sayfaya düştüğüne göre bulunur.
+    """
+    pages = read_pages(path, "pdfplumber")
+    starts, text = [], ""
+    for page_text in pages:
+        starts.append(len(text))
+        text += page_text.strip() + "\n"
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=cfg.chunk_size, chunk_overlap=cfg.chunk_overlap,
+        separators=["\n\n", "\n", ". ", " "], keep_separator="start", add_start_index=True,
+    )
+    docs = []
+    for part_no, d in enumerate(splitter.create_documents([text]), start=1):
+        page = bisect.bisect_right(starts, d.metadata["start_index"])  # 1'den başlar
+        docs.append(Document(page_content=d.page_content.strip(), metadata={
+            "source": path.name, "title": title, "kind": "genel", "page": page, "part": part_no}))
+    return docs
+
+
 def read_pages(path, parser):
     """Her sayfanın ham metnini döndürür. pypdf yolu ilk prototipteki PyPDFLoader'ın aynısıdır."""
     if parser == "pypdf":
@@ -196,16 +233,19 @@ def load_recursive(cfg):
 
 
 def load_structural(cfg):
+    article_re = ARTICLE_PATTERNS[cfg.chunking]
     docs = []
     for path in config.corpus_paths(cfg.corpus):
         title, kind = _doc_info(path)
         if kind is None:
             with pdfplumber.open(path) as pdf:
-                kind = "mevzuat" if any(ARTICLE_RE.match(l) for _, l in _read_lines(pdf)) else "genel"
+                kind = "mevzuat" if any(article_re.match(l) for _, l in _read_lines(pdf)) else "genel"
         if kind == "takvim":
             docs.extend(parse_calendar(path, title))
         elif kind == "mevzuat":
-            docs.extend(parse_regulation(path, title))
+            docs.extend(parse_regulation(path, title, article_re))
+        elif cfg.chunking == "structural_v3":
+            docs.extend(parse_general(path, title, cfg))
         else:
             for page_no, text in enumerate(read_pages(path, "pdfplumber"), start=1):
                 docs.append(Document(page_content=text, metadata={
@@ -216,7 +256,7 @@ def load_structural(cfg):
 def load_documents(cfg):
     if cfg.chunking == "recursive":
         chunks = load_recursive(cfg)
-    elif cfg.chunking == "structural":
+    elif cfg.chunking in ARTICLE_PATTERNS:
         chunks = load_structural(cfg)
     else:
         raise ValueError(f"Bilinmeyen chunking: {cfg.chunking}")
