@@ -15,21 +15,26 @@ LOG_FILE = config.EXPERIMENTS_DIR / "experiment_log.md"
 
 # Setup tablosunda gösterilen hyperparameter'lar (kısa ad -> RagConfig alanı)
 SETUP_COLUMNS = [
-    ("parser", "pdf_parser"), ("chunking", "chunking"), ("chunk_size", "chunk_size"),
+    ("corpus", "corpus"), ("parser", "pdf_parser"), ("chunking", "chunking"), ("chunk_size", "chunk_size"),
     ("overlap", "chunk_overlap"), ("embedding", "embedding_model"), ("normalize", "normalize_embeddings"),
     ("retrieval", "retrieval"), ("reranker", "reranker_model"), ("final_k", "final_k"), ("prompt", "prompt_version"),
+    ("llm", "llm_model"),
 ]
 SHORT_VALUES = {
     "paraphrase-multilingual-MiniLM-L12-v2": "MiniLM", "BAAI/bge-m3": "bge-m3",
     "BAAI/bge-reranker-v2-m3": "bge-reranker", None: "–", True: "✓", False: "✗",
     "v1_prototip": "v1", "v2_kaynakli": "v2",
+    "gemini-2.5-flash": "2.5-flash", "gemini-3.1-flash-lite": "3.1-flash-lite",
 }
 METRIC_NAMES = {"mrr@10": "MRR@10", "context_chars": "context chars", "answer_acc": "answer acc."}
 
 
 def _load(folder):
-    return {p.stem: json.loads(p.read_text(encoding="utf-8"))
+    data = {p.stem: json.loads(p.read_text(encoding="utf-8"))
             for p in sorted((config.EXPERIMENTS_DIR / folder).glob("EXP-*.json"))}
+    for d in data.values():  # sonradan eklenen parametreler eski dosyalarda yok; varsayılanla doldurulur
+        d["params"] = config.full_params(d["params"])
+    return data
 
 
 def _num(value, digits=3):

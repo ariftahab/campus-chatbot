@@ -1,0 +1,31 @@
+{
+  "id": "EXP-014",
+  "baslik": "Corpus: 3 belge → 139 belge (tüm üniversite mevzuatı)",
+  "ust_deney": "EXP-013",
+  "neden": "Chatbot şimdiye kadar yalnız 3 belgeyle (akademik takvim, öğrenci kayıt yönergesi, yatay geçiş yönergesi) çalışıyordu; gerçek kullanımda öğrenciler tüm mevzuatı sorabilir. 136 yeni yönetmelik/yönerge eklendi. Veri temizliği: birebir aynı 2 çift ve aynı yönergenin iki kopyası (intibak) çıkarıldı. Parçalama, retrieval ve LLM parametreleri EXP-013 ile aynı; yalnız belge kümesi değişiyor. Değerlendirme seti hâlâ yalnız ilk 3 belgeye dayandığı için bu deney şunu ölçer: aynı sorular için arama uzayına ~46 kat fazla belge (distractor) eklenince doğru chunk hâlâ bulunabiliyor mu?",
+  "hipotez": "Yeni belgeler benzer konuları (kayıt, sınav, öğrenci işleri) farklı birimler için tekrarladığından bazı sorularda başka bir belgenin chunk'ı doğru chunk'ın önüne geçer; MRR@10 düşer. Reranker sayesinde düşüş sınırlı kalır.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "azalis",
+  "params": {
+    "corpus": "v2",
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural",
+    "chunk_size": 1500,
+    "chunk_overlap": 150,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "hybrid",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 5,
+    "llm_model": "gemini-3.1-flash-lite",
+    "llm_temperature": 0.3,
+    "prompt_version": "v2_kaynakli"
+  },
+  "notlar": "",
+  "kisa_not": ""
+}

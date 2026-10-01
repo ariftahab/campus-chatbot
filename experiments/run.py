@@ -35,8 +35,8 @@ def param_diff(exp):
     """Üst deneye göre değişen parametreler: {ad: [eski, yeni]}."""
     if not exp["ust_deney"]:
         return {}
-    parent = config.load_experiment(exp["ust_deney"])["params"]
-    return {k: [parent[k], v] for k, v in exp["params"].items() if parent.get(k) != v}
+    parent = config.full_params(config.load_experiment(exp["ust_deney"])["params"])
+    return {k: [parent[k], v] for k, v in config.full_params(exp["params"]).items() if parent.get(k) != v}
 
 
 def check_experiment(exp):

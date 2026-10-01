@@ -4,28 +4,28 @@
 
 **Dataset:** `eval/sorular.json` v2.0 — 27 cevaplı soru (+3 kapsam dışı). Bir chunk, kaynakta birebir geçen evidence cümlesini içeriyorsa relevant sayılır.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
-**Sabit parametreler:** `vector_k=15`, `bm25_k=15`, `rrf_k=60`, `reranker_max_length=512`, `rerank_candidates=8`, `llm_temperature=0.3`
+**Sabit parametreler:** `corpus=v1`, `vector_k=15`, `bm25_k=15`, `rrf_k=60`, `reranker_max_length=512`, `rerank_candidates=8`, `llm_temperature=0.3`
 
 ## 1. Setup (hyperparameters)
 
 Kalın hücre = parent'a göre değişen parametre.
 
-| Exp | Parent | parser | chunking | chunk_size | overlap | embedding | normalize | retrieval | reranker | final_k | prompt | #chunks |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| EXP-000 | – | pypdf | recursive | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 68 |
-| EXP-001 | EXP-000 | **pdfplumber** | recursive | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 68 |
-| EXP-002 | EXP-001 | pdfplumber | **structural** | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 90 |
-| EXP-003 | EXP-002 | pdfplumber | structural | 1000 | 200 | MiniLM | **✓** | vector | – | 10 | v1 | 90 |
-| EXP-004 | EXP-003 | pdfplumber | structural | 1000 | 200 | **bge-m3** | ✓ | vector | – | 10 | v1 | 90 |
-| EXP-005 | EXP-004 | pdfplumber | structural | **1500** | 200 | bge-m3 | ✓ | vector | – | 10 | v1 | 74 |
-| EXP-006 | EXP-005 | pdfplumber | structural | 1500 | **150** | bge-m3 | ✓ | vector | – | 10 | v1 | 73 |
-| EXP-007 | EXP-006 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **hybrid** | – | 10 | v1 | 73 |
-| EXP-008 | EXP-007 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | **bge-reranker** | 10 | v1 | 73 |
-| EXP-009 | EXP-008 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | **5** | v1 | 73 |
-| EXP-010 | EXP-009 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v2** | 73 |
-| EXP-011 | EXP-004 | pdfplumber | structural | 1000 | 200 | bge-m3 | **✗** | vector | – | 10 | v1 | 90 |
-| EXP-012 | EXP-008 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 10 | v1 | 73 |
-| EXP-013 | EXP-010 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 73 |
+| Exp | Parent | corpus | parser | chunking | chunk_size | overlap | embedding | normalize | retrieval | reranker | final_k | prompt | llm | #chunks |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| EXP-000 | – | v1 | pypdf | recursive | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 68 |
+| EXP-001 | EXP-000 | v1 | **pdfplumber** | recursive | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 68 |
+| EXP-002 | EXP-001 | v1 | pdfplumber | **structural** | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 90 |
+| EXP-003 | EXP-002 | v1 | pdfplumber | structural | 1000 | 200 | MiniLM | **✓** | vector | – | 10 | v1 | 2.5-flash | 90 |
+| EXP-004 | EXP-003 | v1 | pdfplumber | structural | 1000 | 200 | **bge-m3** | ✓ | vector | – | 10 | v1 | 2.5-flash | 90 |
+| EXP-005 | EXP-004 | v1 | pdfplumber | structural | **1500** | 200 | bge-m3 | ✓ | vector | – | 10 | v1 | 2.5-flash | 74 |
+| EXP-006 | EXP-005 | v1 | pdfplumber | structural | 1500 | **150** | bge-m3 | ✓ | vector | – | 10 | v1 | 2.5-flash | 73 |
+| EXP-007 | EXP-006 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **hybrid** | – | 10 | v1 | 2.5-flash | 73 |
+| EXP-008 | EXP-007 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | **bge-reranker** | 10 | v1 | 2.5-flash | 73 |
+| EXP-009 | EXP-008 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | **5** | v1 | 2.5-flash | 73 |
+| EXP-010 | EXP-009 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v2** | 2.5-flash | 73 |
+| EXP-011 | EXP-004 | v1 | pdfplumber | structural | 1000 | 200 | bge-m3 | **✗** | vector | – | 10 | v1 | 2.5-flash | 90 |
+| EXP-012 | EXP-008 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 10 | v1 | 2.5-flash | 73 |
+| EXP-013 | EXP-010 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | **3.1-flash-lite** | 73 |
 
 ## 2. Results
 

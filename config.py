@@ -32,6 +32,36 @@ DOCUMENTS = {
     "yatay-gecis-yonergesi.pdf": {"title": "BAİBÜ Yatay Geçiş Yönergesi", "tur": "mevzuat"},
 }
 
+# Belge kümeleri (corpus parametresi). Her küme sabit bir dosya listesidir; data/ klasörüne sonradan
+# eklenen bir PDF eski deneylerin belge kümesini değiştirmez.
+#   v1: ilk 3 belge (EXP-000..EXP-013)
+#   v2: 2026-10-01'de eklenen üniversite mevzuatıyla 139 belge (liste data/corpus_v2.txt'de)
+CORPORA = {
+    "v1": ["akademik-takvim.pdf", "ogrenci-kayıt-yonerge.pdf", "yatay-gecis-yonergesi.pdf"],
+    "v2": DATA_DIR / "corpus_v2.txt",
+}
+
+
+def corpus_paths(name):
+    files = CORPORA[name]
+    if isinstance(files, Path):
+        files = [l.strip() for l in files.read_text(encoding="utf-8").splitlines() if l.strip()]
+    paths = [DATA_DIR / f for f in files]
+    missing = [p.name for p in paths if not p.exists()]
+    if missing:
+        raise SystemExit(f"'{name}' belge kümesindeki dosyalar data/ içinde yok: {missing}")
+    return sorted(paths)
+
+
+# Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
+# eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
+PARAM_DEFAULTS = {"corpus": "v1"}
+
+
+def full_params(params):
+    return {**PARAM_DEFAULTS, **params}
+
+
 # Soru yeniden yazma ve cevapta kullanılacak son mesaj sayısı (soru+cevap = 2 mesaj).
 HISTORY_MESSAGES = 6
 NO_ANSWER = "Bu konuda bilgim yok."
@@ -40,6 +70,7 @@ NO_ANSWER = "Bu konuda bilgim yok."
 @dataclass(frozen=True)
 class RagConfig:
     # Belge işleme
+    corpus: str                # CORPORA anahtarı: hangi belgeler indekslenir
     pdf_parser: str            # "pypdf" | "pdfplumber"
     chunking: str              # "recursive" (sabit boyut) | "structural" (madde / takvim tablosu)
     chunk_size: int            # recursive: parça boyutu; structural: bu boyutu aşan madde bölünür (karakter)
@@ -62,17 +93,20 @@ class RagConfig:
     prompt_version: str        # rag.PROMPTS anahtarı
 
     # İndeksi (parçaları ve embedding'leri) etkileyen parametreler
-    INDEX_FIELDS = ("pdf_parser", "chunking", "chunk_size", "chunk_overlap",
+    INDEX_FIELDS = ("corpus", "pdf_parser", "chunking", "chunk_size", "chunk_overlap",
                     "embedding_model", "normalize_embeddings")
 
     @classmethod
     def from_dict(cls, params):
+        params = full_params(params)
         names = {f.name for f in fields(cls)}
         unknown = set(params) - names
         missing = names - set(params)
         if unknown or missing:
             raise ValueError(f"Geçersiz parametreler. Bilinmeyen: {sorted(unknown)}, eksik: {sorted(missing)}")
         cfg = cls(**params)
+        if cfg.corpus not in CORPORA:
+            raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
         if cfg.chunking == "structural" and cfg.pdf_parser != "pdfplumber":
             raise ValueError("structural parçalama pdfplumber gerektirir (takvim tabloları için).")
         return cfg

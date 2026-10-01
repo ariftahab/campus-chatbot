@@ -73,7 +73,8 @@ def validate_dataset(data):
     """
     import ingest
     texts = {}
-    for path in config.DATA_DIR.glob("*.pdf"):
+    # Yalnız soruların kaynak gösterdiği belgeler okunur (138 belgenin hepsini iki okuyucuyla okumak yavaş).
+    for path in {config.DATA_DIR / item["kaynak"] for item in data["sorular"] if "kanit" in item}:
         for parser in ("pypdf", "pdfplumber"):
             texts[(path.name, parser)] = norm(" ".join(ingest.read_pages(path, parser)))
     problems = []

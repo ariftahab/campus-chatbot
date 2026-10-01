@@ -187,7 +187,7 @@ def load_recursive(cfg):
     """Sabit boyutlu parçalama (ilk prototipin yöntemi): sayfa metinleri karakter sayısına göre bölünür."""
     splitter = RecursiveCharacterTextSplitter(chunk_size=cfg.chunk_size, chunk_overlap=cfg.chunk_overlap)
     pages = []
-    for path in sorted(config.DATA_DIR.glob("*.pdf")):
+    for path in config.corpus_paths(cfg.corpus):
         title, _ = _doc_info(path)
         for page_no, text in enumerate(read_pages(path, cfg.pdf_parser), start=1):
             pages.append(Document(page_content=text, metadata={
@@ -197,7 +197,7 @@ def load_recursive(cfg):
 
 def load_structural(cfg):
     docs = []
-    for path in sorted(config.DATA_DIR.glob("*.pdf")):
+    for path in config.corpus_paths(cfg.corpus):
         title, kind = _doc_info(path)
         if kind is None:
             with pdfplumber.open(path) as pdf:
@@ -237,9 +237,9 @@ def get_embeddings(cfg):
 
 
 def fingerprint(cfg):
-    """PDF içerikleri + indeks parametreleri + belge ayarları + bu dosyanın kaynak kodu."""
+    """Belge kümesindeki PDF içerikleri + indeks parametreleri + belge ayarları + bu dosyanın kaynak kodu."""
     h = hashlib.sha256()
-    for path in sorted(config.DATA_DIR.glob("*.pdf")):
+    for path in config.corpus_paths(cfg.corpus):
         h.update(path.name.encode())
         h.update(path.read_bytes())
     settings = [cfg.index_params(), config.DOCUMENTS]
@@ -259,7 +259,7 @@ def build_index(cfg, embeddings=None):
     started = time.perf_counter()
     chunks = load_documents(cfg)
     if not chunks:
-        raise SystemExit(f"Hata: '{config.DATA_DIR}' klasöründe PDF bulunamadı.")
+        raise SystemExit(f"Hata: '{cfg.corpus}' belge kümesinde PDF bulunamadı.")
     print(f"{len(chunks)} parça oluşturuldu. Embedding'ler hesaplanıyor ({cfg.embedding_model})...")
     embeddings = embeddings or get_embeddings(cfg)
     store = FAISS.from_documents(chunks, embeddings)
