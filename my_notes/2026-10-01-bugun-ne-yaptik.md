@@ -109,9 +109,9 @@ Eski EXP-014'ün henüz sonucu yoktu, yani bir sonuç değiştirilmiş olmadı.
 **Bulgular:**
 1. **Distractor etkisi:** Benzer konulu belgeler (diğer fakültelerin eğitim yönetmelikleri gibi) retrieval'ı ciddi düşürüyor. Vector 0,94'ten 0,60'a indi.
 2. **Reranker kritik:** RRF'teki 0,59'u 0,86'ya çıkarıyor. Bu sistemin en değerli bileşeni.
-3. **BM25 zarar veriyor olabilir:** Kötüleşen 6 sorunun 4'ünde BM25 ilgili chunk'ı hiç bulamadı ve RRF'i vector'ün tek başına verdiği sıralamadan da aşağı çekti (T05: vector 2. sıra → RRF 6. sıra).
-4. **Reranker penceresi dar:** Bir soruda (T01) ilgili chunk RRF'te 9. sıradaydı. Reranker'a yalnız ilk 8 aday gittiği için onu hiç göremedi.
-5. **Değerlendirme seti eksik etiketliyor:** Değerlendirme yalnız sorunun "kaynak" belgesini doğru sayıyor. K08'de ("Öğretim dili nedir?") öne geçen chunk "Üniversitenin eğitim-öğretim dili Türkçedir" diyor; bu doğru bir cevap, sadece başka bir yönetmelikte geçiyor. K04 (diploma kaybı) de benzer. Yani 6 kötüleşmenin **2'si gerçek hata değil**, eksik etiket (false negative).
+3. **BM25 zarar veriyor olabilir:** Kötüleşen 6 sorunun 4'ünde BM25 ilgili chunk'ı hiç bulamadı ve RRF'i vector'ün tek başına verdiği sıralamadan da aşağı çekti ("Yaz okulu ders kayıtları ne zaman yapılacak?" sorusunda vector 2. sıra → RRF 6. sıra).
+4. **Reranker penceresi dar:** "Güz yarıyılında dersler ne zaman başlıyor?" sorusunda ilgili chunk RRF'te 9. sıradaydı. Reranker'a yalnız ilk 8 aday gittiği için onu hiç göremedi.
+5. **Değerlendirme seti eksik etiketliyor:** Değerlendirme yalnız sorunun "kaynak" belgesini doğru sayıyor. "Üniversitenin öğretim dili nedir?" sorusunda öne geçen chunk "Üniversitenin eğitim-öğretim dili Türkçedir" diyor; bu doğru bir cevap, sadece başka bir yönetmelikte geçiyor. "Diplomamı kaybedersem ne yapmalıyım?" sorusu da benzer: mezun belgeleri yönergesi de diploma kaybını düzenliyor. Yani 6 kötüleşmenin **2'si gerçek hata değil**, eksik etiket (false negative).
 
 ## 7. Regex genişletme ve fallback kodu (commit `a899135`)
 
@@ -165,7 +165,7 @@ v3 deneyi değerlendirme seti v2'den sonra yapılacak.
 | Sorun | Sonucu |
 |---|---|
 | 27 sorunun hepsi ilk 3 belgeden | Yeni 136 belgedeki iyileşmeyi (ör. regex) **ölçemiyoruz** |
-| Her sorunun tek bir "doğru belgesi" var | Başka belgedeki doğru cevap yanlış sayılıyor (K08, K04) |
+| Her sorunun tek bir "doğru belgesi" var | Başka belgedeki doğru cevap yanlış sayılıyor ("Üniversitenin öğretim dili nedir?", "Diplomamı kaybedersem ne yapmalıyım?") |
 | 3 belgede her şey 1,000 çıkıyordu | Ceiling effect: iyileşme görülecek yer kalmamıştı |
 
 ### Önerim

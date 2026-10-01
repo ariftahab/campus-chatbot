@@ -45,6 +45,11 @@ chunking, embedding, token, retrieval, reranker, vector store, index, pipeline, 
 dataset, context, latency, prompt, hash, fingerprint vb. ("dal", "parçalama", "getirme", "gecikme" gibi çeviriler
 kullanılmaz.) Sohbet, learning_log, experiment log ve deney başlıkları için geçerli.
 
+**Kod değil bağlam kuralı:** Değerlendirme sorularının kimlikleri (K08, Y01, T05, N33...) ve "Madde 8/2" gibi kısaltmalar
+**hiçbir yerde** tek başına yazılmaz: experiment log (`notlar`, `kisa_not`), learning_log, my_notes, commit mesajları,
+sohbet. Her zaman **sorunun kendisi** ("Üniversitenin öğretim dili nedir?") ve **bağlamı** ("Yatay Geçiş Yönergesi'nin
+başvuru şartları maddesi") yazılır. Kimlikler yalnız `eval/*.json` ve `results/*.json` gibi makine dosyalarında kalır.
+
 `my_notes/` kullanıcının kendi notları ve notebook'ları içindir; yalnız istendiğinde dosya ekle.
 ## Deney disiplini (önemli)
 RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)
@@ -62,7 +67,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Sonuç yorumu config'in `notlar` alanına yazılır. Beklenen iyileşme çıkmadıysa bu da açıkça yazılır.
 - `experiments/experiment_log.md` elle düzenlenmez, `python -m experiments.report` ile üretilir. Log **kısa** kalmalı:
   setup (hyperparameter) tablosu, results tablosu ve deney başına tek satır (`kisa_not`). Ayrıntılar `results/*.json` içinde.
-- `eval/sorular.json` değişirse veri seti hash'i değişir ve eski sonuçlarla karşılaştırma geçersiz olur.
+- Soru setleri değiştirilmez: bir set değişirse hash'i değişir ve eski sonuçlarla karşılaştırma geçersiz olur. Yeni
+  sorular yeni bir set dosyası olarak eklenir; deney config'inde `veri_seti` alanıyla seçilir (yoksa `sorular`).
   Soru eklemek gerekiyorsa sürümü artır ve referans zinciri yeniden koşulmalı.
 - Commit mesajları ayrıntılı olmalı (ne, neden, sayısal sonuç); tezde kaynak olarak kullanılacak.
 
@@ -79,13 +85,17 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - `ingest.py` — `pdf_parser` (pypdf | pdfplumber) ve `chunking` (recursive | structural | structural_v2: genişletilmiş madde regex'i | structural_v3: + belge bütünü fallback). Structural: mevzuat madde madde
   ("Madde N-"), eşiği aşan maddeler fıkra sınırından bölünür; takvimde her tablo bir parça. İndeks
   `vectorstore/<parmak izi>/` altında (PDF'ler + indeks parametreleri + ingest.py kaynağı); yoksa otomatik kurulur.
-- `rag.py` — `Retriever.rank()`: vector | bm25 | hybrid (RRF) + isteğe bağlı cross-encoder reranker. `PROMPTS` sürümleri.
+- `rag.py` — `Retriever.rank()`: vector | bm25 | hybrid (RRF) + isteğe bağlı cross-encoder reranker. `PROMPTS` sürümleri (v1_prototip, v2_kaynakli,
+  v3_kapsam: kurallar kapsama göre farklıysa her birini kapsamıyla verir).
   `RagBot`: geçmiş varsa soruyu bağımsız hale getirir, Gemini ile cevaplar.
 - `chat.py` — CLI.
 - `experiments/evaluation.py` — kanıt tabanlı ilgililik (parçalamadan bağımsız), metrikler (MRR@10, Hit@k, bağlam isabeti,
   bağlam uzunluğu, gecikme, cevap doğruluğu), McNemar/Wilcoxon, ortam kaydı.
 - `experiments/run.py` — deney koşucu, `experiments/report.py` — günlük üretici.
-- `eval/sorular.json` — 27 cevaplı + 3 kapsam dışı soru; her soruda kaynakta birebir geçen `kanit`.
+- `eval/sorular.json` (set 2.0) — 27 cevaplı + 3 kapsam dışı soru, yalnız ilk 3 belgeden; EXP-000..016.
+- `eval/sorular_v3.json` (set 3.0) — 77 soru: eski 30 + yeni 47 (31 belge). `kaynaklar`: birden fazla doğru kaynak
+  (her biri kendi `kanit`'iyle), `stil` (belge/ogrenci dili), `kategori`, cevapsızlarda isteğe bağlı `kabul`.
+  Okunabilir hali: `my_notes/eval_v3_taslak.md`.
 
 ## Notlar
 - LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. Ücretsiz kota günde 20 istek (gemini-2.5-flash);
