@@ -49,6 +49,9 @@ kullanılmaz.) Sohbet, learning_log, experiment log ve deney başlıkları için
 ## Deney disiplini (önemli)
 RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)
 her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
+- **Onay kuralı:** Her deneyden önce sohbette neden yapılmak istendiği, hipotez ve neyin ölçüleceği (ve mevcut
+  değerlendirme setiyle neyin ölçülemeyeceği) yazılır; kullanıcının **açık onayı** olmadan config yazılmaz, deney
+  koşulmaz. Deneyler art arda kendiliğinden zincirlenmez: bir deney biter → sonuç yorumlanır → sonraki önerilir → onay.
 - Yeni bir `experiments/configs/EXP-XXX.json` oluştur. Tam parametre seti olmalı, `ust_deney`'den **tek** parametre farklı
   olmalı (runner denetler; zorunluysa `coklu_degisiklik_gerekcesi`).
 - `neden`, `hipotez`, `birincil_metrik`, `beklenen_yon` alanları deney **koşulmadan önce** yazılır.
