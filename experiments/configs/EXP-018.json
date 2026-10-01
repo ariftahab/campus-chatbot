@@ -1,0 +1,33 @@
+{
+  "id": "EXP-018",
+  "baslik": "Prompt: v2 → v3_kapsam (kurallar kapsama göre farklıysa hepsi kapsamıyla)",
+  "ust_deney": "EXP-017",
+  "veri_seti": "sorular_v3",
+  "neden": "Corpus 139 belgeye çıkınca aynı konu farklı kapsamlar için farklı kurallarla birden fazla belgede geçiyor (genel önlisans-lisans yönetmeliği ile fakülteye özel yönetmelikler, lisans ile lisansüstü). EXP-017'de fakülteye özel ve çok kapsamlı sorularda retrieval MRR@10 1,000: doğru chunk'lar bağlama giriyor, ama v2 prompt'u bağlamdan tek bir cevap seçip kapsamı söylemeyebilir. v3_kapsam, somut örnek vermeden, modelden her belgenin kimi kapsadığını anlamasını ve kurallar farklıysa her birini kapsamıyla vermesini ister (kullanıcı isteği). Retrieval değişmez; etki yalnız cevap doğruluğuyla (--llm) ölçülür.",
+  "hipotez": "Çok kapsamlı sorularda (ör. 'Teorik derslerin yüzde kaçına girmek zorundayım?': genel %70 ve tıpta %75 birlikte beklenir) ve fakülteye özel sorularda cevap doğruluğu artar. Diğer sorularda değişmez; cevaplar biraz uzayabilir. Toplam answer_acc artar ama çok kapsamlı soru sayısı az (2) olduğu için fark istatistiksel olarak anlamlı çıkmayabilir.",
+  "birincil_metrik": "answer_acc",
+  "beklenen_yon": "artis",
+  "params": {
+    "corpus": "v2",
+    "device": "cuda",
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural_v2",
+    "chunk_size": 1500,
+    "chunk_overlap": 150,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "hybrid",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 5,
+    "llm_model": "gemini-3.1-flash-lite",
+    "llm_temperature": 0.3,
+    "prompt_version": "v3_kapsam"
+  },
+  "notlar": "",
+  "kisa_not": ""
+}

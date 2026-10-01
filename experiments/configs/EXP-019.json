@@ -1,0 +1,33 @@
+{
+  "id": "EXP-019",
+  "baslik": "Corpus: kopyalar çıkarıldı (v2 → v3, 139 → 131 belge)",
+  "ust_deney": "EXP-017",
+  "veri_seti": "sorular_v3",
+  "neden": "Corpus v2'de içeriği neredeyse aynı 8 belge çifti var (aynı yönergenin farklı kaynaklardan indirilmiş PDF'leri; metin benzerliği %94-100). Kopyalar retrieval'da aynı maddeyi iki kez getirip LLM'e giden 5 chunk'lık context'in bir kısmını boşa harcıyor; ikisinden biri bozuk okunuyorsa (ör. yabancı dil yönetmeliğinin kopyasında madde başlıkları bozuk) yanlış maddenin öne geçmesine de yol açabiliyor (EXP-017: hazırlık seviye tespit sorusunda 1. sırada kopyanın yeterlik sınavı maddesi). v3 her çiftten metni temiz okunanı / adı açıklayıcı olanı tutar. Soru setinde kopyaların ikisi de doğru kaynak olarak yazılı, yani etiketler her iki corpus için de doğru. Yalnız corpus değişiyor; LLM gerekmiyor.",
+  "hipotez": "Kopyaların ikisi de doğru kaynak sayıldığı için MRR@10 büyük ölçüde değişmez; bozuk okunan kopyanın öne geçtiği birkaç soruda sıra iyileşebilir. Asıl etki, LLM'e giden context'te aynı maddenin tekrarının azalmasıdır (context'teki tekrar eden chunk sayısıyla ayrıca raporlanacak).",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "degisim_yok",
+  "params": {
+    "corpus": "v3",
+    "device": "cuda",
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural_v2",
+    "chunk_size": 1500,
+    "chunk_overlap": 150,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "hybrid",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 5,
+    "llm_model": "gemini-3.1-flash-lite",
+    "llm_temperature": 0.3,
+    "prompt_version": "v2_kaynakli"
+  },
+  "notlar": "",
+  "kisa_not": ""
+}
