@@ -176,3 +176,45 @@ v3 deneyi değerlendirme seti v2'den sonra yapılacak.
   - Bir soru için birden fazla belge doğru sayılabilsin (`kaynak` bir liste olsun).
   - Kanıt yine "kaynakta birebir geçen cümle" ile doğrulansın.
 - **Referans zincirini v2 üzerinde yeniden koş:** EXP-015 yapılandırması v2 setiyle yeniden ölçülür ve yeni baseline o olur.
+
+---
+
+## 9. Akşam: latency düzeltmesi, soru seti 3.0, prompt v3, EXP-017
+
+| Ne | Sonuç | Commit |
+|---|---|---|
+| Runner index'i ayrı süreçte kuruyor | Latency artık temiz süreçte ölçülüyor (~400 ms) | `5d94077` |
+| Yazım kuralı: soru kodu yerine sorunun kendisi | CLAUDE.md'ye eklendi, bugünkü notlar düzeltildi | `ca22018` |
+| Soru seti 3.0 + değerlendirme kodu + prompt v3 | 77 soru, 31 belge | `1a0212c` |
+| EXP-017: yeni setle referans ölçüm | MRR@10 0,852 | `785fadc`, `c3936e3` |
+
+### Soru seti 3.0
+- Eski 30 soru aynen kaldı. 47 yeni soru eklendi: 42'si belge diliyle, 35'i öğrenci diliyle soruluyor (toplamda).
+- Bir soru için **birden fazla doğru kaynak** olabiliyor. İlke: chunk soruyu *sorulduğu haliyle* doğru cevaplamaya
+  yetiyorsa ilgilidir. Örneğin harf notu tablosu genel yönetmelikte, hukukta ve tıpta aynı; üçü de doğru kaynak.
+- **Fakülteye özel** sorular: tıpta devam zorunluluğu %75, genel kural %70.
+- **Çok kapsamlı** sorular: "Teorik derslerin yüzde kaçına girmek zorundayım?" Doğru cevap ikisini birden vermeli:
+  genel %70, tıpta %75.
+- Okunabilir hali: `my_notes/eval_v3_taslak.md`.
+
+### Prompt v3_kapsam (henüz kullanılmıyor)
+LLM'e somut örnek vermeden şunu anlatıyor: her belgenin kimi kapsadığını anla (tüm üniversite mi, bir fakülte mi,
+lisans mı lisansüstü mü). Kurallar kapsama göre farklıysa hepsini kapsamıyla birlikte ver; aynıysa tekrar etme.
+Etkisi ayrı bir deneyle ölçülecek (LLM kotası harcar).
+
+### EXP-017 sonuçları (yeni setle baseline)
+
+| Grup | Soru sayısı | MRR@10 |
+|---|---|---|
+| Hepsi | 71 | **0,852** |
+| Belge dili | 42 | 0,921 |
+| Öğrenci dili | 29 | **0,751** |
+| Eski sorular | 27 | 0,900 |
+| Yeni sorular | 44 | 0,822 |
+
+- **En büyük zayıflık öğrenci dili.** "İkinci bir bölüm okumak istiyorum..." sorusunda belge "çift ana dal" diyor ama
+  öğrenci "ikinci bölüm" diyor. Doğru chunk ilk 10'da bile yok.
+- **Ölçüm hâlâ eksik etiketli.** Kanıt cümlesi taraması yalnız *aynı cümleyi* içeren chunk'ları bulabiliyor.
+  Aynı bilgiyi başka kelimelerle veren chunk'ları yakalayamıyor. Gerçek performans ölçülenden biraz daha iyi.
+- **Bozuk okunan bir PDF var.** `lisansüstü eğitim öğretim.pdf` çok sütunlu ve metni karışık okunuyor;
+  reranker bu chunk'ı bir soruda 1. sıraya koydu.
