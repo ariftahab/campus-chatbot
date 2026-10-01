@@ -28,6 +28,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v2_kaynakli"
   },
-  "notlar": "",
-  "kisa_not": ""
+  "notlar": "Ana etki doğrulandı: LLM'e giden ilk 5 chunk'ta kopya belgeden gelen aynı madde tekrarı 31 → 0 (önce 71 sorunun 24'ünde vardı); kopya belgeden gelen chunk 37 → 0. İndeks 4045 → 3785 chunk. MRR@10 ortalaması aynı: 0,8519 → 0,8516 (Wilcoxon p=1,0); runner'ın karar kuralı yalnız tam sıfır farkı 'değişim yok' saydığı için -0,0002'yi 'sayısal kötüleşme' olarak etiketledi, pratikte değişim yok. Hit@1, Hit@5, context hit aynı (her birinde 1-2 soru iyileşti, 1-2 kötüleşti). Rerank input recall 0,944 → 0,958. Ortalamanın altında 7 soru yer değiştirdi ve en büyük iki değişiklik kopyaların kendisinden değil, reranker penceresinden kaynaklanıyor: 'Güz yarıyılında dersler ne zaman başlıyor?' sorusunda takvim chunk'ı RRF'te 9 → 8'e kayıp 8 adaylık reranker penceresine girdi ve reranker onu 1. sıraya taşıdı (9 → 1); 'Yatay geçiş hangi dönemlerde yapılamaz?' sorusunda ilgili chunk RRF'te 8 → 10'a kayıp pencereden çıktı (1 → 10). rerank_candidates=8 iki deneydir darboğaz olarak görünüyor; artırılması ayrı deney olarak önerilecek. Latency 397 → 407 ms (p<0,001 ama 10 ms, pratikte önemsiz). Kopyasız corpus daha temiz context verdiği için üretimde v3 tercih edilmeli.",
+  "kisa_not": "Context'teki kopya madde tekrarı 31 → 0; MRR@10 aynı (0,852). Büyük sıra değişimleri reranker penceresinin (8 aday) sınırından."
 }

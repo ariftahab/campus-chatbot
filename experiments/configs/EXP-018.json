@@ -28,6 +28,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v3_kapsam"
   },
-  "notlar": "",
-  "kisa_not": ""
+  "notlar": "Hipotez doğrulanmadı: answer_acc 0,896 → 0,883 (2 soru kötüleşti, 1 iyileşti; McNemar p=1,0). Ama değişen 3 sorunun ikisi prompt'un etkisi değil: (1) 'Kaydımı sildirirsem ödediğim harç iade edilir mi?' v3 cevabı doğru ('iade edilmemektedir') ama aranan kelime 'edilmez' (anahtar kelime artefaktı). (2) 'Kısmi zamanlı çalışırsam saatine ne kadar ücret alırım?' sorusunda Gemini hata vermeden boş cevap döndürdü (API anomalisi; runner boş cevabı ayrıca işaretlemiyor, eklenmeli). (3) Gerçek iyileşme: 'Açık öğretimden örgün öğretime yatay geçiş için not ortalaması kaç olmalı?' v2 yalnız YÖK yönetmeliğindeki 90'ı verirken v3 BAİBÜ yönergesine göre 80 ve YÖK düzenlemesine göre 90'ı ayrı ayrı, kaynaklarıyla verdi; prompt'un hedeflediği davranış. Çok kapsamlı sorularda 0,5 → 0,5: devam zorunluluğu sorusunu v2 de birimlere göre ayırarak doğru cevaplamıştı; 'Yatay geçiş hangi dönemlerde yapılamaz?' sorusunda lisansüstü kuralı yine yok, çünkü lisansüstü yönetmeliğinin yatay geçiş maddesi LLM'e giden 5 chunk'ta değil (retrieval sorunu; ilk 5'teki tek lisansüstü chunk bozuk okunan PDF'ten). Fakülteye özel sorular iki prompt'ta da 1,0. Cevaplar ortalama %50 uzadı (335 → 503 karakter). Sonuç: v3 kapsam çatışmasını görünür kılıyor ama bu soru setinde ve anahtar kelime değerlendirmesiyle cevap doğruluğuna etkisi ölçülemedi; daha çok çok kapsamlı soru ve anlam tabanlı cevap değerlendirmesi (ör. LLM-as-judge) gerekiyor.",
+  "kisa_not": "answer_acc 0,896 → 0,883 (anlamsız). Değişen 3 sorudan biri gerçek iyileşme (iki kapsamı ayırdı), biri kelime artefaktı, biri boş API cevabı."
 }

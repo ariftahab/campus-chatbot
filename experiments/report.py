@@ -52,6 +52,8 @@ def _verdict(res, exp):
         return "koşulmadı", ""
     if not comp:
         return "baseline", ""
+    if not comp.get("ayni_veri_seti", True):
+        return "referans (yeni soru seti, karşılaştırma yok)", "–"
     metric = exp["birincil_metrik"]
     m = comp["metrikler"].get(metric)
     if not m:
