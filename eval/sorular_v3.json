@@ -1,0 +1,1555 @@
+{
+ "surum": "3.0",
+ "aciklama": "BAİBÜ RAG değerlendirme seti 3.0. 2.0'daki 30 soru (eski_set: true; soru metni ve kanıtları aynı, eksik kaynaklar eklendi) + yeni sorular. 'kaynaklar': her biri {belge, kanit} olan doğru kaynaklar listesi; bir chunk, kaynaklardan birinin belgesine aitse ve o kaynağın kanıt alternatiflerinden birini içeriyorsa ilgili sayılır (kanıt kuralı 2.0 ile aynı). Kopya belgeler (corpus v2) ayrı kaynak olarak yazılır. 'stil': belge (belgedeki kelimelerle) | ogrenci (öğrencinin soracağı gibi). 'kategori': tarih | kural | surec | fakulteye_ozel | coklu_kapsam (kural kapsama göre farklı; cevap hepsini kapsamıyla vermeli) | bilgi_yok (konu belgede var, istenen bilgi yok) | kapsam_disi. 'cevapsiz': 'Bu konuda bilgim yok.' beklenir; 'kabul' varsa, bilgiyi kimin belirlediğini söyleyen cevap da (ör. 'Yönetim Kurulu') doğru sayılır.",
+ "sorular": [
+  {
+   "id": "T01",
+   "soru": "Güz yarıyılında dersler ne zaman başlıyor?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "29 Eylül 2025",
+       "DERSLERİN BAŞLAMASI"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "29 Eylül"
+   ]
+  },
+  {
+   "id": "T02",
+   "soru": "Bahar dönemi bütünleme sınavları hangi tarihlerde?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "29 Haziran – 03 Temmuz 2026",
+       "Bütünleme sınavları"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "29 Haziran",
+    "3 Temmuz"
+   ]
+  },
+  {
+   "id": "T03",
+   "soru": "Güz dönemi final sınavları ne zaman bitiyor?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "05 – 16 Ocak 2026",
+       "Dönem sonu sınavları"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "16 Ocak"
+   ]
+  },
+  {
+   "id": "T04",
+   "soru": "Bahar yarıyılında ders ekleme-bırakma ne zaman?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "23 – 27 Şubat 2026",
+       "Ders ekleme-bırakma"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "23",
+    "27 Şubat"
+   ]
+  },
+  {
+   "id": "T05",
+   "soru": "Yaz okulu ders kayıtları ne zaman yapılacak?",
+   "stil": "ogrenci",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "07 – 09 Temmuz 2026",
+       "Yaz öğretimi ders kayıtları"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "9 Temmuz"
+   ]
+  },
+  {
+   "id": "T06",
+   "soru": "Güz dönemindeki tek-çift sınavları ne zaman?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "05 – 07 Şubat 2026",
+       "Tek-çift sınavları"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "7 Şubat"
+   ]
+  },
+  {
+   "id": "T07",
+   "soru": "Güz dönemi için kurum içi ve kurum dışı yatay geçiş başvuruları hangi tarihlerde?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "14 – 20 Temmuz 2025",
+       "Kurum içi ve kurum dışı yatay geçiş başvuruları"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "14",
+    "20 Temmuz"
+   ]
+  },
+  {
+   "id": "T08",
+   "soru": "Zorunlu yabancı dil muafiyet sınavı hangi gün yapılacak?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "26 Eylül 2025",
+       "Zorunlu Yabancı Dil Dersleri I-II Muafiyet Sınavı"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "26 Eylül"
+   ]
+  },
+  {
+   "id": "T09",
+   "soru": "Erasmus için yabancı dil yeterlik sınavı ne zaman?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "17 Ekim 2025",
+       "Erasmus+ Öğrenci hareketliliği"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "17 Ekim"
+   ]
+  },
+  {
+   "id": "T10",
+   "soru": "Dereceye giren öğrenciler için ödül töreni ne zaman?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim.pdf",
+     "kanit": [
+      [
+       "06 Ağustos 2026",
+       "Dereceye giren öğrenciler için ödül töreni"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "6 Ağustos"
+   ]
+  },
+  {
+   "id": "K01",
+   "soru": "Kaydımı en fazla kaç dönem dondurabilirim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "bir defada en çok iki yarıyıl"
+     ]
+    }
+   ],
+   "beklenen": [
+    "iki|2",
+    "dört|4"
+   ]
+  },
+  {
+   "id": "K02",
+   "soru": "Kayıt dondurduğum süre azami öğrenim süresinden sayılır mı?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "Kayıt dondurulan süre, azami öğrenim süresinden sayılmaz"
+     ]
+    }
+   ],
+   "beklenen": [
+    "sayılmaz"
+   ]
+  },
+  {
+   "id": "K03",
+   "soru": "Kaydımı sildirirsem ödediğim harç iade edilir mi?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "harç ücretleri iade edilmez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "edilmez"
+   ]
+  },
+  {
+   "id": "K04",
+   "soru": "Diplomamı kaybedersem ne yapmalıyım?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "ikinci nüsha ibaresi konulur"
+     ]
+    },
+    {
+     "belge": "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf",
+     "kanit": [
+      "İkinci Nüsha"
+     ]
+    }
+   ],
+   "beklenen": [
+    "ikinci nüsha"
+   ]
+  },
+  {
+   "id": "K05",
+   "soru": "Hazırlık sınıfında en fazla kaç yıl okunabilir?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "Hazırlık sınıflarındaki eğitim süresi en çok iki yıldır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "iki yıl|2 yıl"
+   ]
+  },
+  {
+   "id": "K06",
+   "soru": "Dönem başında kayıt olduktan sonra ders bırakırsam ödediğim katkı payı geri verilir mi?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "öğrenim ücreti öğrenciye iade edilmez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "edilmez|verilmez|hayır"
+   ]
+  },
+  {
+   "id": "K07",
+   "soru": "Özel öğrencilere diploma verilir mi?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "Özel öğrencilere diploma ve ünvan verilmez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "verilmez|hayır"
+   ]
+  },
+  {
+   "id": "K08",
+   "soru": "Üniversitenin öğretim dili nedir?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "öğretim dili Türkçe’dir"
+     ]
+    },
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "eğitim-öğretim dili Türkçedir"
+     ]
+    }
+   ],
+   "beklenen": [
+    "Türkçe"
+   ]
+  },
+  {
+   "id": "K09",
+   "soru": "Hastalık nedeniyle izin almak için ne gerekiyor?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "bir sağlık raporu ile belgelendirmek koşulu ile"
+     ]
+    }
+   ],
+   "beklenen": [
+    "sağlık raporu"
+   ]
+  },
+  {
+   "id": "Y01",
+   "soru": "Kurumlar arası yatay geçiş için not ortalamam en az kaç olmalı?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "genel not ortalamasının en az 100 üzerinden 60 olması şarttır"
+     ]
+    },
+    {
+     "belge": "kurumlar arası kredi transferi.pdf",
+     "kanit": [
+      "genel not ortalamasının en az 100 üzerinden 60 olması"
+     ]
+    }
+   ],
+   "beklenen": [
+    "60"
+   ]
+  },
+  {
+   "id": "Y02",
+   "soru": "Yatay geçişte değerlendirme puanı nasıl hesaplanıyor?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "ÖSYS/YKS Puanı x 0,8"
+     ]
+    }
+   ],
+   "beklenen": [
+    "0,8|0.8|%80|yüzde seksen"
+   ]
+  },
+  {
+   "id": "Y03",
+   "soru": "Lisans programlarında hangi yarıyıllara yatay geçiş yapılamaz?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "lisans diploma programlarının ilk iki yarıyılı ile son iki yarıyılına yatay geçiş yapılamaz"
+     ]
+    },
+    {
+     "belge": "kurumlar arası kredi transferi.pdf",
+     "kanit": [
+      "lisans diploma programlarının ilk iki yarıyılı ile son iki yarıyılına yatay geçiş yapılamaz"
+     ]
+    }
+   ],
+   "beklenen": [
+    "ilk iki",
+    "son iki"
+   ]
+  },
+  {
+   "id": "Y04",
+   "soru": "Kaydı dondurulmuş bir öğrenci yatay geçiş yapabilir mi?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "Kayıt dondurmuş olmak yatay geçiş hakkından yararlanmak için engel teşkil etmez"
+     ]
+    },
+    {
+     "belge": "kurumlar arası kredi transferi.pdf",
+     "kanit": [
+      "Kayıt dondurmuş olmak yatay geçiş hakkından yararlanmak için engel teşkil etmez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "engel|yapabilir|evet"
+   ]
+  },
+  {
+   "id": "Y05",
+   "soru": "Bahar döneminde merkezi yerleştirme puanıyla yatay geçiş yapılabilir mi?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "bahar döneminde merkezi yerleştirme puanına göre yatay geçiş ile öğrenci kabul edilmez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "edilmez|yapılamaz|hayır"
+   ]
+  },
+  {
+   "id": "Y06",
+   "soru": "Yatay geçiş başvurusunda hangi belgeler isteniyor?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "Not dökümü (transkript)"
+     ]
+    }
+   ],
+   "beklenen": [
+    "transkript|not dökümü",
+    "öğrenci belgesi"
+   ]
+  },
+  {
+   "id": "Y07",
+   "soru": "Açık öğretimden örgün öğretime yatay geçiş için not ortalaması kaç olmalı?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "genel not ortalamasının 100 üzerinden 80 veya üzeri olması"
+     ]
+    }
+   ],
+   "beklenen": [
+    "80"
+   ]
+  },
+  {
+   "id": "Y08",
+   "soru": "Yatay geçiş ve intibak komisyonu en az kaç kişiden oluşur?",
+   "stil": "belge",
+   "kategori": "kural",
+   "eski_set": true,
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "biri başkan olmak üzere en az 3 öğretim elemanından oluşur"
+     ]
+    }
+   ],
+   "beklenen": [
+    "3|üç"
+   ]
+  },
+  {
+   "id": "C01",
+   "soru": "Yemekhanede öğle yemeği ücreti ne kadar?",
+   "stil": "ogrenci",
+   "kategori": "bilgi_yok",
+   "eski_set": true,
+   "cevapsiz": true,
+   "not": "Yemek bursu yönergesi yemekhaneyi anlatıyor ama ücret yazmıyor."
+  },
+  {
+   "id": "C02",
+   "soru": "Kütüphane hafta sonu kaçta kapanıyor?",
+   "stil": "ogrenci",
+   "kategori": "bilgi_yok",
+   "eski_set": true,
+   "cevapsiz": true,
+   "not": "Kütüphane yönergesi çalışma saatlerinin Rektörlükçe belirlendiğini söylüyor, saat vermiyor.",
+   "kabul": [
+    "Rektörlük"
+   ]
+  },
+  {
+   "id": "C03",
+   "soru": "Tıp fakültesinde güz dönemi dersleri ne zaman başlıyor?",
+   "stil": "ogrenci",
+   "kategori": "kapsam_disi",
+   "eski_set": true,
+   "beklenen": [
+    "hariç|kapsamaz|kapsamında değil|bilgim yok"
+   ]
+  },
+  {
+   "id": "N01",
+   "soru": "Teorik derslerde devam zorunluluğu yüzde kaçtır?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim yönetmeliği.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    },
+    {
+     "belge": "hemşirelik beceri uygulamları ve intörn.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    },
+    {
+     "belge": "uzaktan eğitim.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    }
+   ],
+   "beklenen": [
+    "70"
+   ]
+  },
+  {
+   "id": "N02",
+   "soru": "Laboratuvar dersine en az ne kadar katılmam lazım, yoksa devamsızlıktan mı kalırım?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "uygulamalı dersler için % 80"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim yönetmeliği.pdf",
+     "kanit": [
+      "uygulamalı dersler için % 80"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim.pdf",
+     "kanit": [
+      "uygulamalı dersler için % 80"
+     ]
+    }
+   ],
+   "beklenen": [
+    "80"
+   ]
+  },
+  {
+   "id": "N03",
+   "soru": "Ara sınava mazeretim nedeniyle giremezsem kaç gün içinde başvurmalıyım?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "mazeretinin bitiminden itibaren 3 iş günü içerisinde başvurması"
+     ]
+    }
+   ],
+   "beklenen": [
+    "3|üç"
+   ]
+  },
+  {
+   "id": "N04",
+   "soru": "Finale hastalandığım için giremedim, mazeret sınavı hakkım var mı?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "Dönem sonu sınavı ve bütünleme sınavı için mazeret sınavı yapılmaz"
+     ]
+    },
+    {
+     "belge": "hukuk fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "Dönem sonu sınavı ve bütünleme sınavı için mazeret sınavı yapılmaz"
+     ]
+    }
+   ],
+   "beklenen": [
+    "yapılmaz|yoktur|hayır"
+   ]
+  },
+  {
+   "id": "N05",
+   "soru": "Dört yıllık bir lisans programı en fazla kaç dönemde bitirilmelidir?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "dört yıl süreli eğitim programındaki eğitim-öğretimlerini en fazla on dört dönem"
+     ]
+    }
+   ],
+   "beklenen": [
+    "on dört|14"
+   ]
+  },
+  {
+   "id": "N06",
+   "soru": "Okulu uzattım, azami süre dolunca hemen atılır mıyım?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "iki ek sınav hakkı verilir"
+     ]
+    }
+   ],
+   "beklenen": [
+    "ek sınav"
+   ]
+  },
+  {
+   "id": "N07",
+   "soru": "Bir dersten 100 üzerinden 87 alırsam harf notum ne olur?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "85-89 BA"
+     ]
+    },
+    {
+     "belge": "hukuk fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "85-89 BA"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim yönetmeliği.pdf",
+     "kanit": [
+      "85-89 BA"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim.pdf",
+     "kanit": [
+      "85-89 BA"
+     ]
+    },
+    {
+     "belge": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "85-89 BA"
+     ]
+    }
+   ],
+   "beklenen": [
+    "BA"
+   ]
+  },
+  {
+   "id": "N08",
+   "soru": "CC harf notunun katsayısı kaçtır?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "CC 3,00"
+     ]
+    },
+    {
+     "belge": "hukuk fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "CC 3,00"
+     ]
+    }
+   ],
+   "beklenen": [
+    "3,00|3.00|3,0"
+   ]
+  },
+  {
+   "id": "N09",
+   "soru": "Devamsızlıktan kaldığım dersin bütünlemesine girebilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "dersten devamsız (DZ/NA) olan öğrenci o dersin bütünleme sınavına giremez"
+     ]
+    },
+    {
+     "belge": "hukuk fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "dersten devamsız (DZ/NA) olan öğrenci o dersin bütünleme sınavına giremez"
+     ]
+    },
+    {
+     "belge": "sağlık bilimleri fakültesi sınav uygulama yönergesi.pdf",
+     "kanit": [
+      "dersten devamsız (DZ/NA) olan öğrenci o dersin bütünleme sınavına giremez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "giremez|hayır"
+   ]
+  },
+  {
+   "id": "N10",
+   "soru": "E/I (eksik) notu alan öğrenci eksiklerini kaç gün içinde tamamlamalıdır?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "on beş gün içinde eksiklerini tamamlayarak"
+     ]
+    },
+    {
+     "belge": "hukuk fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "on beş gün içinde eksiklerini tamamlayarak"
+     ]
+    }
+   ],
+   "beklenen": [
+    "on beş|15"
+   ]
+  },
+  {
+   "id": "N11",
+   "soru": "Hocam bana eksik notu verdi, bu not ortalamamda nasıl sayılıyor?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "E/I notu, öğrencinin not dökümünde gösterilir ve FF notu işlemi görür"
+     ]
+    },
+    {
+     "belge": "hukuk fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "E/I notu, öğrencinin not dökümünde gösterilir ve FF notu işlemi görür"
+     ]
+    }
+   ],
+   "beklenen": [
+    "FF"
+   ]
+  },
+  {
+   "id": "N12",
+   "soru": "Başka bir üniversiteden ders almak istersem nereye başvurmalıyım?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "eşdeğerlik alınması talebiyle bölümüne başvurur"
+     ]
+    }
+   ],
+   "beklenen": [
+    "bölüm"
+   ]
+  },
+  {
+   "id": "N13",
+   "soru": "Çift ana dal programına başvurmak için genel not ortalaması en az kaç olmalıdır?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "çift anadal program yönergesi.pdf",
+     "kanit": [
+      "genel not ortalaması 100 üzerinden en az 70"
+     ]
+    }
+   ],
+   "beklenen": [
+    "70"
+   ]
+  },
+  {
+   "id": "N14",
+   "soru": "İkinci bir bölüm okumak istiyorum, sınıfımda başarı sıralamasında ilk yüzde kaçta olmalıyım?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "çift anadal program yönergesi.pdf",
+     "kanit": [
+      "başarı sıralaması itibari ile en üst %20"
+     ]
+    },
+    {
+     "belge": "kurumlar arası kredi transferi.pdf",
+     "kanit": [
+      "başarı sıralaması itibari ile en üst %20"
+     ]
+    }
+   ],
+   "beklenen": [
+    "20"
+   ]
+  },
+  {
+   "id": "N15",
+   "soru": "Yan dal programına en erken hangi dönemde başvurulabilir?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yandal programı.pdf",
+     "kanit": [
+      "en erken üçüncü ve en geç altıncı döneminin başında"
+     ]
+    },
+    {
+     "belge": "Yandal_Yonergesi.pdf",
+     "kanit": [
+      "en erken üçüncü ve en geç altıncı döneminin başında"
+     ]
+    }
+   ],
+   "beklenen": [
+    "üçüncü|3"
+   ]
+  },
+  {
+   "id": "N16",
+   "soru": "Yan dal yaparken bir dönemde en fazla kaç AKTS ders alabilirim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yandal programı.pdf",
+     "kanit": [
+      "en fazla 15 AKTS ders alabilirler"
+     ]
+    },
+    {
+     "belge": "Yandal_Yonergesi.pdf",
+     "kanit": [
+      "en fazla 15 AKTS ders alabilirler"
+     ]
+    }
+   ],
+   "beklenen": [
+    "15"
+   ]
+  },
+  {
+   "id": "N17",
+   "soru": "Yaz okulunda kaç ders alabilirim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yaz öğretimi yönetmeliği.pdf",
+     "kanit": [
+      "en fazla dört ders alabilir"
+     ]
+    }
+   ],
+   "beklenen": [
+    "dört|4"
+   ]
+  },
+  {
+   "id": "N18",
+   "soru": "Lisans öğrencileri yaz öğretiminde önlisans programlarından ders alabilir mi?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yaz öğretimi yönetmeliği.pdf",
+     "kanit": [
+      "Lisans öğrencileri, yaz öğretiminde önlisans programlarından ders alamazlar"
+     ]
+    }
+   ],
+   "beklenen": [
+    "alamaz|hayır"
+   ]
+  },
+  {
+   "id": "N19",
+   "soru": "Yaz okulunda bir dersi bırakıp yerine başka ders ekleyebilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yaz öğretimi yönetmeliği.pdf",
+     "kanit": [
+      "Yaz öğretiminde ders ekleme, ders bırakma ve dersten çekilme uygulanmaz"
+     ]
+    }
+   ],
+   "beklenen": [
+    "uygulanmaz|yapılamaz|hayır"
+   ]
+  },
+  {
+   "id": "N20",
+   "soru": "Yaz öğretiminde yıllık dersler açılır mı?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yaz öğretimi yönetmeliği.pdf",
+     "kanit": [
+      "Yıllık dersler yaz öğretiminde açılmaz"
+     ]
+    }
+   ],
+   "beklenen": [
+    "açılmaz|hayır"
+   ]
+  },
+  {
+   "id": "N21",
+   "soru": "Kaydımı dondurduğum dönemde yaz okuluna gidebilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yaz öğretimi yönetmeliği.pdf",
+     "kanit": [
+      "izinli sayılma süresi devam eden öğrenciler yaz öğretiminde ders alamazlar"
+     ]
+    }
+   ],
+   "beklenen": [
+    "alamaz|giremez|katılamaz|hayır"
+   ]
+  },
+  {
+   "id": "N22",
+   "soru": "Sınavda kopyaya teşebbüs etmenin disiplin cezası nedir?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "Ogrenci_disiplin_Isleri.pdf",
+     "kanit": [
+      "Sınavlarda kopyaya teşebbüs etmek"
+     ]
+    }
+   ],
+   "beklenen": [
+    "kınama"
+   ]
+  },
+  {
+   "id": "N23",
+   "soru": "Yemek bursuna nasıl başvurabilirim?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "öğrenci yemek bursu.pdf",
+     "kanit": [
+      "başvuru formunu doldurarak"
+     ]
+    }
+   ],
+   "beklenen": [
+    "form"
+   ]
+  },
+  {
+   "id": "N24",
+   "soru": "Öğrenci topluluğu kurmak için en az kaç kurucu üye gerekir?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "öğrenci toplulukları kuruluş ve işleyiş.pdf",
+     "kanit": [
+      "En az 20 öğrenci olmak zorundadır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "20"
+   ]
+  },
+  {
+   "id": "N25",
+   "soru": "Öğrenci kartımı kaybettim, yenisini kim veriyor?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "kimlik kartı yönergesi.pdf",
+     "kanit": [
+      "Öğrenci İşleri Daire Başkanlığı tarafından yeniden kimlik kartı verilir"
+     ]
+    }
+   ],
+   "beklenen": [
+    "Öğrenci İşleri"
+   ]
+  },
+  {
+   "id": "N26",
+   "soru": "Kütüphane ve spor sahalarının açık alanlarında sigara içmek yasak mı?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "dumansız üniversite uygulama.pdf",
+     "kanit": [
+      "kütüphane gibi binaların, spor sahalarının kapalı ve açık alanlarında"
+     ]
+    }
+   ],
+   "beklenen": [
+    "yasak|evet"
+   ]
+  },
+  {
+   "id": "N27",
+   "soru": "Görme engelliyim, sınavlarda bana ek süre veriliyor mu?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi.pdf",
+     "kanit": [
+      "sınav süresinin yarısı kadar ek süre verilir"
+     ]
+    },
+    {
+     "belge": "Engelli Öğrenciler Eğt-Öğr Yönergesi.pdf",
+     "kanit": [
+      "sınav süresinin yarısı kadar ek süre verilir"
+     ]
+    }
+   ],
+   "beklenen": [
+    "yarısı"
+   ]
+  },
+  {
+   "id": "N28",
+   "soru": "Tezli yüksek lisans programı en çok kaç yarıyılda tamamlanmalıdır?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "lisansüstü eğitim yönetmeliği.pdf",
+     "kanit": [
+      "program en çok altı yarıyılda tamamlanır"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim.pdf",
+     "kanit": [
+      "program en çok altı yarıyılda tamamlanır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "altı|6"
+   ]
+  },
+  {
+   "id": "N29",
+   "soru": "Mühendislik fakültesinde zorunlu staj süresi toplam kaç iş günüdür?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "mühendislik fakültesi staj yönergesi.pdf",
+     "kanit": [
+      "zorunlu staj süresi toplam 40 (kırk) iş günüdür"
+     ]
+    }
+   ],
+   "beklenen": [
+    "40|kırk"
+   ]
+  },
+  {
+   "id": "N30",
+   "soru": "Mühendislik stajımı ikiye bölmeden tek seferde yapabilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "mühendislik fakültesi staj yönergesi.pdf",
+     "kanit": [
+      "birleştirilerek tek seferde aralıksız 40 (kırk) iş günü"
+     ]
+    }
+   ],
+   "beklenen": [
+    "evet|tek seferde|birleştir"
+   ]
+  },
+  {
+   "id": "N31",
+   "soru": "Alan dışı seçmeli dersten kalırsam aynı dersi tekrar almak zorunda mıyım?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "alan dışı seçmeli ders yönergesi.pdf",
+     "kanit": [
+      "kaldığı dersi alma zorunluluğu yoktur"
+     ]
+    }
+   ],
+   "beklenen": [
+    "zorunluluğu yok|zorunda değil|farklı"
+   ]
+  },
+  {
+   "id": "N32",
+   "soru": "Alan dışı seçmeli dersler hangi yarıyıldan itibaren müfredatta yer alır?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "alan dışı seçmeli ders yönergesi.pdf",
+     "kanit": [
+      "ADSD, III. yarıyıldan itibaren müfredatlarda yer alır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "III|3|üçüncü"
+   ]
+  },
+  {
+   "id": "N33",
+   "soru": "Tıp fakültesinde teorik derslere devam zorunluluğu yüzde kaçtır?",
+   "stil": "belge",
+   "kategori": "fakulteye_ozel",
+   "kaynaklar": [
+    {
+     "belge": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "teorik derslerin en az %75"
+     ]
+    }
+   ],
+   "beklenen": [
+    "75"
+   ]
+  },
+  {
+   "id": "N34",
+   "soru": "Hukuk fakültesinde başarılı sayılmak için genel not ortalaması en az kaç olmalı?",
+   "stil": "belge",
+   "kategori": "fakulteye_ozel",
+   "kaynaklar": [
+    {
+     "belge": "hukuk fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "Genel ağırlıklı not ortalaması en az 2.00 olan lisans öğrencileri başarılı sayılırlar"
+     ]
+    }
+   ],
+   "beklenen": [
+    "2.00|2,00"
+   ]
+  },
+  {
+   "id": "N35",
+   "soru": "Hukuk fakültesindeyim, raporluyken ara sınava girebilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "fakulteye_ozel",
+   "kaynaklar": [
+    {
+     "belge": "hukuk fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "yarıyıl içi değerlendirmesine esas teşkil eden hiçbir sınava katılamaz"
+     ]
+    }
+   ],
+   "beklenen": [
+    "katılamaz|giremez|hayır"
+   ]
+  },
+  {
+   "id": "N36",
+   "soru": "Ders kaydımda seçtiğim dersleri kim onaylıyor?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "ogrenci_danismanligi.pdf",
+     "kanit": [
+      "Alacağı dersleri onaylar"
+     ]
+    }
+   ],
+   "beklenen": [
+    "danışman"
+   ]
+  },
+  {
+   "id": "N37",
+   "soru": "Kısmi zamanlı öğrenci çalıştırma ilanları ne zaman yapılır?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "kaynaklar": [
+    {
+     "belge": "kısmı zamanlı öğrenci çalıştırma.pdf",
+     "kanit": [
+      "her eğitim öğretim yılının Ekim ayı başında"
+     ]
+    }
+   ],
+   "beklenen": [
+    "Ekim"
+   ]
+  },
+  {
+   "id": "N38",
+   "soru": "Hazırlıktayım, seviye tespit sınavına girmezsem ne olur?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf",
+     "kanit": [
+      "Sınava girmeyen öğrenciler en düşük seviye grubuna yerleştirilirler"
+     ]
+    },
+    {
+     "belge": "yabancı dil eğitim öğretim sınav.pdf",
+     "kanit": [
+      "Sınava girmeyen öğrenciler en düşük seviye grubuna yerleştirilirler"
+     ]
+    }
+   ],
+   "beklenen": [
+    "en düşük"
+   ]
+  },
+  {
+   "id": "N39",
+   "soru": "İkinci öğretimden birinci öğretime yatay geçiş yapılabilir mi?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "kurumlar arası kredi transferi.pdf",
+     "kanit": [
+      "ilk yüzde onuna girerek bir üst sınıfa geçen öğrenciler birinci öğretim diploma programlarına kontenjan dahilinde yatay geçiş yapabilirler"
+     ]
+    }
+   ],
+   "beklenen": [
+    "yüzde on|%10"
+   ]
+  },
+  {
+   "id": "N40",
+   "soru": "Öğretim elemanları yaz öğretiminde haftada en fazla kaç saat ders verebilir?",
+   "stil": "belge",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yaz öğretimi yönetmeliği.pdf",
+     "kanit": [
+      "haftada en fazla onaltı saati geçmemek"
+     ]
+    },
+    {
+     "belge": "Yaz Öğretimi Uygulama Esasları.pdf",
+     "kanit": [
+      "haftada en fazla onaltı saati geçmemek"
+     ]
+    }
+   ],
+   "beklenen": [
+    "16|onaltı|on altı"
+   ]
+  },
+  {
+   "id": "N46",
+   "soru": "Teorik derslerin yüzde kaçına girmek zorundayım?",
+   "stil": "ogrenci",
+   "kategori": "coklu_kapsam",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    },
+    {
+     "belge": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "teorik derslerin en az %75"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim yönetmeliği.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    },
+    {
+     "belge": "hemşirelik beceri uygulamları ve intörn.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    },
+    {
+     "belge": "uzaktan eğitim.pdf",
+     "kanit": [
+      "Devam zorunluluğu teorik dersler için % 70"
+     ]
+    }
+   ],
+   "beklenen": [
+    "70",
+    "75"
+   ],
+   "not": "Genel kural %70, tıp fakültesinde %75; cevap ikisini de kapsamıyla vermeli."
+  },
+  {
+   "id": "N47",
+   "soru": "Yatay geçiş hangi dönemlerde yapılamaz?",
+   "stil": "belge",
+   "kategori": "coklu_kapsam",
+   "kaynaklar": [
+    {
+     "belge": "yatay-gecis-yonergesi.pdf",
+     "kanit": [
+      "ilk iki yarıyılı ile son iki yarıyılına"
+     ]
+    },
+    {
+     "belge": "kurumlar arası kredi transferi.pdf",
+     "kanit": [
+      "lisans diploma programlarının ilk iki yarıyılı ile son iki yarıyılına yatay geçiş yapılamaz"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim yönetmeliği.pdf",
+     "kanit": [
+      "Yüksek lisans programlarına, en geç üçüncü döneme başlamamış olan"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim.pdf",
+     "kanit": [
+      "Yüksek lisans programlarına, en geç üçüncü döneme başlamamış olan"
+     ]
+    }
+   ],
+   "beklenen": [
+    "ilk iki",
+    "üçüncü"
+   ],
+   "not": "Lisans: ilk iki ve son iki yarıyıl; yüksek lisans: üçüncü döneme başlamış olan kabul edilmez."
+  },
+  {
+   "id": "N41",
+   "soru": "Kısmi zamanlı çalışırsam saatine ne kadar ücret alırım?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "kısmı zamanlı öğrenci çalıştırma.pdf",
+     "kanit": [
+      "günlük brüt asgari ücretin dörtte birini geçmemek"
+     ]
+    }
+   ],
+   "beklenen": [
+    "dörtte"
+   ],
+   "not": "Tutar yok ama kural var: LLM rakam uydurmak yerine kuralı söylemeli."
+  },
+  {
+   "id": "N42",
+   "soru": "Yaz okulunda bir dersin ücreti ne kadar?",
+   "stil": "ogrenci",
+   "kategori": "bilgi_yok",
+   "cevapsiz": true,
+   "not": "Yönetmelik ücretin Üniversite Yönetim Kurulunca belirlendiğini söylüyor, tutar vermiyor.",
+   "kabul": [
+    "Yönetim Kurulu"
+   ]
+  },
+  {
+   "id": "N43",
+   "soru": "Yemek bursu alan öğrenci günde kaç kez ücretsiz yemek yiyebilir?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "öğrenci yemek bursu.pdf",
+     "kanit": [
+      "günde bir kez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "bir|1"
+   ]
+  },
+  {
+   "id": "N44",
+   "soru": "KYK yurt başvuruları ne zaman başlıyor?",
+   "stil": "ogrenci",
+   "kategori": "kapsam_disi",
+   "cevapsiz": true,
+   "not": "KYK yurtları üniversite mevzuatında değil."
+  },
+  {
+   "id": "N45",
+   "soru": "Bu dönem Veri Yapıları dersini hangi hoca veriyor?",
+   "stil": "ogrenci",
+   "kategori": "kapsam_disi",
+   "cevapsiz": true,
+   "not": "Ders programı/hoca bilgisi belgelerde yok."
+  }
+ ]
+}

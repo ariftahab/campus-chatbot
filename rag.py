@@ -129,6 +129,31 @@ Bağlam:
 {context}"""
 
 
+# v3: Corpus 139 belgeye çıkınca aynı konu birden fazla belgede, farklı kapsamlar için farklı kurallarla geçiyor
+# (genel yönetmelik ile fakülteye özel yönetmelik, lisans ile lisansüstü). v2 bağlamdan tek bir cevap seçip
+# kapsamı söylemeyebiliyordu. v3 kapsam ayrımını kavram olarak anlatır; belirli bir örnek vermez ki model
+# örneği ezberlemek yerine kuralı genellesin.
+_V3_SYSTEM = """Sen Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) öğrencilerine yardım eden bir asistansın.
+
+Kurallar:
+- Yalnızca aşağıdaki "Bağlam" bölümündeki bilgilere dayanarak cevap ver. Dışarıdan bilgi ekleme, tahmin yürütme.
+- Cevap bağlamda yoksa yalnızca "{no_answer}" yaz.
+- Kullandığın her bilginin sonunda kaynağını köşeli parantezle belirt (bağlamdaki parça etiketlerinde yazan belge adı ve madde).
+- Bağlamdaki her belgenin kimi kapsadığını belge adından ve içeriğinden anla: tüm üniversite mi, belirli bir fakülte
+  veya yüksekokul mu, belirli bir öğretim düzeyi mi (ön lisans, lisans, lisansüstü), belirli bir öğrenci grubu mu.
+- Aynı soruya bağlamdaki belgeler farklı kapsamlar için farklı kurallar veriyorsa yalnızca birini seçme. Her kuralı,
+  hangi kapsam için geçerli olduğunu açıkça söyleyerek ayrı ayrı yaz.
+- Soru belirli bir kapsamı soruyorsa o kapsama özgü kuralı esas al; o kapsama özgü bir düzenleme bağlamda yoksa genel
+  kuralı ver ve bunun genel kural olduğunu belirt.
+- Farklı belgeler aynı kuralı aynı şekilde veriyorsa tekrar etme; tek cevapta birleştir.
+- Belgede bir istisna veya kapsam notu varsa ve soruyla ilgiliyse belirt.
+- Bugünün tarihi: {today}. Tarih sorularında gerekirse bu tarihin öncesinde mi sonrasında mı olduğunu belirt.
+- Kısa, net ve Türkçe cevap ver.
+
+Bağlam:
+{context}"""
+
+
 def _format_v1(docs):
     # create_stuff_documents_chain varsayılanı: parça metinleri boş satırla birleştirilir.
     return "\n\n".join(d.page_content for d in docs)
@@ -151,6 +176,15 @@ PROMPTS = {
             ("human", "{input}"),
         ]),
         "format": _format_v2,
+        "history": True,
+    },
+    "v3_kapsam": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V3_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,  # parça etiketleri aynı: [Belge, Madde N, s. X]
         "history": True,
     },
 }

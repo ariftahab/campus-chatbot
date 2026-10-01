@@ -41,8 +41,15 @@ NO_CHANGE_EPS = 1e-9
 
 # --- Veri seti ---
 
-def load_dataset():
-    raw = config.EVAL_FILE.read_bytes()
+DEFAULT_DATASET = "sorular"  # veri_seti alanı olmayan deneyler (EXP-000..016) bu setle koşuldu
+
+
+def dataset_path(name=DEFAULT_DATASET):
+    return config.EVAL_FILE.parent / f"{name}.json"
+
+
+def load_dataset(name=DEFAULT_DATASET):
+    raw = dataset_path(name).read_bytes()
     data = json.loads(raw.decode("utf-8"))
     return data, hashlib.sha256(raw).hexdigest()[:16]
 
@@ -55,14 +62,31 @@ def norm(text):
     return re.sub(r"[\W_]+", "", tr_lower(text))
 
 
-def evidence_alternatives(item):
+def evidence_alternatives(kanit):
     """Her alternatif, aynı parçada birlikte bulunması gereken ifadelerin listesidir."""
-    return [[alt] if isinstance(alt, str) else alt for alt in item["kanit"]]
+    return [[alt] if isinstance(alt, str) else alt for alt in kanit]
+
+
+def sources(item):
+    """Sorunun doğru kaynakları: [(belge, kanıt alternatifleri)].
+
+    Set 2.0'da tek kaynak vardı ('kaynak' + 'kanit'); 3.0'da 'kaynaklar' listesi. Aynı kural birden fazla
+    belgede geçebildiği için (ör. not tablosu birçok yönetmelikte aynı), soruyu sorulduğu haliyle doğru
+    cevaplamaya yeten her belge ayrı kaynak olarak yazılır.
+    """
+    if "kaynaklar" in item:
+        return [(s["belge"], evidence_alternatives(s["kanit"])) for s in item["kaynaklar"]]
+    return [(item["kaynak"], evidence_alternatives(item["kanit"]))]
+
+
+def answerable(item):
+    """Retrieval değerlendirmesine girer mi (kanıtı olan soru)."""
+    return "kaynaklar" in item or "kanit" in item
 
 
 def is_relevant(item, chunk_text_norm, chunk_source):
-    return chunk_source == item["kaynak"] and any(
-        all(norm(part) in chunk_text_norm for part in alt) for alt in evidence_alternatives(item))
+    return any(chunk_source == belge and any(all(norm(part) in chunk_text_norm for part in alt) for alt in alts)
+               for belge, alts in sources(item))
 
 
 def validate_dataset(data):
@@ -73,19 +97,21 @@ def validate_dataset(data):
     """
     import ingest
     texts = {}
-    # Yalnız soruların kaynak gösterdiği belgeler okunur (138 belgenin hepsini iki okuyucuyla okumak yavaş).
-    for path in {config.DATA_DIR / item["kaynak"] for item in data["sorular"] if "kanit" in item}:
+    # Yalnız soruların kaynak gösterdiği belgeler okunur (139 belgenin hepsini iki okuyucuyla okumak yavaş).
+    paths = {config.DATA_DIR / belge for item in data["sorular"] if answerable(item) for belge, _ in sources(item)}
+    for path in paths:
         for parser in ("pypdf", "pdfplumber"):
-            texts[(path.name, parser)] = norm(" ".join(ingest.read_pages(path, parser)))
+            texts[(path.name, parser)] = norm(" ".join(ingest.read_pages(path, parser))) if path.exists() else ""
     problems = []
     for item in data["sorular"]:
-        if "kanit" not in item:
+        if not answerable(item):
             continue
-        for alt in evidence_alternatives(item):
-            for part in alt:
-                for parser in ("pypdf", "pdfplumber"):
-                    if norm(part) not in texts.get((item["kaynak"], parser), ""):
-                        problems.append(f"{item['id']}: '{part}' {parser} metninde bulunamadı")
+        for belge, alts in sources(item):
+            for alt in alts:
+                for part in alt:
+                    for parser in ("pypdf", "pdfplumber"):
+                        if norm(part) not in texts.get((belge, parser), ""):
+                            problems.append(f"{item['id']}: '{part}' {belge} ({parser}) metninde bulunamadı")
     return problems
 
 

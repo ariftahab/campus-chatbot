@@ -2,7 +2,7 @@
 
 > Otomatik üretilir (`python -m experiments.report`). Production: **EXP-014**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
-**Dataset:** `eval/sorular.json` v2.0 — 27 cevaplı soru (+3 kapsam dışı). Bir chunk, kaynakta birebir geçen evidence cümlesini içeriyorsa relevant sayılır.  
+**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
 **Sabit parametreler:** `vector_k=15`, `bm25_k=15`, `rrf_k=60`, `reranker_max_length=512`, `rerank_candidates=8`, `llm_temperature=0.3`
 
@@ -32,25 +32,25 @@ Kalın hücre = parent'a göre değişen parametre.
 
 ## 2. Results
 
-| Exp | Değişiklik | MRR@10 | Hit@1 | Hit@5 | Context hit | Context chars | Latency | Primary metric | Hyp. |
-|---|---|---|---|---|---|---|---|---|---|
-| EXP-000 | Baseline (prototip) | 0.564 | 0.444 | 0.741 | 0.815 | 9223 | 22 ms | baseline |  |
-| EXP-001 | PDF parser: pypdf → pdfplumber | 0.584 | 0.481 | 0.667 | 0.778 | 9278 | 21 ms | MRR@10 ↑ iyileşti (p=0.72, anlamlı değil) | ~ |
-| EXP-002 | Chunking: recursive → structural | 0.716 | 0.556 | 0.889 | 1.000 | 8436 | 21 ms | MRR@10 ↑ iyileşti (p=0.22, anlamlı değil) | ~ |
-| EXP-003 | Normalize embeddings: kapalı → açık | 0.654 | 0.444 | 0.926 | 1.000 | 8095 | 21 ms | MRR@10 ↓ kötüleşti (p=0.06, anlamlı değil) | ✗ |
-| EXP-004 | Embedding: MiniLM → bge-m3 | 0.920 | 0.852 | 1.000 | 1.000 | 8708 | 83 ms | MRR@10 ↑ iyileşti (p<0.01, anlamlı) | ✓ |
-| EXP-005 | chunk_size: 1000 → 1500 | 0.938 | 0.889 | 1.000 | 1.000 | 10835 | 79 ms | MRR@10 ↑ iyileşti (p=0.56, anlamlı değil) | ~ |
-| EXP-006 | chunk_overlap: 200 → 150 | 0.938 | 0.889 | 1.000 | 1.000 | 10793 | 73 ms | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
-| EXP-007 | Retrieval: vector → hybrid (BM25 + RRF) | 0.938 | 0.889 | 1.000 | 1.000 | 10678 | 78 ms | MRR@10 = değişmedi (p=0.89, anlamlı değil) | ✗ |
-| EXP-008 | Reranker: yok → bge-reranker-v2-m3 | 1.000 | 1.000 | 1.000 | 1.000 | 10678 | 4.7 s | MRR@10 ↑ iyileşti (p=0.10, anlamlı değil) | ~ |
-| EXP-009 | final_k: 10 → 5 | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.3 s | context chars ↓ iyileşti (p<0.01, anlamlı) | ✓ |
-| EXP-010 | Prompt: v1 → v2 (system prompt + citation) | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.4 s | answer acc.: ölçülmedi | beklemede |
-| EXP-011 | Kontrol: bge-m3 + normalize kapalı | 0.920 | 0.852 | 1.000 | 1.000 | 8708 | 90 ms | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
-| EXP-012 | Kontrol: reranker + vector (BM25 yok) | 1.000 | 1.000 | 1.000 | 1.000 | 10793 | 5.5 s | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
-| EXP-013 | LLM: gemini-2.5-flash → gemini-3.1-flash-lite | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.4 s | answer acc.: ölçülmedi | beklemede |
-| EXP-014 | Donanım: CPU → GPU (RTX 4050) | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 366 ms | latency_ms ↓ iyileşti (p<0.01, anlamlı) | ✓ |
-| EXP-015 | Corpus: 3 belge → 139 belge (tüm üniversite mevzuatı) | 0.863 | 0.778 | 0.963 | 0.963 | 5820 | 407 ms | MRR@10 ↓ kötüleşti (p=0.02, anlamlı) | ✓ |
-| EXP-016 | Chunking: madde regex'i genişletildi (structural → structural_v2) | 0.863 | 0.778 | 0.963 | 0.963 | 5740 | 2.2 s | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
+| Exp | Değişiklik | Set | MRR@10 | Hit@1 | Hit@5 | Context hit | Context chars | Latency | Primary metric | Hyp. |
+|---|---|---|---|---|---|---|---|---|---|---|
+| EXP-000 | Baseline (prototip) | 2.0 | 0.564 | 0.444 | 0.741 | 0.815 | 9223 | 22 ms | baseline |  |
+| EXP-001 | PDF parser: pypdf → pdfplumber | 2.0 | 0.584 | 0.481 | 0.667 | 0.778 | 9278 | 21 ms | MRR@10 ↑ iyileşti (p=0.72, anlamlı değil) | ~ |
+| EXP-002 | Chunking: recursive → structural | 2.0 | 0.716 | 0.556 | 0.889 | 1.000 | 8436 | 21 ms | MRR@10 ↑ iyileşti (p=0.22, anlamlı değil) | ~ |
+| EXP-003 | Normalize embeddings: kapalı → açık | 2.0 | 0.654 | 0.444 | 0.926 | 1.000 | 8095 | 21 ms | MRR@10 ↓ kötüleşti (p=0.06, anlamlı değil) | ✗ |
+| EXP-004 | Embedding: MiniLM → bge-m3 | 2.0 | 0.920 | 0.852 | 1.000 | 1.000 | 8708 | 83 ms | MRR@10 ↑ iyileşti (p<0.01, anlamlı) | ✓ |
+| EXP-005 | chunk_size: 1000 → 1500 | 2.0 | 0.938 | 0.889 | 1.000 | 1.000 | 10835 | 79 ms | MRR@10 ↑ iyileşti (p=0.56, anlamlı değil) | ~ |
+| EXP-006 | chunk_overlap: 200 → 150 | 2.0 | 0.938 | 0.889 | 1.000 | 1.000 | 10793 | 73 ms | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
+| EXP-007 | Retrieval: vector → hybrid (BM25 + RRF) | 2.0 | 0.938 | 0.889 | 1.000 | 1.000 | 10678 | 78 ms | MRR@10 = değişmedi (p=0.89, anlamlı değil) | ✗ |
+| EXP-008 | Reranker: yok → bge-reranker-v2-m3 | 2.0 | 1.000 | 1.000 | 1.000 | 1.000 | 10678 | 4.7 s | MRR@10 ↑ iyileşti (p=0.10, anlamlı değil) | ~ |
+| EXP-009 | final_k: 10 → 5 | 2.0 | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.3 s | context chars ↓ iyileşti (p<0.01, anlamlı) | ✓ |
+| EXP-010 | Prompt: v1 → v2 (system prompt + citation) | 2.0 | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.4 s | answer acc.: ölçülmedi | beklemede |
+| EXP-011 | Kontrol: bge-m3 + normalize kapalı | 2.0 | 0.920 | 0.852 | 1.000 | 1.000 | 8708 | 90 ms | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
+| EXP-012 | Kontrol: reranker + vector (BM25 yok) | 2.0 | 1.000 | 1.000 | 1.000 | 1.000 | 10793 | 5.5 s | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
+| EXP-013 | LLM: gemini-2.5-flash → gemini-3.1-flash-lite | 2.0 | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.4 s | answer acc.: ölçülmedi | beklemede |
+| EXP-014 | Donanım: CPU → GPU (RTX 4050) | 2.0 | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 366 ms | latency_ms ↓ iyileşti (p<0.01, anlamlı) | ✓ |
+| EXP-015 | Corpus: 3 belge → 139 belge (tüm üniversite mevzuatı) | 2.0 | 0.863 | 0.778 | 0.963 | 0.963 | 5820 | 407 ms | MRR@10 ↓ kötüleşti (p=0.02, anlamlı) | ✓ |
+| EXP-016 | Chunking: madde regex'i genişletildi (structural → structural_v2) | 2.0 | 0.863 | 0.778 | 0.963 | 0.963 | 5740 | 2.2 s | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -64,7 +64,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-015 | 0.602 | 0.581 | 0.594 | 0.963 | 0.863 |
 | EXP-016 | 0.600 | 0.581 | 0.594 | 0.963 | 0.863 |
 
-## 4. Notes
+## 5. Notes
 
 - **EXP-000:** 27 sorunun 5'inde doğru chunk ilk 10'da yok; MiniLM chunk'ların ortalama %64'ünü görüyor (128 token sınırı).
 - **EXP-001:** Anlamlı fark yok; bazı sorular iyileşti, bazıları kötüleşti. Asıl faydası structural chunking'i mümkün kılması.

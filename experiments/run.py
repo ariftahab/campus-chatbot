@@ -31,12 +31,22 @@ def load_result(exp_id):
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
+def dataset_name(exp):
+    """Deneyin soru seti (eval/<ad>.json). Alan yoksa ilk set: EXP-000..016 onunla koşuldu."""
+    return exp.get("veri_seti", ev.DEFAULT_DATASET)
+
+
 def param_diff(exp):
-    """Üst deneye göre değişen parametreler: {ad: [eski, yeni]}."""
+    """Üst deneye göre değişen parametreler: {ad: [eski, yeni]}.
+
+    Soru seti RAG parametresi değil ama değişirse deneyin tek değişkeni odur; bu yüzden farka dahil edilir.
+    """
     if not exp["ust_deney"]:
         return {}
-    parent = config.full_params(config.load_experiment(exp["ust_deney"])["params"])
-    return {k: [parent[k], v] for k, v in config.full_params(exp["params"]).items() if parent.get(k) != v}
+    parent_exp = config.load_experiment(exp["ust_deney"])
+    parent = {**config.full_params(parent_exp["params"]), "veri_seti": dataset_name(parent_exp)}
+    child = {**config.full_params(exp["params"]), "veri_seti": dataset_name(exp)}
+    return {k: [parent[k], v] for k, v in child.items() if parent.get(k) != v}
 
 
 def check_experiment(exp):
@@ -48,6 +58,8 @@ def check_experiment(exp):
     if exp["beklenen_yon"] not in ("artis", "azalis", "degisim_yok"):
         raise SystemExit(f"{exp['id']}: beklenen_yon artis | azalis | degisim_yok olmalı")
     config.RagConfig.from_dict(exp["params"])  # parametre doğrulaması
+    if not ev.dataset_path(dataset_name(exp)).exists():
+        raise SystemExit(f"{exp['id']}: soru seti bulunamadı: {ev.dataset_path(dataset_name(exp))}")
     diff = param_diff(exp)
     if exp["ust_deney"] and not diff:
         raise SystemExit(f"{exp['id']}: üst deneyden hiçbir parametre farklı değil.")
@@ -174,7 +186,8 @@ def answer_ok(item, answer):
     normalize = _normalize_answer
     answer = normalize(answer)
     if item.get("cevapsiz"):
-        return normalize(config.NO_ANSWER) in answer
+        # 'kabul': belge tutarı/saati vermiyor ama kimin belirlediğini söylüyor; bunu söyleyen cevap da doğru.
+        return any(normalize(x) in answer for x in [config.NO_ANSWER, *item.get("kabul", [])])
     return all(any(normalize(alt) in answer for alt in kw.split("|")) for kw in item["beklenen"])
 
 
@@ -219,9 +232,36 @@ def compare(exp, result, parent):
     return out
 
 
-def run(exp_id, use_llm, wait, rerun, dataset, dataset_hash):
+def subset_metrics(rows, items, answers=None):
+    """Soru alt grupları için ortalamalar: eski/yeni set, stil (belge/öğrenci dili), kategori.
+
+    Set 2.0'da bu alanlar yok; o zaman boş döner. Grup küçükse (birkaç soru) ortalama gürültülüdür.
+    """
+    meta = {q["id"]: q for q in items}
+    groups = {}
+    for key in ("stil", "kategori"):
+        for r in rows:
+            if key in meta[r["id"]]:
+                groups.setdefault(f"{key}:{meta[r['id']][key]}", []).append(r["id"])
+    if any("stil" in q for q in items):
+        for r in rows:
+            groups.setdefault("set:eski" if meta[r["id"]].get("eski_set") else "set:yeni", []).append(r["id"])
+    by_id = {r["id"]: r for r in rows}
+    ok = {a["id"]: a["answer_ok"] for a in (answers or [])}
+    out = {}
+    for name, ids in sorted(groups.items()):
+        out[name] = {"n": len(ids), "mrr@10": round(statistics.mean(by_id[i]["rr"] for i in ids), 4),
+                     "hit@5": round(statistics.mean(by_id[i]["hit@5"] for i in ids), 4)}
+        answered = [ok[i] for i in ids if i in ok]
+        if answered:
+            out[name]["answer_acc"] = round(statistics.mean(answered), 4)
+    return out
+
+
+def run(exp_id, use_llm, wait, rerun, datasets):
     exp = config.load_experiment(exp_id)
     diff = check_experiment(exp)
+    dataset, dataset_hash = datasets(dataset_name(exp))
     if load_result(exp_id) and not rerun:
         print(f"{exp_id}: sonuç zaten var, atlanıyor (yeniden üretmek için --yeniden).")
         return
@@ -238,7 +278,7 @@ def run(exp_id, use_llm, wait, rerun, dataset, dataset_hash):
     ensure_index(exp_id, cfg)
     store, chunks, manifest = ingest.load_index(cfg)
     retriever = Retriever(cfg, store, chunks)
-    items = [q for q in dataset["sorular"] if "kanit" in q]
+    items = [q for q in dataset["sorular"] if ev.answerable(q)]
     rows = evaluate_retrieval(cfg, retriever, items)
 
     env = ev.environment(cfg)
@@ -247,7 +287,8 @@ def run(exp_id, use_llm, wait, rerun, dataset, dataset_hash):
     result = {
         "id": exp_id,
         "calisma_zamani": datetime.now().isoformat(timespec="seconds"),
-        "dataset": {"surum": dataset["surum"], "hash": dataset_hash, "n_getirme": len(items),
+        "dataset": {"dosya": f"eval/{dataset_name(exp)}.json", "surum": dataset["surum"], "hash": dataset_hash,
+                    "n_getirme": len(items),
                     "n_toplam": len(dataset["sorular"])},
         "params": exp["params"],
         "degisen_parametreler": diff,
@@ -267,6 +308,8 @@ def run(exp_id, use_llm, wait, rerun, dataset, dataset_hash):
                         "n": len(answers)},
             "per_question": answers,
         }
+    llm_rows = result["llm"]["per_question"] if result["llm"] else None
+    result["retrieval"]["alt_kirilimlar"] = subset_metrics(rows, items, llm_rows)
     parent = load_result(exp["ust_deney"]) if exp["ust_deney"] else None
     result["karsilastirma"] = compare(exp, result, parent) if parent else None
 
@@ -294,13 +337,20 @@ def main():
     if not ids:
         parser.error("deney kimliği ya da --all verin")
 
-    dataset, dataset_hash = ev.load_dataset()
-    problems = ev.validate_dataset(dataset)
-    if problems:
-        print("Veri seti doğrulaması başarısız:\n  " + "\n  ".join(problems))
-        return 1
+    cache = {}
+
+    def datasets(name):
+        """Soru setini bir kez yükleyip doğrular (her deney kendi setini seçebilir)."""
+        if name not in cache:
+            dataset, dataset_hash = ev.load_dataset(name)
+            problems = ev.validate_dataset(dataset)
+            if problems:
+                raise SystemExit(f"Soru seti ({name}) doğrulaması başarısız:\n  " + "\n  ".join(problems))
+            cache[name] = (dataset, dataset_hash)
+        return cache[name]
+
     for exp_id in ids:
-        run(exp_id, args.llm, args.bekle, args.yeniden, dataset, dataset_hash)
+        run(exp_id, args.llm, args.bekle, args.yeniden, datasets)
     report.build()
     print(f"\nGünlük güncellendi: {report.LOG_FILE}")
     return 0
