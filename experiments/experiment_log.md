@@ -2,7 +2,7 @@
 
 > Otomatik üretilir (`python -m experiments.report`). Production: **EXP-014**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
-**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
+**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
 **Sabit parametreler:** `vector_k=15`, `bm25_k=15`, `rrf_k=60`, `reranker_max_length=512`, `rerank_candidates=8`, `llm_temperature=0.3`
 
@@ -29,6 +29,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-014 | EXP-013 | v1 | **cuda** | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 73 |
 | EXP-015 | EXP-014 | **v2** | cuda | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 4033 |
 | EXP-016 | EXP-015 | v2 | cuda | pdfplumber | **structural_v2** | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 4045 |
+| EXP-017 | EXP-016 | v2 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 4045 |
 
 ## 2. Results
 
@@ -51,6 +52,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-014 | Donanım: CPU → GPU (RTX 4050) | 2.0 | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 366 ms | latency_ms ↓ iyileşti (p<0.01, anlamlı) | ✓ |
 | EXP-015 | Corpus: 3 belge → 139 belge (tüm üniversite mevzuatı) | 2.0 | 0.863 | 0.778 | 0.963 | 0.963 | 5820 | 407 ms | MRR@10 ↓ kötüleşti (p=0.02, anlamlı) | ✓ |
 | EXP-016 | Chunking: madde regex'i genişletildi (structural → structural_v2) | 2.0 | 0.863 | 0.778 | 0.963 | 0.963 | 5740 | 2.2 s | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
+| EXP-017 | Referans: değerlendirme seti 2.0 → 3.0 (77 soru, 31 belge) | 3.0 | 0.852 | 0.789 | 0.930 | 0.930 | 5798 | 386 ms | MRR@10: ölçülmedi | beklemede |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -63,6 +65,15 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-014 | 0.938 | 0.838 | 0.938 | 1.000 | 1.000 |
 | EXP-015 | 0.602 | 0.581 | 0.594 | 0.963 | 0.863 |
 | EXP-016 | 0.600 | 0.581 | 0.594 | 0.963 | 0.863 |
+| EXP-017 | 0.674 | 0.588 | 0.687 | 0.944 | 0.852 |
+
+## 4. Soru grupları (MRR@10)
+
+Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama gürültülüdür.
+
+| Exp | Eski sorular | Yeni sorular | Belge dili | Öğrenci dili | Fakülteye özel | Çok kapsamlı |
+|---|---|---|---|---|---|---|
+| EXP-017 | 0.900 (27) | 0.822 (44) | 0.921 (42) | 0.751 (29) | 1.000 (3) | 1.000 (2) |
 
 ## 5. Notes
 
@@ -83,3 +94,4 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 - **EXP-014:** Latency 5,4 sn → 0,37 sn (~15×, p<0,001); sıralamalar birebir aynı.
 - **EXP-015:** MRR@10 1,00 → 0,86 (p=0,02); reranker düşüşü sınırlıyor (RRF 0,59 → 0,86). 6 kötüleşmenin 2'si eksik etiket.
 - **EXP-016:** Değişmedi (beklenen): soruların kaynak belgeleri etkilenmiyor; fallback belge 11 → 2. Latency değeri ölçüm artefaktı.
+- **EXP-017:** Yeni baseline: MRR@10 0,852. Öğrenci dili 0,75 / belge dili 0,92. Bazı 'hatalar' eksik etiket; bir PDF bozuk okunuyor.
