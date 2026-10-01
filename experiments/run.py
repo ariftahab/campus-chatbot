@@ -58,6 +58,20 @@ def check_experiment(exp):
     return diff
 
 
+def ensure_index(exp_id, cfg):
+    """İndeks yoksa ayrı bir süreçte kurar.
+
+    Aynı süreçte kurulursa embedding hesabının GPU belleği (PyTorch önbelleği) retrieval ölçümü sırasında
+    da tutulur; 6 GB'lık kartta VRAM dolup Windows belleği sistem RAM'ine taşıyınca latency birkaç kat
+    şişiyordu (EXP-016: 2220 ms, ayrı süreçte ~400 ms). Süreç bitince belleğin tamamı geri verilir, böylece
+    latency her zaman "indeks hazır, temiz süreç" koşulunda ölçülür.
+    """
+    import subprocess
+    import ingest
+    if not (ingest.index_dir(cfg) / "manifest.json").exists():
+        subprocess.run([sys.executable, "ingest.py", exp_id], cwd=config.ROOT, check=True)
+
+
 def evaluate_retrieval(cfg, retriever, items):
     retriever.rank(items[0]["soru"])  # ısınma: ilk çağrıdaki model/önbellek yüklemesi süreye katılmasın
     rows = []
@@ -221,6 +235,7 @@ def run(exp_id, use_llm, wait, rerun, dataset, dataset_hash):
 
     from rag import RagBot, Retriever
     import ingest
+    ensure_index(exp_id, cfg)
     store, chunks, manifest = ingest.load_index(cfg)
     retriever = Retriever(cfg, store, chunks)
     items = [q for q in dataset["sorular"] if "kanit" in q]
