@@ -1,31 +1,33 @@
 # Experiment Log
 
-> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-013**. Ayrıntılar: `experiments/results/EXP-*.json`.
+> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-014**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
 **Dataset:** `eval/sorular.json` v2.0 — 27 cevaplı soru (+3 kapsam dışı). Bir chunk, kaynakta birebir geçen evidence cümlesini içeriyorsa relevant sayılır.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
-**Sabit parametreler:** `corpus=v1`, `vector_k=15`, `bm25_k=15`, `rrf_k=60`, `reranker_max_length=512`, `rerank_candidates=8`, `llm_temperature=0.3`
+**Sabit parametreler:** `vector_k=15`, `bm25_k=15`, `rrf_k=60`, `reranker_max_length=512`, `rerank_candidates=8`, `llm_temperature=0.3`
 
 ## 1. Setup (hyperparameters)
 
 Kalın hücre = parent'a göre değişen parametre.
 
-| Exp | Parent | corpus | parser | chunking | chunk_size | overlap | embedding | normalize | retrieval | reranker | final_k | prompt | llm | #chunks |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| EXP-000 | – | v1 | pypdf | recursive | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 68 |
-| EXP-001 | EXP-000 | v1 | **pdfplumber** | recursive | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 68 |
-| EXP-002 | EXP-001 | v1 | pdfplumber | **structural** | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 90 |
-| EXP-003 | EXP-002 | v1 | pdfplumber | structural | 1000 | 200 | MiniLM | **✓** | vector | – | 10 | v1 | 2.5-flash | 90 |
-| EXP-004 | EXP-003 | v1 | pdfplumber | structural | 1000 | 200 | **bge-m3** | ✓ | vector | – | 10 | v1 | 2.5-flash | 90 |
-| EXP-005 | EXP-004 | v1 | pdfplumber | structural | **1500** | 200 | bge-m3 | ✓ | vector | – | 10 | v1 | 2.5-flash | 74 |
-| EXP-006 | EXP-005 | v1 | pdfplumber | structural | 1500 | **150** | bge-m3 | ✓ | vector | – | 10 | v1 | 2.5-flash | 73 |
-| EXP-007 | EXP-006 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **hybrid** | – | 10 | v1 | 2.5-flash | 73 |
-| EXP-008 | EXP-007 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | **bge-reranker** | 10 | v1 | 2.5-flash | 73 |
-| EXP-009 | EXP-008 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | **5** | v1 | 2.5-flash | 73 |
-| EXP-010 | EXP-009 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v2** | 2.5-flash | 73 |
-| EXP-011 | EXP-004 | v1 | pdfplumber | structural | 1000 | 200 | bge-m3 | **✗** | vector | – | 10 | v1 | 2.5-flash | 90 |
-| EXP-012 | EXP-008 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 10 | v1 | 2.5-flash | 73 |
-| EXP-013 | EXP-010 | v1 | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | **3.1-flash-lite** | 73 |
+| Exp | Parent | corpus | device | parser | chunking | chunk_size | overlap | embedding | normalize | retrieval | reranker | final_k | prompt | llm | #chunks |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| EXP-000 | – | v1 | cpu | pypdf | recursive | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 68 |
+| EXP-001 | EXP-000 | v1 | cpu | **pdfplumber** | recursive | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 68 |
+| EXP-002 | EXP-001 | v1 | cpu | pdfplumber | **structural** | 1000 | 200 | MiniLM | ✗ | vector | – | 10 | v1 | 2.5-flash | 90 |
+| EXP-003 | EXP-002 | v1 | cpu | pdfplumber | structural | 1000 | 200 | MiniLM | **✓** | vector | – | 10 | v1 | 2.5-flash | 90 |
+| EXP-004 | EXP-003 | v1 | cpu | pdfplumber | structural | 1000 | 200 | **bge-m3** | ✓ | vector | – | 10 | v1 | 2.5-flash | 90 |
+| EXP-005 | EXP-004 | v1 | cpu | pdfplumber | structural | **1500** | 200 | bge-m3 | ✓ | vector | – | 10 | v1 | 2.5-flash | 74 |
+| EXP-006 | EXP-005 | v1 | cpu | pdfplumber | structural | 1500 | **150** | bge-m3 | ✓ | vector | – | 10 | v1 | 2.5-flash | 73 |
+| EXP-007 | EXP-006 | v1 | cpu | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **hybrid** | – | 10 | v1 | 2.5-flash | 73 |
+| EXP-008 | EXP-007 | v1 | cpu | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | **bge-reranker** | 10 | v1 | 2.5-flash | 73 |
+| EXP-009 | EXP-008 | v1 | cpu | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | **5** | v1 | 2.5-flash | 73 |
+| EXP-010 | EXP-009 | v1 | cpu | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v2** | 2.5-flash | 73 |
+| EXP-011 | EXP-004 | v1 | cpu | pdfplumber | structural | 1000 | 200 | bge-m3 | **✗** | vector | – | 10 | v1 | 2.5-flash | 90 |
+| EXP-012 | EXP-008 | v1 | cpu | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 10 | v1 | 2.5-flash | 73 |
+| EXP-013 | EXP-010 | v1 | cpu | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | **3.1-flash-lite** | 73 |
+| EXP-014 | EXP-013 | v1 | **cuda** | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 73 |
+| EXP-015 | EXP-014 | **v2** | cuda | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | – |
 
 ## 2. Results
 
@@ -45,10 +47,20 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-011 | Kontrol: bge-m3 + normalize kapalı | 0.920 | 0.852 | 1.000 | 1.000 | 8708 | 90 ms | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
 | EXP-012 | Kontrol: reranker + vector (BM25 yok) | 1.000 | 1.000 | 1.000 | 1.000 | 10793 | 5.5 s | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
 | EXP-013 | LLM: gemini-2.5-flash → gemini-3.1-flash-lite | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.4 s | answer acc.: ölçülmedi | beklemede |
+| EXP-014 | Donanım: CPU → GPU (RTX 4050) | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 366 ms | latency_ms ↓ iyileşti (p<0.01, anlamlı) | ✓ |
+| EXP-015 | Corpus: 3 belge → 139 belge (tüm üniversite mevzuatı) | | | | | | | koşulmadı | |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
-## 3. Notes
+## 3. Retrieval stages
+
+Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adaylar içinde mi (reranker'ın düzeltebileceğinin üst sınırı). Aşama verisi EXP-014'ten itibaren kaydediliyor.
+
+| Exp | Vector | BM25 | RRF | Rerank input recall | Final |
+|---|---|---|---|---|---|
+| EXP-014 | 0.938 | 0.838 | 0.938 | 1.000 | 1.000 |
+
+## 4. Notes
 
 - **EXP-000:** 27 sorunun 5'inde doğru chunk ilk 10'da yok; MiniLM chunk'ların ortalama %64'ünü görüyor (128 token sınırı).
 - **EXP-001:** Anlamlı fark yok; bazı sorular iyileşti, bazıları kötüleşti. Asıl faydası structural chunking'i mümkün kılması.
@@ -64,3 +76,4 @@ Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı deği
 - **EXP-011:** Değişmedi: bge-m3 zaten kendi içinde normalize ediyor, parametre etkisiz.
 - **EXP-012:** Değişmedi: BM25'in katkısı reranker ile de gösterilemedi.
 - **EXP-013:** Retrieval aynı; answer_acc henüz ölçülmedi.
+- **EXP-014:** Latency 5,4 sn → 0,37 sn (~15×, p<0,001); sıralamalar birebir aynı.

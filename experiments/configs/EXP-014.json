@@ -27,6 +27,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v2_kaynakli"
   },
-  "notlar": "",
-  "kisa_not": ""
+  "notlar": "Hipotez doğrulandı. Retrieval latency ortalaması 5352 ms → 366 ms (medyan 5117 → 348 ms, ~14,6 kat; Wilcoxon p≈1,5e-8). İndeks kurma süresi (73 chunk, PDF okuma dahil) 37,3 sn → 4,0 sn. Sıralama birebir aynı: 27/27 soruda ilk ilgili chunk'ın sırası ve top-5 listesi değişmedi, MRR@10/Hit@k/bağlam uzunluğu farkı 0. GPU float farkları sıralamayı etkilemiyor; bu yüzden CPU ile koşulan EXP-000..013'ün kalite metrikleri GPU deneyleriyle karşılaştırılabilir, latency_ms karşılaştırılamaz. Bu deneyden itibaren retrieval aşamaları da kaydediliyor: vector MRR@10 0,938, BM25 0,838, RRF 0,938, final 1,000; 3 belgede bile sıralamayı 1,000'e reranker çıkarıyor.",
+  "kisa_not": "Latency 5,4 sn → 0,37 sn (~15×, p<0,001); sıralamalar birebir aynı."
 }
