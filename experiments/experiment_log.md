@@ -27,7 +27,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-012 | EXP-008 | v1 | cpu | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 10 | v1 | 2.5-flash | 73 |
 | EXP-013 | EXP-010 | v1 | cpu | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | **3.1-flash-lite** | 73 |
 | EXP-014 | EXP-013 | v1 | **cuda** | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 73 |
-| EXP-015 | EXP-014 | **v2** | cuda | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | – |
+| EXP-015 | EXP-014 | **v2** | cuda | pdfplumber | structural | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 4033 |
 
 ## 2. Results
 
@@ -48,7 +48,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-012 | Kontrol: reranker + vector (BM25 yok) | 1.000 | 1.000 | 1.000 | 1.000 | 10793 | 5.5 s | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
 | EXP-013 | LLM: gemini-2.5-flash → gemini-3.1-flash-lite | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 5.4 s | answer acc.: ölçülmedi | beklemede |
 | EXP-014 | Donanım: CPU → GPU (RTX 4050) | 1.000 | 1.000 | 1.000 | 1.000 | 5448 | 366 ms | latency_ms ↓ iyileşti (p<0.01, anlamlı) | ✓ |
-| EXP-015 | Corpus: 3 belge → 139 belge (tüm üniversite mevzuatı) | | | | | | | koşulmadı | |
+| EXP-015 | Corpus: 3 belge → 139 belge (tüm üniversite mevzuatı) | 0.863 | 0.778 | 0.963 | 0.963 | 5820 | 407 ms | MRR@10 ↓ kötüleşti (p=0.02, anlamlı) | ✓ |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -59,6 +59,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | Exp | Vector | BM25 | RRF | Rerank input recall | Final |
 |---|---|---|---|---|---|
 | EXP-014 | 0.938 | 0.838 | 0.938 | 1.000 | 1.000 |
+| EXP-015 | 0.602 | 0.581 | 0.594 | 0.963 | 0.863 |
 
 ## 4. Notes
 
@@ -77,3 +78,4 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 - **EXP-012:** Değişmedi: BM25'in katkısı reranker ile de gösterilemedi.
 - **EXP-013:** Retrieval aynı; answer_acc henüz ölçülmedi.
 - **EXP-014:** Latency 5,4 sn → 0,37 sn (~15×, p<0,001); sıralamalar birebir aynı.
+- **EXP-015:** MRR@10 1,00 → 0,86 (p=0,02); reranker düşüşü sınırlıyor (RRF 0,59 → 0,86). 6 kötüleşmenin 2'si eksik etiket.
