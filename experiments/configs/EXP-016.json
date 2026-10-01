@@ -27,6 +27,6 @@
     "llm_temperature": 0.3,
     "prompt_version": "v2_kaynakli"
   },
-  "notlar": "",
-  "kisa_not": ""
+  "notlar": "Hipotez doğrulandı: MRR@10, Hit@k ve context hit EXP-015 ile birebir aynı (0,863 / Hit@1 0,778 / context hit 0,963); 27 sorunun hiçbirinde ilk ilgili chunk'ın sırası değişmedi. Değerlendirme sorularının 3 kaynak belgesi bu değişiklikten etkilenmediği için bu beklenen sonuçtu; regex'in faydası bu setle ölçülemez, değerlendirme seti v2 gerekiyor. Yapısal etki: fallback'e düşen belge 11 → 2, 4033 → 4045 chunk, chunk'ı değişen 16 belge. Distractor etkisi: 6 sorunun top-5 listesi değişti ama sıralamayı etkilemedi; ör. K04'te öne geçen mezun belgeleri yönergesi artık 'Madde 17' olarak etiketleniyor (önce maddesiz sayfa chunk'ıydı). Vector MRR@10 0,602 → 0,600 (K05'te ilgili chunk vector'de 4 → 5); diğer aşamalar aynı. Context chars 5820 → 5740 (anlamsız). LATENCY ARTEFAKTI: sonuç dosyasında 407 → 2220 ms görünüyor ama bu chunking'den değil ölçümden: index aynı süreçte kurulduktan sonra retrieval ölçülüyor; bge-m3 + reranker (fp32) retrieval'da tek başına 4,4 GB VRAM kullanıyor (kart 6 GB) ve diğer uygulamaların GPU belleğiyle birlikte Windows belleği sistem RAM'ine taşıyor. Index hazırken ayrı süreçte iki ölçüm: 392 ve 403 ms (EXP-015 ile aynı). Bu deneyin latency_ms değeri yorumlanmamalı; runner'da index kurma ve latency ölçümünün ayrılması gerekiyor.",
+  "kisa_not": "Değişmedi (beklenen): soruların kaynak belgeleri etkilenmiyor; fallback belge 11 → 2. Latency değeri ölçüm artefaktı."
 }
