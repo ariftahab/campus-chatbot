@@ -62,8 +62,9 @@ def evaluate_retrieval(cfg, retriever, items):
     retriever.rank(items[0]["soru"])  # ısınma: ilk çağrıdaki model/önbellek yüklemesi süreye katılmasın
     rows = []
     for item in items:
+        trace = {}
         started = time.perf_counter()
-        ranking = retriever.rank(item["soru"], depth=ev.EVAL_DEPTH)
+        ranking = retriever.rank(item["soru"], depth=ev.EVAL_DEPTH, trace=trace)
         latency = (time.perf_counter() - started) * 1000
         top = ranking[:ev.EVAL_DEPTH]
         relevant = [ev.is_relevant(item, ev.norm(c.page_content), c.metadata["source"]) for c in top]
@@ -81,8 +82,40 @@ def evaluate_retrieval(cfg, retriever, items):
         }
         for k in ev.HIT_KS:
             row[f"hit@{k}"] = int(bool(first and first <= k))
+        row["asamalar"] = stage_ranks(item, retriever.chunks, trace)
         rows.append(row)
     return rows
+
+
+def stage_ranks(item, chunks, trace):
+    """Her ara listede ilk ilgili parçanın sırası (1'den başlar; listede yoksa None).
+
+    Böylece bir hatanın aday üretiminde mi (ilgili parça hiçbir listeye girmemiş: recall hatası)
+    yoksa sıralamada mı (aday listesinde var ama aşağıda kalmış: ranking hatası) oluştuğu görülür.
+    """
+    cache = {}
+
+    def relevant(cid):
+        if cid not in cache:
+            c = chunks[cid]
+            cache[cid] = ev.is_relevant(item, ev.norm(c.page_content), c.metadata["source"])
+        return cache[cid]
+
+    return {stage: next((i + 1 for i, cid in enumerate(ids) if relevant(cid)), None)
+            for stage, ids in trace.items()}
+
+
+def stage_metrics(rows):
+    """Aşama başına MRR@10; reranker varsa ilgili parçanın reranker'a giden adaylar içinde olma oranı."""
+    out = {}
+    for stage in rows[0]["asamalar"]:
+        ranks = [r["asamalar"][stage] for r in rows]
+        if stage == "rerank_input":
+            out["rerank_input_recall"] = round(statistics.mean(int(x is not None) for x in ranks), 4)
+        else:
+            out[f"{stage}_mrr@10"] = round(statistics.mean(
+                1 / x if x and x <= ev.EVAL_DEPTH else 0.0 for x in ranks), 4)
+    return out
 
 
 def summarize(rows, key):
@@ -205,7 +238,7 @@ def run(exp_id, use_llm, wait, rerun, dataset, dataset_hash):
         "degisen_parametreler": diff,
         "index": manifest,
         "environment": env,
-        "retrieval": {"metrics": retrieval_metrics(rows), "per_question": rows},
+        "retrieval": {"metrics": retrieval_metrics(rows), "asamalar": stage_metrics(rows), "per_question": rows},
         "llm": None,
     }
     if use_llm:
@@ -227,6 +260,7 @@ def run(exp_id, use_llm, wait, rerun, dataset, dataset_hash):
     m = result["retrieval"]["metrics"]
     print(f"  MRR@10={m['mrr@10']:.3f} Hit@1={m['hit@1']:.3f} Hit@5={m['hit@5']:.3f} "
           f"bağlam isabeti={m['context_hit']:.3f} gecikme={m['latency_ms']:.0f} ms")
+    print("  Aşamalar: " + " ".join(f"{k}={v:.3f}" for k, v in result["retrieval"]["asamalar"].items()))
     if result["karsilastirma"] and "karar" in result["karsilastirma"]:
         k = result["karsilastirma"]["karar"]
         print(f"  Karar ({k['metrik']}): {k['sonuc']} | Hipotez: {k['hipotez']}")

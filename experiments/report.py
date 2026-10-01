@@ -122,7 +122,26 @@ def build():
         lines.append(
             f"| {exp_id} | {exp['baslik']} | {_num(m['mrr@10'])} | {_num(m['hit@1'])} | {_num(m['hit@5'])} | "
             f"{_num(m['context_hit'])} | {m['context_chars']:.0f} | {latency} | {verdict} | {hyp} |")
-    lines += ["", "Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil", "", "## 3. Notes", ""]
+    lines += ["", "Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil"]
+
+    staged = {e: r["retrieval"]["asamalar"] for e, r in results.items() if r["retrieval"].get("asamalar")}
+    if staged:
+        lines += [
+            "",
+            "## 3. Retrieval stages",
+            "",
+            "Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adaylar içinde mi "
+            "(reranker'ın düzeltebileceğinin üst sınırı). Aşama verisi EXP-014'ten itibaren kaydediliyor.",
+            "",
+            "| Exp | Vector | BM25 | RRF | Rerank input recall | Final |",
+            "|---|---|---|---|---|---|",
+        ]
+        for exp_id, s in staged.items():
+            cells = [s.get(k) for k in ("vector_mrr@10", "bm25_mrr@10", "rrf_mrr@10", "rerank_input_recall",
+                                       "final_mrr@10")]
+            lines.append(f"| {exp_id} | " + " | ".join(_num(c) if c is not None else "–" for c in cells) + " |")
+
+    lines += ["", "## 4. Notes", ""]
     for exp_id, exp in configs.items():
         if exp.get("kisa_not"):
             lines.append(f"- **{exp_id}:** {exp['kisa_not']}")

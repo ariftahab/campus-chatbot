@@ -57,32 +57,39 @@ class Retriever:
         ranked = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
         return [i for i in ranked[:k] if scores[i] > 0]
 
-    def rank(self, query, depth=10):
+    def rank(self, query, depth=10, trace=None):
         """Parçaların sıralı listesini döndürür (en az `depth` uzunluğunda, mümkünse).
 
         LLM'e bunun ilk final_k elemanı gider; değerlendirme ise sıralamanın tamamına bakar.
+        `trace` bir sözlük verilirse ara aşamaların chunk_id listeleri içine yazılır
+        ("vector", "bm25", "rrf", "rerank_input", "final"); sonuç bundan etkilenmez.
         """
         cfg = self.cfg
+        trace = {} if trace is None else trace
         if cfg.retrieval == "vector":
-            ids = self._vector_ids(query, max(cfg.vector_k, depth))
+            ids = trace["vector"] = self._vector_ids(query, max(cfg.vector_k, depth))
         elif cfg.retrieval == "bm25":
-            ids = self._bm25_ids(query, max(cfg.bm25_k, depth))
+            ids = trace["bm25"] = self._bm25_ids(query, max(cfg.bm25_k, depth))
         elif cfg.retrieval == "hybrid":
             # Reciprocal Rank Fusion: iki listede de üst sıralarda olan parçalar öne çıkar.
+            trace["vector"] = self._vector_ids(query, cfg.vector_k)
+            trace["bm25"] = self._bm25_ids(query, cfg.bm25_k)
             fused = {}
-            for ranked in (self._vector_ids(query, cfg.vector_k), self._bm25_ids(query, cfg.bm25_k)):
+            for ranked in (trace["vector"], trace["bm25"]):
                 for rank, chunk_id in enumerate(ranked):
                     fused[chunk_id] = fused.get(chunk_id, 0) + 1 / (cfg.rrf_k + rank)
-            ids = sorted(fused, key=fused.get, reverse=True)
+            ids = trace["rrf"] = sorted(fused, key=fused.get, reverse=True)
         else:
             raise ValueError(f"Bilinmeyen retrieval: {cfg.retrieval}")
 
         if self.reranker:
             # İlk rerank_candidates aday yeniden sıralanır, geri kalanlar sırasını korur.
             head, tail = ids[:cfg.rerank_candidates], ids[cfg.rerank_candidates:]
+            trace["rerank_input"] = list(head)
             scores = self.reranker.predict([(query, self.chunks[i].page_content) for i in head])
             head = [head[j] for j in sorted(range(len(head)), key=lambda j: scores[j], reverse=True)]
             ids = head + tail
+        trace["final"] = list(ids)
         return [self.chunks[i] for i in ids]
 
     def search(self, query):
