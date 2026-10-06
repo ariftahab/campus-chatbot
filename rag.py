@@ -197,13 +197,25 @@ REWRITE_SYSTEM = (
 )
 
 
+def _to_messages(history):
+    """{"role": "user"|"assistant", "content": ...} listesini LangChain mesajlarına çevirir (son HISTORY_MESSAGES)."""
+    kinds = {"user": HumanMessage, "assistant": AIMessage}
+    return [kinds[m["role"]](m["content"]) for m in (history or [])][-config.HISTORY_MESSAGES:]
+
+
 class RagBot:
+    """Stateless: sohbet geçmişini kendisi tutmaz, her çağrıda dışarıdan alır.
+
+    Böylece aynı bot (ve GPU'daki modeller) birden fazla oturum arasında paylaşılabilir; geçmişi
+    çağıran taraf tutar (chat.py'de bir liste, API'de istemci). Geçmiş biçimi:
+    [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}, ...]
+    """
+
     def __init__(self, cfg, retriever, llm):
         self.cfg = cfg
         self.retriever = retriever
         self.llm = llm
         self.prompt = PROMPTS[cfg.prompt_version]
-        self.history = []
         self.rewrite_chain = ChatPromptTemplate.from_messages([
             ("system", REWRITE_SYSTEM),
             MessagesPlaceholder("history"),
@@ -217,26 +229,23 @@ class RagBot:
         llm = ChatGoogleGenerativeAI(model=cfg.llm_model, temperature=cfg.llm_temperature, max_retries=2)
         return cls(cfg, Retriever(cfg, store, chunks), llm)
 
-    def reset(self):
-        self.history = []
-
-    def retrieve(self, question):
+    def retrieve(self, question, history=None):
         """Geçmiş varsa soruyu bağımsız hale getirip ilgili parçaları döndürür."""
-        history = self.history[-config.HISTORY_MESSAGES:]
+        messages = _to_messages(history)
         query = question
-        if history and self.prompt["history"]:
-            query = self.rewrite_chain.invoke({"history": history, "question": question}).text.strip()
+        if messages and self.prompt["history"]:
+            query = self.rewrite_chain.invoke({"history": messages, "question": question}).text.strip()
         return query, self.retriever.search(query)
 
-    def ask(self, question):
-        query, docs = self.retrieve(question)
+    def ask(self, question, history=None):
+        """Cevap üretir; geçmişi güncellemez (yeni soru-cevabı geçmişe eklemek çağıranın işi)."""
+        query, docs = self.retrieve(question, history)
         variables = {"input": question, "context": self.prompt["format"](docs)}
         if self.prompt["history"]:
             variables.update({
-                "history": self.history[-config.HISTORY_MESSAGES:],
+                "history": _to_messages(history),
                 "no_answer": config.NO_ANSWER,
                 "today": date.today().strftime("%d.%m.%Y"),
             })
         answer = (self.prompt["template"] | self.llm).invoke(variables).text.strip()
-        self.history += [HumanMessage(question), AIMessage(answer)]
         return {"answer": answer, "query": query, "docs": docs}

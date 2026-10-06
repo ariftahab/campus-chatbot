@@ -2,48 +2,57 @@
 
 ## Sıra
 
-1. [ ] **PDF'ler:** Sitedeki tüm yönergeler, yönetmelikler ve mevzuat `data/` içine eklenecek (çok sayıda PDF).
-2. [ ] **UI:** Chatbot için bir arayüz yazılacak (terminal yerine).
-3. [ ] **Ders programları (en son):** Sitenin ders programı bölümünde her dönemin programı yayınlanıyor; her dönem başı
-       linkteki dosya da data'ya eklenecek. Tablo yapısı yüzünden en zor kısım.
-4. [ ] Diğer bilgiler (duyurular, birim sayfaları, iletişim...). Gerekirse **web scraping**.
+0. [x] **PDF'ler:** Sitedeki yönergeler, yönetmelikler ve mevzuat `data/` içine eklendi (corpus v2 = 139 belge,
+       v3 = kopyalar çıkarılmış 131 belge). Corpus artık deney config'inde bir parametre (`corpus`).
 
-## PDF'leri eklemeden önce bilinmesi gerekenler
+1. [ ] **UI (chatbot arayüzü)** — terminal yerine sohbet arayüzü.
+   - [ ] **Sohbet sekmesi:** soru sor, cevabı ve kaynakları (belge + madde) gör.
+   - [ ] **Soru-cevap kaydı (logging):** Sorulan her soru, verilen cevap, retrieve edilen chunk'lar, kullanılan
+         config / commit hash ve zaman bir dosyaya yazılır (ör. `logs/sohbet.jsonl`).
+   - [ ] **Doğruluk ölçümü:** Kaydedilen cevaplar sonradan doğru / yanlış / kısmen olarak işaretlenir (UI'dan geri
+         bildirim butonu ve/veya sonradan elle ya da LLM ile değerlendirme).
+   - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
+         analiz edilir ve model / pipeline buna göre güncellenir. Gerçek sorulardan seçilenler yeni bir soru seti
+         sürümü olarak eklenebilir (eski setler değiştirilmez).
+   - [ ] **Data sekmesi:** Corpus'taki belgeleri listele (başlık, tür, chunk sayısı), bir belgenin chunk'larını gör.
+   - (UI'dan belge ekleme şimdilik kapsam dışı; belgeler eskisi gibi `data/` + yeni corpus sürümüyle eklenir.)
+   - Konuşulacaklar: hangi framework (Streamlit / Gradio / FastAPI + web sayfası), log dosyasında kişisel veri
+     tutulmaması.
 
-- Şu an `config.DOCUMENTS`'ta olmayan bir PDF eklenirse: başlık = dosya adı; içinde "Madde N-" satırları varsa madde madde
-  chunk'lanır, yoksa sayfa sayfa. Yani dosya adları anlamlı olmalı (ör. `lisans-egitim-ogretim-yonetmeligi.pdf`).
-- **Corpus değişince eski deney sonuçları yeni sonuçlarla karşılaştırılamaz.** Şu an koşucu sadece evaluation dataset'in
-  hash'ini kontrol ediyor, PDF'lerin (corpus) hash'ini karşılaştırmada kontrol etmiyor. PDF'ler eklendikten sonra:
-  (a) koşucuya corpus hash kontrolü eklenmeli, (b) yeni corpus ile baseline yeniden koşulmalı.
-- Yeni belgeler için evaluation dataset'e soru eklenmeli (yoksa yeni belgelerde sistemin nasıl çalıştığı ölçülmez).
+2. [ ] **Ders programları ve akademik takvim (scraping)** — okulun sitesinde her dönem güncelleniyor; her dönem elle
+       indirip yüklemek yerine scrape edilecek.
+   - [ ] Sitenin yapısını incele: program/takvim HTML tablo mu, PDF mi, Excel mi? `robots.txt` ve kullanım koşulları;
+         istekler yavaş gönderilmeli (rate limit).
+   - [ ] Scraper yaz; her dönemin verisini `donem` / `gecerlilik` metadata'sıyla sakla (eski dönem yenisiyle karışmasın).
+   - [ ] **Chunking geliştirmesi:** Bu veriler mevcut structural chunking'e ("Madde N-" ve takvim tablosu) uymayabilir;
+         yeni bir chunking yöntemi (veya tablo verisini yapılandırılmış saklama, ör. SQL) gerekebilir. Deney olarak yapılır.
+   - [ ] **Soru seti:** Ders programı ve takvim için yeni sorular eklenerek yeni bir set sürümü oluşturulur
+         (ör. "Salı günü 3. sınıfın hangi dersleri var?"); referans zinciri yeni setle yeniden koşulur.
+
+3. [ ] **Deneylere geri dönüş / optimizasyon** — 1 ve 2 bittikten sonra, büyüyen corpus, gerçek kullanıcı soruları ve
+       yeni soru setiyle RAG bileşenleri (chunking, embedding, retrieval, reranker, prompt, LLM) yeniden deneylerle
+       optimize edilecek.
+
+4. [ ] Diğer bilgiler (duyurular, birim sayfaları, iletişim...). Gerekirse web scraping.
 
 ## Bu plan mimariyi nasıl etkiler? (uygulamadan önce konuşulacak)
 
 Aşağıdakiler karar verilmesi gereken sorular. Her biri, uygulanmadan önce alternatifleriyle birlikte anlatılıp
 onaylanacak ve RAG bileşenini etkileyenler deney olarak kaydedilecek.
 
-- **Data ingestion / scraping:** Hangi sayfalar ve dosyalar alınacak? Site PDF, HTML ya da Excel mi veriyor?
-  `robots.txt` ve kullanım koşulları kontrol edilmeli; siteyi yormamak için istekler yavaş gönderilmeli (rate limit).
-- **Güncellik (freshness):** Ders programı ve takvim her dönem değişiyor. Eski dönemin bilgisi yeni dönemle
-  karışmamalı. Her belgeye `donem` / `gecerlilik` gibi metadata eklenmeli; eski sürümler arşive mi alınacak, silinecek mi?
+- **UI ve deney ayrımı:** UI production config'i (`config.PRODUCTION_EXPERIMENT`) kullanır; deney koşucusundan bağımsızdır.
+- **Kullanıcı sorularının değerlendirilmesi:** Gerçek sorularda "doğru cevap" önceden bilinmiyor. Etiketleme (elle,
+  kullanıcı geri bildirimi, LLM-as-judge) yöntemi seçilmeli; Gemini ücretsiz kotası (günde 20 istek) sınırlayıcı.
+- **Güncellik (freshness):** Ders programı ve takvim her dönem değişiyor. Eski sürümler arşive mi alınacak, silinecek mi?
 - **Yeniden indexleme:** Yeni belge geldiğinde bütün index'i baştan kurmak yerine sadece yeni belgeyi eklemek
   (incremental indexing) gerekebilir. Şu anki fingerprint sistemi her değişiklikte hepsini yeniden kuruyor.
-- **Chunking ölçeklenmesi:** Şu anki structural chunking sadece "Madde N-" biçimine ve bu takvimin tablo yapısına göre
-  yazılmış. Farklı biçimli yönergeler, HTML sayfalar ve ders programı tabloları için yeni yöntemler gerekecek.
-  `config.DOCUMENTS` listesine her dosyayı elle eklemek yüzlerce belgede sürdürülemez.
-- **Ders programı soruları:** "Salı günü 3. sınıfın hangi dersleri var?" gibi sorular, tablo verisi üzerinde filtreleme
-  gerektirir. Bunu embedding ile aramak iyi çalışmayabilir; tabloyu yapılandırılmış veri olarak saklayıp sorgulamak
-  (ör. SQL) bir alternatif.
-- **Vector store:** 73 chunk için FAISS yeterli. Binlerce chunk ve metadata filtresi ("sadece 2026 Bahar") gerekince
-  Chroma / Qdrant gibi bir vector database düşünülebilir.
-- **Retrieval kalitesi:** Belge sayısı artınca benzer belgeler (farklı fakültelerin benzer yönergeleri) karışabilir.
-  Bugün etkisi görülmeyen BM25 ve reranker, büyük koleksiyonda fark yaratabilir; yeniden ölçülmeli.
-- **Evaluation dataset:** Yeni belge türleri için yeni sorular gerekli (ders programı, farklı yönergeler).
-  Dataset'in yeni sürümü eski sonuçlarla karşılaştırılamaz; baseline yeniden koşulmalı.
+- **Ders programı soruları:** Tablo verisi üzerinde filtreleme gerektirir; embedding ile aramak iyi çalışmayabilir.
+  Tabloyu yapılandırılmış veri olarak saklayıp sorgulamak (ör. SQL) bir alternatif.
+- **Vector store:** Binlerce chunk ve metadata filtresi ("sadece 2026 Bahar") gerekince Chroma / Qdrant gibi bir
+  vector database düşünülebilir.
 - **Kaynak gösterme:** Cevapta belgenin sitedeki linki de verilebilir (metadata'da `url`).
 
 ## Diğer açık işler
 
 - [ ] Evaluation dataset'i zorlaştır (ceiling effect) ve tez için ayrı bir test seti oluştur.
-- [ ] EXP-009 ve EXP-010 için answer accuracy ölç (`--llm`; Gemini ücretsiz kotası günde 20 istek).
-- [ ] Hybrid search ve reranker production'da kalsın mı? (Bugünkü set üzerinde katkıları gösterilemedi.)
+- [ ] Hybrid search ve reranker production'da kalsın mı? (Büyük corpus'ta yeniden ölçülmeli.)

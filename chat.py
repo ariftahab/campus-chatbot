@@ -19,6 +19,7 @@ def main():
     bot = RagBot.from_config(config.production_config())
     print("Hazır. Çıkmak için 'çık', yeni konuya geçmek için 'yeni' yazın.")
 
+    history = []  # bot stateless; sohbet geçmişini burada tutuyoruz
     while True:
         try:
             question = input("\nSoru: ").strip()
@@ -31,16 +32,17 @@ def main():
         if command in EXIT_COMMANDS:
             break
         if command in RESET_COMMANDS:
-            bot.reset()
+            history = []
             print("Sohbet geçmişi temizlendi.")
             continue
 
         print("Cevap düşünülüyor...")
         try:
-            result = bot.ask(question)
+            result = bot.ask(question, history)
         except Exception as e:  # kota, ağ, API hataları döngüyü öldürmesin
             print(f"Hata: cevap alınamadı ({type(e).__name__}: {e})")
             continue
+        history += [{"role": "user", "content": question}, {"role": "assistant", "content": result["answer"]}]
 
         print(f"\n{result['answer']}")
         if result["query"] != question:

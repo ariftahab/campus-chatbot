@@ -87,8 +87,9 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
   `vectorstore/<parmak izi>/` altında (PDF'ler + indeks parametreleri + ingest.py kaynağı); yoksa otomatik kurulur.
 - `rag.py` — `Retriever.rank()`: vector | bm25 | hybrid (RRF) + isteğe bağlı cross-encoder reranker. `PROMPTS` sürümleri (v1_prototip, v2_kaynakli,
   v3_kapsam: kurallar kapsama göre farklıysa her birini kapsamıyla verir).
-  `RagBot`: geçmiş varsa soruyu bağımsız hale getirir, Gemini ile cevaplar.
+  `RagBot` (stateless): geçmişi `ask(question, history)` ile dışarıdan alır, varsa soruyu bağımsız hale getirir, Gemini ile cevaplar.
 - `chat.py` — CLI.
+- `app/` — UI / API (FastAPI + Gradio, yapım aşamasında). Her adım `app/gelistirme_gunlugu.md` dosyasına yazılır.
 - `experiments/evaluation.py` — kanıt tabanlı ilgililik (parçalamadan bağımsız), metrikler (MRR@10, Hit@k, bağlam isabeti,
   bağlam uzunluğu, gecikme, cevap doğruluğu), McNemar/Wilcoxon, ortam kaydı.
 - `experiments/run.py` — deney koşucu, `experiments/report.py` — günlük üretici.

@@ -162,9 +162,8 @@ def retrieval_metrics(rows):
 def answer_rows(bot, items, wait):
     rows = []
     for n, item in enumerate(items):
-        bot.reset()
         try:
-            answer = bot.ask(item["soru"])["answer"]
+            answer = bot.ask(item["soru"])["answer"]  # geçmişsiz: her soru bağımsız
         except Exception as e:  # kota dolarsa kalan soruları boşuna deneme
             print(f"  LLM hatası ({item['id']}): {type(e).__name__}: {str(e)[:200]}")
             if "ResourceExhausted" in type(e).__name__ or "429" in str(e):
