@@ -1,1 +1,1 @@
-"""Chatbot'un UI / API katmanları. Ayrıntılar: app/gelistirme_gunlugu.md"""
+"""Chatbot'un UI / API katmanları. Geliştirme günlüğü: learning_log/ui_api_log.md"""

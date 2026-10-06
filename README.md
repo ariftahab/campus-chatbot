@@ -3,7 +3,7 @@ Making chatbot assistant for university
 
 Bolu Abant İzzet Baysal Üniversitesi belgeleri (akademik takvim, yönetmelikler) üzerinden
 soru cevaplayan bir RAG chatbot. Bitirme projesi; RAG bileşenlerindeki her değişiklik
-tekrar üretilebilir bir deney olarak kaydedilir (bkz. `experiments/experiment_log.md`).
+tekrar üretilebilir bir deney olarak kaydedilir (bkz. `learning_log/experiment_log.md`).
 
 ## Kurulum
 

@@ -1,4 +1,4 @@
-"""experiments/experiment_log.md dosyasını configs/ ve results/ klasörlerinden üretir.
+"""learning_log/experiment_log.md dosyasını configs/ ve results/ klasörlerinden üretir.
 
   python -m experiments.report
 
@@ -11,7 +11,7 @@ import json
 import config
 from experiments import evaluation as ev
 
-LOG_FILE = config.EXPERIMENTS_DIR / "experiment_log.md"
+LOG_FILE = config.ROOT / "learning_log" / "experiment_log.md"
 
 # Setup tablosunda gösterilen hyperparameter'lar (kısa ad -> RagConfig alanı)
 SETUP_COLUMNS = [

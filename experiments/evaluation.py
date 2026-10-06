@@ -187,7 +187,7 @@ def environment(cfg):
         "git_commit": _git("rev-parse", "HEAD"),
         # Koşucunun kendi çıktıları (sonuçlar, günlük) "commit edilmemiş değişiklik" sayılmaz.
         "git_dirty": bool(_git("status", "--porcelain", "--", ".", ":!experiments/results",
-                               ":!experiments/experiment_log.md")),
+                               ":!learning_log/experiment_log.md")),
         "python": platform.python_version(),
         "platform": platform.platform(),
         "cpu": platform.processor(),

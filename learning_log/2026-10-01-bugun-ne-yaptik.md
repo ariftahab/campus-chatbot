@@ -195,7 +195,7 @@ v3 deneyi değerlendirme seti v2'den sonra yapılacak.
 - **Fakülteye özel** sorular: tıpta devam zorunluluğu %75, genel kural %70.
 - **Çok kapsamlı** sorular: "Teorik derslerin yüzde kaçına girmek zorundayım?" Doğru cevap ikisini birden vermeli:
   genel %70, tıpta %75.
-- Okunabilir hali: `my_notes/eval_v3_taslak.md`.
+- Okunabilir hali: `learning_log/eval_v3_taslak.md`.
 
 ### Prompt v3_kapsam (henüz kullanılmıyor)
 LLM'e somut örnek vermeden şunu anlatıyor: her belgenin kimi kapsadığını anla (tüm üniversite mi, bir fakülte mi,

@@ -15,12 +15,20 @@
    - [ ] Gradio arayüzünü (`/ui`, `app/ui.py`) yeni arayüz oturunca kaldır.
    - [ ] `/admin` için kimlik doğrulama (sistem başkalarına açılmadan önce).
    - [ ] Atıftaki fıkrayı ("Madde 8/2") panelde vurgulama.
+   - [ ] **Başka biri tarafından test (deploy):** arayüz bir arkadaşa açılacak (2026-10-06'da konuşuldu, ertelendi).
+     - Kısa test için: **Cloudflare Quick Tunnel** (`cloudflared tunnel --url http://localhost:8000`). Uygulama
+       laptopta GPU ile çalışır, ücretsiz geçici link verir. Laptop açık kalmalı, link her açılışta değişir.
+     - Kalıcı demo için: **Hugging Face Spaces** (ücretsiz CPU, 16 GB RAM yeterli; Docker, index + PDF yükleme,
+       API anahtarı secret). CPU'da retrieval soru başına ~5 sn.
+     - Açmadan önce: Gemini günlük kotası (link herkese açık, kotayı başkası tüketebilir) → `/ask` için günlük istek
+       sınırı; `/admin` için şifre (HTTP Basic Auth), çünkü linki bilen herkes değerlendirme verisine etiket
+       yazabilir; test edene soruların kaydedildiğini söylemek.
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir ve model / pipeline buna göre güncellenir. Gerçek sorulardan seçilenler yeni bir soru seti
          sürümü olarak eklenebilir (eski setler değiştirilmez).
    - [x] **Data sekmesi:** Corpus'taki belgeleri listele (başlık, tür, chunk sayısı), bir belgenin chunk'larını gör.
    - (UI'dan belge ekleme şimdilik kapsam dışı; belgeler eskisi gibi `data/` + yeni corpus sürümüyle eklenir.)
-   - Karar: FastAPI backend + kendi HTML/CSS/JS frontend'imiz (ayrıntılar `app/gelistirme_gunlugu.md`).
+   - Karar: FastAPI backend + kendi HTML/CSS/JS frontend'imiz (ayrıntılar `learning_log/ui_api_log.md`).
 
 2. [ ] **Ders programları ve akademik takvim (scraping)** — okulun sitesinde her dönem güncelleniyor; her dönem elle
        indirip yüklemek yerine scrape edilecek.
