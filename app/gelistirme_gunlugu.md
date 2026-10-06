@@ -103,3 +103,119 @@ ve sahte bir retriever ile test edildi:
 - Botta artık `history` alanı yok.
 
 Bu bir **deney değil**: retrieval, prompt ve LLM aynı. Sadece geçmişin nerede tutulduğu değişti.
+
+---
+
+## Adım 2 — Paketlerin kurulması (2026-10-06)
+
+### Ne yapıldı?
+`fastapi`, `uvicorn[standard]`, `gradio`, `httpx` kuruldu ve `requirements.txt`'ye sürümleriyle eklendi.
+
+| Paket | Ne işe yarar |
+|---|---|
+| **FastAPI** | API'yi tanımladığımız web framework'ü: endpoint'ler, istek doğrulama, otomatik dokümantasyon |
+| **uvicorn** | FastAPI uygulamasını çalıştıran sunucu (ASGI server). FastAPI tek başına çalışmaz, uvicorn onu ağa açar |
+| **Gradio** | Arayüz (sohbet ekranı, data sekmesi) |
+| **httpx** | Python'dan HTTP isteği atmak için. Gradio arayüzü API'ye bununla bağlanacak |
+
+### Karşılaşılan sorun: bağımlılık çakışması (dependency conflict)
+Kurmadan önce `pip install --dry-run` ile neyin kurulacağına bakıldı. En yeni Gradio (6.29) `huggingface-hub` 2.x
+istiyordu. Embedding ve reranker'ı çalıştıran `transformers` 4.57.1 ise `huggingface-hub<1.0` istiyor. Doğrudan
+kursaydık pip hub'ı yükseltecek, `transformers` bozulacak ve büyük ihtimalle model yüklenirken hata alacaktık.
+
+**Çözüm:** Kritik paketler (`huggingface-hub`, `transformers`, `langchain-core`, `pydantic`) mevcut sürümlerine
+sabitlenerek kurulum yapıldı. pip bu kısıtlarla uyumlu en yeni Gradio'yu (6.17.3) buldu. Kurulumdan önce ve sonra
+`pip freeze` alınıp karşılaştırıldı: **hiçbir mevcut paket değişmedi**, sadece yeni paketler eklendi.
+
+### Kavram: Dependency resolution ve version pinning
+- **Nedir?** Her paket başka paketlerin belirli sürüm aralıklarına ihtiyaç duyar. pip bu kısıtların hepsini aynı anda
+  sağlayan bir sürüm kombinasyonu arar (dependency resolution). Version pinning, bir paketi `==` ile tam bir sürüme
+  sabitlemek demek.
+- **Basit örnek:** A paketi "B'nin 1'den küçük sürümü" ister, C paketi "B'nin 2 veya üstü" ister. İkisi aynı ortamda
+  olamaz. Ya C'nin eski bir sürümünü bulursun ya da A'yı yükseltirsin.
+- **Bizim projede:** Gradio'nun eski ama uyumlu sürümü seçildi. `transformers`'ı yükseltmek embedding sonuçlarını
+  değiştirebilirdi; bu da eski deneylerle karşılaştırmayı bozardı.
+- **Dikkat:** `pip install X` komutu sessizce başka paketleri yükseltebilir. Önemli bir ortamda önce `--dry-run`,
+  sonra `pip check`. `requirements.txt`'de sürüm yazmak, projeyi başka bilgisayarda aynı şekilde kurabilmenin şartı.
+
+---
+
+## Adım 3 — Service katmanı ve soru-cevap kaydı (2026-10-06)
+
+### Ne yapıldı?
+`app/service.py` dosyasına `ChatService` sınıfı yazıldı:
+
+| Metot | Ne yapar |
+|---|---|
+| `ChatService.from_experiment()` | Deney config'ine göre modelleri yükler. Uygulama açılırken **bir kez** çağrılır |
+| `ask(question, history, session_id)` | Soruyu cevaplar, `logs/sohbet.jsonl`'e kaydeder |
+| `feedback(answer_id, rating, note)` | 👍 (1) / 👎 (-1) geri bildirimini `logs/geri_bildirim.jsonl`'e kaydeder |
+| `documents()` | Corpus'taki belgeler ve chunk sayıları (data sekmesi için) |
+| `document_chunks(source)` | Bir belgenin chunk'ları (data sekmesi için) |
+
+`logs/` klasörü `.gitignore`'a eklendi: gerçek kullanıcı soruları repoya girmemeli.
+
+### Log kaydının biçimi
+```json
+{"id": "555abf88...", "zaman": "2026-10-06T15:45:48", "oturum": "s1",
+ "soru": "peki son günü?", "rewritten_query": "Bahar dönemi ders kayıtlarının son günü ne?",
+ "gecmis_uzunlugu": 2, "cevap": "...",
+ "kaynaklar": [{"chunk_id": 0, "etiket": "Yatay Geçiş Yönergesi, Madde 8, s. 3"}],
+ "config": "EXP-019", "commit": "7871b95", "latency_ms": 2140, "hata": null}
+```
+
+| Alan | Neden var |
+|---|---|
+| `id` | 👍/👎 geri bildirimini bu cevaba bağlamak için (UUID: rastgele, çakışmayan kimlik) |
+| `rewritten_query` | Rewrite yapılmadıysa `null`. Yanlış cevapta hatanın rewriting'de mi retrieval'da mı olduğunu ayırmak için |
+| `kaynaklar` | LLM'e giden chunk'lar. Doğru chunk gelmiş mi? (retrieval hatası mı, generation hatası mı?) |
+| `config`, `commit` | Bu cevabı hangi pipeline sürümü üretti? Commit edilmemiş kodla çalışıyorsa `-dirty` eki alır (deneylerdeki `git_dirty` gibi) |
+| `latency_ms` | Cevap süresi (rewrite + retrieval + LLM) |
+| `hata` | Kota dolması (429), ağ hatası vb. Hatalı istekler de kaydedilir; kaç sorunun cevapsız kaldığını görmek için |
+
+### Neden böyle tasarlandı?
+
+**1. JSONL, append-only.** Her satır bağımsız bir JSON nesnesi, yeni kayıt sadece sona eklenir.
+- *Alternatif: tek bir JSON dosyası (liste).* Her kayıtta dosyanın tamamını okuyup yeniden yazmak gerekir. Yazma
+  sırasında program çökerse dosyanın tamamı bozulur.
+- *Alternatif: SQLite veritabanı.* Sorgulama güçlü, ama şimdilik gereksiz karmaşıklık. JSONL ileride kolayca SQLite'a
+  veya pandas'a aktarılır (`pd.read_json(..., lines=True)`).
+- JSONL'de en kötü ihtimalle son satır yarım kalır; önceki kayıtların hepsi sağlam kalır.
+
+**2. Geri bildirim ayrı dosyada.** 👍/👎'yi sohbet kaydının içine yazmak, o satırı sonradan değiştirmek demek. Bu,
+append-only kuralını bozar. Bunun yerine geri bildirim ayrı dosyaya yazılır ve `id` ile bağlanır; veritabanlarındaki
+foreign key mantığı. Aynı cevaba fikir değiştirip ikinci geri bildirim verilirse ikisi de kalır, en sonuncusu geçerli
+sayılır.
+
+**3. Hata olunca da kayıt.** `try / except / finally`: cevap da dönse hata da fırlasa `finally` bloğu çalışır ve kayıt
+yazılır. Hata, kaydedildikten sonra yukarıya (API'ye) iletilir; API kullanıcıya uygun bir mesaj gösterecek.
+
+**4. Kilit (lock).** FastAPI senkron fonksiyonları ayrı thread'lerde çalıştırır. İki istek aynı anda dosyaya yazarsa
+satırlar birbirine karışabilir. `threading.Lock` yazma işlemlerini sıraya sokar. Testte 8 thread aynı anda 400 kayıt
+yazdı; bozuk satır çıkmadı.
+
+### Kavram: Dependency injection
+- **Nedir?** Bir sınıfın ihtiyaç duyduğu nesneyi kendisi oluşturması yerine dışarıdan alması.
+- **Basit örnek:** Bir kahve makinesine suyu içine gömülü bir depodan değil, takılabilir bir hazneden vermek. Test
+  ederken hazneye istediğin suyu koyabilirsin.
+- **Bizim projede:** `ChatService(bot, experiment_id)` botu dışarıdan alıyor. Gerçek kullanımda
+  `ChatService.from_experiment()` GPU modelleriyle gerçek botu oluşturuyor. Testte ise sabit cevap dönen sahte bir
+  `FakeBot` veriliyor. Test GPU, model ve Gemini kotası gerektirmeden 1 saniyede çalışıyor.
+- **Dikkat:** `from_experiment` gibi "fabrika" metotları gerçek bağımlılıkları kurar, `__init__` ise sadece alır. Bu
+  ayrım test edilebilir kodun temel kalıbı. FastAPI'nin kendi `Depends()` sistemi de aynı fikre dayanır.
+
+### Kavram: Thread ve race condition
+- **Nedir?** Thread, aynı program içinde paralel çalışan bir iş akışı. Race condition, iki thread'in aynı kaynağa
+  (dosya, değişken) aynı anda erişip sonucun hangisinin önce davrandığına bağlı olması.
+- **Basit örnek:** İki kişi aynı deftere aynı anda yazarsa satırlar iç içe geçer. Kilit, kalemi tek kişiye vermektir.
+- **Bizim projede:** `with self._lock:` bloğu içinde aynı anda sadece bir thread dosyaya yazabilir.
+- **Dikkat:** Kilit sadece aynı süreç (process) içindeki thread'leri korur. İleride birden fazla sunucu süreci
+  çalıştırılırsa dosya yerine veritabanına geçmek gerekir.
+
+### Nasıl doğrulandı?
+Sahte bot ve geçici bir klasörle (gerçek `logs/` kullanılmadan) test edildi:
+- Geçmişsiz soruda `rewritten_query` null, geçmişli soruda dolu.
+- Hata fırlatan soru `hata` alanıyla kaydedildi ve hata yukarı iletildi.
+- Bilinmeyen `id`'ye ve geçersiz puana geri bildirim reddedildi.
+- Servis yeniden başlatıldığında eski kayıtların kimlikleri tanındı.
+- 8 thread × 50 eşzamanlı soru: 400 satırın hepsi geçerli JSON.

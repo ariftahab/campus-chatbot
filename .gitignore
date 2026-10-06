@@ -1,6 +1,8 @@
 # Proje
 vectorstore/
 node_modules/
+# Sohbet kayıtları (gerçek kullanıcı soruları) repoya girmez
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
