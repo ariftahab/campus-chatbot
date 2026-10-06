@@ -219,3 +219,119 @@ Sahte bot ve geçici bir klasörle (gerçek `logs/` kullanılmadan) test edildi:
 - Bilinmeyen `id`'ye ve geçersiz puana geri bildirim reddedildi.
 - Servis yeniden başlatıldığında eski kayıtların kimlikleri tanındı.
 - 8 thread × 50 eşzamanlı soru: 400 satırın hepsi geçerli JSON.
+
+---
+
+## Ara karar — Production config'i: EXP-014 → EXP-020 (2026-10-06)
+
+Arayüzü yazarken `config.PRODUCTION_EXPERIMENT`'in hâlâ `EXP-014` olduğu görüldü: corpus v1, yani **sadece 3 belge**.
+Arayüz 131 belgeyi bilmeyecekti.
+
+- **İstenen:** kopyasız corpus (v3, EXP-019'dan) + kapsam ayıran prompt (v3_kapsam, EXP-018'den).
+- **Sorun:** bu kombinasyon hiç ölçülmemişti. Production sadece ölçülmüş bir config ile çalışmalı.
+- **Çözüm:** EXP-020 açıldı (EXP-019'dan tek fark: prompt). Retrieval-only koşuldu, metrikler EXP-019 ile birebir aynı
+  çıktı (MRR@10 0,852). Prompt retrieval'ı etkilemediği için beklenen sonuç buydu.
+
+### Kavram: İstatistiksel güç (statistical power)
+- **Nedir?** Bir testin gerçekten var olan bir farkı yakalayabilme olasılığı. Az örnekle güç düşüktür.
+- **Basit örnek:** Bir parayı 4 kez atıp 3 yazı gelirse "para hileli" diyemezsin. Para hileli olsa bile 4 atış bunu
+  göstermeye yetmez.
+- **Bizim projede:** Prompt v3'ün hedeflediği "birden fazla kapsamı olan" soru set 3.0'da sadece 2 tane. EXP-018'de
+  anlamlı fark çıkmadı, ama elle denemede yatay geçiş sorusunda lisans ve lisansüstü kurallarını ayrı ayrı verdiği
+  görüldü.
+- **Dikkat:** "Anlamlı fark çıkmadı" ≠ "fark yok". Doğru ifade: "bu veriyle ölçülemedi". Kanıt, arayüzün soru-cevap
+  kayıtlarından ve sonraki soru setine eklenecek çok kapsamlı sorulardan gelecek. Log sistemi tam olarak bunun için var.
+
+### Kavram: Deployment kararı ve deney ayrımı
+Hangi config'in kullanıcıya sunulacağı (deployment) bir deney değil. Ama sunulan config'in **ölçülmüş** olması gerekir.
+Böylece log'daki her cevabın `config` alanı, sonuçları bilinen bir deneye işaret eder.
+
+---
+
+## Adım 4 — FastAPI katmanı (2026-10-06)
+
+### Ne yapıldı?
+`app/api.py` yazıldı. Çalıştırma: `venv/Scripts/python.exe -m uvicorn app.api:app --port 8000`
+
+| Endpoint | Method | Ne yapar | Hata kodları |
+|---|---|---|---|
+| `/health` | GET | Sunucu ayakta mı, hangi config ve commit ile çalışıyor, kaç belge var | — |
+| `/ask` | POST | Soruyu cevaplar ve kaydeder | 422 (geçersiz istek), 503 (Gemini kotası), 500 (diğer) |
+| `/feedback` | POST | 👍 (1) / 👎 (-1) kaydeder | 422 (geçersiz puan), 404 (bilinmeyen cevap id) |
+| `/documents` | GET | Corpus'taki belgeler ve chunk sayıları | — |
+| `/documents/{source}/chunks` | GET | Bir belgenin chunk'ları | 404 (belge yok) |
+| `/docs` | GET | Otomatik Swagger dokümantasyonu (FastAPI kendisi üretir) | — |
+
+Örnek istek ve cevap:
+```json
+POST /ask
+{"question": "peki son günü ne?",
+ "history": [{"role": "user", "content": "Bahar dönemi ders kayıtları ne zaman?"},
+             {"role": "assistant", "content": "9-13 Şubat ..."}],
+ "session_id": "abc"}
+
+200 OK
+{"id": "555abf88...", "answer": "...", "rewritten_query": "Bahar dönemi ders kayıtlarının son günü ne?",
+ "sources": [{"chunk_id": 12, "label": "BAİBÜ 2025-2026 Akademik Takvimi, ..."}], "latency_ms": 2140}
+```
+
+### Önemli tasarım kararları
+
+**1. GET ve POST ayrımı.** GET sadece okur ve tekrarlanması zararsızdır (tarayıcı adres çubuğundan bile açılır).
+POST bir şey üretir veya kaydeder: `/ask` log'a satır ekler, `/feedback` geri bildirim yazar. Bu yüzden POST.
+
+**2. Pydantic şemaları = API sözleşmesi (contract).** `AskRequest`, `AskResponse` gibi sınıflar istemcinin neyi
+göndereceğini ve ne alacağını tanımlar. FastAPI bunlarla üç iş yapar:
+- **Doğrulama:** boş soru, `role: "sistem"`, `rating: 5` gibi hatalı istekler service'e hiç ulaşmadan 422 ile reddedilir.
+- **Dönüştürme:** JSON → Python nesnesi → JSON.
+- **Dokümantasyon:** `/docs` sayfası bu şemalardan otomatik üretilir.
+
+**3. API alan adları İngilizce, log alanları Türkçe.** API dışarıya açılan bir sözleşme; okul sistemini yazan
+geliştirici `answer`, `sources` bekler. Log ise iç biçim. API katmanı ikisi arasında çeviri yapar (`etiket` → `label`).
+İç biçim değişse bile sözleşme sabit kalabilir; bu, katman ayrımının somut faydası.
+
+**4. Hataların HTTP durum kodlarına çevrilmesi.**
+
+| Kod | Anlamı | Ne zaman |
+|---|---|---|
+| 200 / 201 | Başarılı / oluşturuldu | Normal cevap / geri bildirim kaydedildi |
+| 404 | Bulunamadı | Bilinmeyen cevap id'si veya belge |
+| 422 | İstek geçersiz | Pydantic doğrulaması başarısız |
+| 500 | Sunucu hatası | Beklenmeyen bir hata |
+| 503 | Servis geçici olarak kullanılamıyor | Gemini kotası doldu: hata bizde değil, dış serviste ve geçici |
+
+İstemci (Gradio veya okul sistemi) bu kodlara göre davranır: 503'te "daha sonra deneyin" gösterir, 422'de isteğini düzeltir.
+
+**5. `def`, `async def` değil.** `bot.ask()` GPU'yu ve Gemini'yi bekleyen bloklayan (blocking) bir çağrı. `async def`
+içinde bloklayan kod çalıştırılırsa bütün sunucu donar, cevap gelene kadar `/health` bile cevap vermez. FastAPI düz
+`def` endpoint'leri bir thread havuzunda çalıştırır. Adım 3'teki kilit (lock) bu yüzden gerekliydi.
+
+### Kavram: Lifespan
+- **Nedir?** Uygulamanın açılışında ve kapanışında bir kez çalışan kod.
+- **Basit örnek:** Dükkânı sabah açarken ışıkları yakıp kasayı hazırlamak (her müşteride değil), akşam kapatmak.
+- **Bizim projede:** `lifespan` içinde `ChatService.from_experiment()` çağrılıyor: index, bge-m3 ve reranker GPU'ya bir
+  kez yükleniyor (~20-30 sn). Sonraki her istek hazır modelleri kullanıyor.
+- **Dikkat:** Açılış uzun sürer ve sunucu modeller yüklenmeden istek kabul etmez. Uvicorn'un "Application startup
+  complete" mesajını beklemek gerekir.
+
+### Kavram: Dependency (`Depends`) ve dependency override
+- **Nedir?** Endpoint'in ihtiyaç duyduğu nesneyi (burada `ChatService`) FastAPI'nin otomatik olarak vermesi:
+  `service: ChatService = Depends(get_service)`.
+- **Basit örnek:** Aşçı malzemeyi kendisi almaya gitmez; tezgâha konur. Test günü tezgâha plastik malzeme konabilir.
+- **Bizim projede:** Testte `app.dependency_overrides[get_service] = lambda: sahte_servis` ile sahte bot kullanan servis
+  verildi. Endpoint kodu hiç değişmeden GPU ve kota olmadan test edildi. Adım 3'teki dependency injection fikrinin
+  FastAPI'deki karşılığı.
+
+### Kavram: Swagger / OpenAPI
+- **Nedir?** OpenAPI, bir API'nin endpoint'lerini ve şemalarını makinece okunabilir biçimde (JSON) tanımlayan
+  standart. Swagger UI, bu tanımdan üretilen ve tarayıcıdan istek atılabilen dokümantasyon sayfası.
+- **Bizim projede:** `http://localhost:8000/docs` açılır; her endpoint'i "Try it out" ile deneyebilirsin.
+  `/openapi.json` ham tanımı verir. Okul sisteminin geliştiricisi bu dosyadan istemci kodu bile üretebilir.
+- **Dikkat:** Dokümantasyon koddan üretildiği için hep günceldir. Elle yazılan dokümantasyon zamanla koddan kopar.
+
+### Nasıl doğrulandı?
+1. **TestClient ile (sahte servis, kota yok):** tüm endpoint'ler. Hatalar: boş soru / eksik alan / geçersiz `role` → 422,
+   kota hatası → 503, başka hata → 500, geçersiz puan → 422, bilinmeyen id → 404, olmayan belge → 404.
+   `TestClient` `with` bloğu olmadan kullanıldığı için lifespan (gerçek model yükleme) çalışmadı.
+2. **Gerçek sunucu (uvicorn, EXP-020 modelleri):** `/health` ve `/documents` çağrıldı. `/ask` kotayı korumak için
+   otomatik testte çağrılmadı; Swagger'dan elle denenecek.
