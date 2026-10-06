@@ -1,22 +1,36 @@
 """API ve arayüzü tek sunucuda birleştirir.
 
 Çalıştırma:  venv/Scripts/python.exe -m uvicorn app.main:app --port 8000
-  http://localhost:8000/ui    Gradio arayüzü
-  http://localhost:8000/docs  API dokümantasyonu (Swagger)
+  http://localhost:8000/          sohbet (app/static/index.html)
+  http://localhost:8000/belgeler  corpus'taki belgeler
+  http://localhost:8000/admin     elle değerlendirme
+  http://localhost:8000/docs      API dokümantasyonu (Swagger)
+  http://localhost:8000/ui        eski Gradio arayüzü (yeni arayüz oturunca kaldırılacak)
 
-Arayüz aynı süreçte olsa da service'i doğrudan çağırmaz, API'ye HTTP ile istek atar (app/ui.py);
-böylece okul sistemi gibi dış istemcilerle aynı yolu kullanır.
+Sayfalar statik dosyalardır (HTML/CSS/JS); veriyi tarayıcıdan API'ye fetch ile istek atarak alırlar.
+Sunucu sayfa üretmez, yalnız dosyaları ve API'yi servis eder.
 """
+from pathlib import Path
+
 import gradio as gr
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api import app
 from app.ui import build_ui
 
+STATIC = Path(__file__).parent / "static"
 
-@app.get("/", include_in_schema=False)
-def root():
-    return RedirectResponse("/ui")
+app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
+
+def _page(name):
+    def handler():
+        return FileResponse(STATIC / name)
+    return handler
+
+
+for route, page in [("/", "index.html"), ("/belgeler", "belgeler.html"), ("/admin", "admin.html")]:
+    app.add_api_route(route, _page(page), include_in_schema=False)
 
 app = gr.mount_gradio_app(app, build_ui(), path="/ui")

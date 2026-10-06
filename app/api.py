@@ -10,6 +10,7 @@ from contextlib import asynccontextmanager
 from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from app.service import ChatService
@@ -33,6 +34,16 @@ class AskRequest(BaseModel):
 class Source(BaseModel):
     chunk_id: int
     label: str
+    # Bu alanlar 2026-10-06'dan önceki log kayıtlarında yok; bu yüzden isteğe bağlı.
+    source: str | None = Field(default=None, description="PDF dosya adı (GET /files/{source})")
+    title: str | None = None
+    page: int | None = None
+    madde: int | str | None = None
+
+
+def _source(s):
+    return Source(chunk_id=s["chunk_id"], label=s["etiket"], source=s.get("source"), title=s.get("title"),
+                  page=s.get("page"), madde=s.get("madde"))
 
 
 class AskResponse(BaseModel):
@@ -60,6 +71,44 @@ class ChunkInfo(BaseModel):
     chunk_id: int
     label: str
     text: str
+
+
+class ChunkDetail(Source):
+    text: str
+
+
+class EvaluationRequest(BaseModel):
+    id: str
+    answer_label: Literal["dogru", "kismen", "yanlis", "cevapsiz"] = Field(
+        description="cevapsiz: bilgi corpus'ta yokken doğru şekilde 'bilgim yok' dedi")
+    source_ok: Literal["evet", "hayir", "emin_degil"] = Field(description="LLM'e doğru kaynak gitti mi?")
+    error_stage: Literal["rewrite", "retrieval", "generation", "corpus_yok"] | None = Field(
+        default=None, description="Yalnız yanlis / kismen için: hata hangi aşamada?")
+    note: str | None = Field(default=None, max_length=2000)
+
+
+class Evaluation(BaseModel):
+    answer_label: str
+    source_ok: str
+    error_stage: str | None
+    note: str | None
+    time: str
+
+
+class RecordOut(BaseModel):
+    id: str
+    time: str
+    session_id: str | None
+    question: str
+    rewritten_query: str | None
+    answer: str | None
+    sources: list[Source]
+    experiment: str
+    commit: str | None
+    latency_ms: int | None
+    error: str | None
+    feedback: int | None = Field(description="Son 👍 (1) / 👎 (-1); yoksa null")
+    evaluation: Evaluation | None
 
 
 class Health(BaseModel):
@@ -118,7 +167,7 @@ def ask(req: AskRequest, service: ChatService = Depends(get_service)):
         id=record["id"],
         answer=record["cevap"],
         rewritten_query=record["rewritten_query"],
-        sources=[Source(chunk_id=s["chunk_id"], label=s["etiket"]) for s in record["kaynaklar"]],
+        sources=[_source(s) for s in record["kaynaklar"]],
         latency_ms=record["latency_ms"],
     )
 
@@ -147,3 +196,64 @@ def document_chunks(source: str, service: ChatService = Depends(get_service)):
     except KeyError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Corpus'ta böyle bir belge yok: {source}")
     return [ChunkInfo(chunk_id=r["chunk_id"], label=r["etiket"], text=r["metin"]) for r in rows]
+
+
+@app.get("/chunks/{chunk_id}", response_model=ChunkDetail, tags=["data"])
+def chunk(chunk_id: int, service: ChatService = Depends(get_service)):
+    """Tek bir chunk'ın tam metni ve kaynağı (arayüzdeki kaynak paneli)."""
+    try:
+        c = service.chunk(chunk_id)
+    except KeyError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Böyle bir chunk yok: {chunk_id}")
+    return ChunkDetail(**_source(c).model_dump(), text=c["metin"])
+
+
+@app.get("/files/{source}", tags=["data"], response_class=FileResponse)
+def pdf_file(source: str, service: ChatService = Depends(get_service)):
+    """Corpus'taki bir belgenin orijinal PDF'i. Belirli sayfa için URL'ye #page=N eklenir."""
+    try:
+        path = service.pdf_path(source)
+    except KeyError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Corpus'ta böyle bir belge yok: {source}")
+    # inline: tarayıcı dosyayı indirmek yerine kendi PDF görüntüleyicisinde açar.
+    return FileResponse(path, media_type="application/pdf", filename=source, content_disposition_type="inline")
+
+
+# --- Yönetici (elle değerlendirme) ---
+# Şimdilik kimlik doğrulama yok (yalnız geliştirici kullanıyor). Sistem başkalarına açılmadan önce /admin
+# altındaki her şey korunmalı: kullanıcıların soruları kişisel veridir.
+
+def _record(r):
+    e = r["degerlendirme"]
+    return RecordOut(
+        id=r["id"], time=r["zaman"], session_id=r["oturum"], question=r["soru"],
+        rewritten_query=r["rewritten_query"], answer=r["cevap"], sources=[_source(s) for s in r["kaynaklar"]],
+        experiment=r["config"], commit=r["commit"], latency_ms=r["latency_ms"], error=r["hata"],
+        feedback=r["geri_bildirim"],
+        evaluation=Evaluation(answer_label=e["cevap_etiketi"], source_ok=e["kaynak_dogru"],
+                              error_stage=e["hata_asamasi"], note=e["not"], time=e["zaman"]) if e else None,
+    )
+
+
+@app.get("/admin/records", response_model=list[RecordOut], tags=["yönetici"])
+def records(service: ChatService = Depends(get_service)):
+    """Bütün soru-cevap kayıtları (yeniden eskiye), son geri bildirim ve son değerlendirmeyle."""
+    return [_record(r) for r in service.records()]
+
+
+@app.post("/admin/evaluations", status_code=status.HTTP_201_CREATED, tags=["yönetici"])
+def evaluate(req: EvaluationRequest, service: ChatService = Depends(get_service)):
+    """Bir cevabı elle değerlendirir (logs/degerlendirme.jsonl). Tekrar gönderilirse en sonuncusu geçerli."""
+    try:
+        service.evaluate(req.id, req.answer_label, req.source_ok, req.error_stage, req.note)
+    except KeyError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Böyle bir cevap kaydı yok: {req.id}")
+    except ValueError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
+    return {"ok": True}
+
+
+@app.get("/admin/summary", tags=["yönetici"])
+def summary(service: ChatService = Depends(get_service)):
+    """Değerlendirme özeti: etiket dağılımı, doğruluk, kaynak doğruluğu, hata aşamaları, 👍/👎 sayıları."""
+    return service.summary()

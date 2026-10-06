@@ -412,3 +412,164 @@ arayüz API'nin nerede çalıştığını bilmek zorunda değil.
    listesi, arama, chunk görüntüleme, 404, kapalı sunucu.
 2. **Gerçek sunucu (`app.main`):** `/`, `/ui`, `/docs`, `/health` 200 döndü; arayüz fonksiyonları gerçek API'den 131 belgeyi
    ve Yatay Geçiş Yönergesi'nin chunk'larını aldı. Sohbet elle denenecek (Gemini kotası).
+
+---
+
+## Kullanıcı geri bildirimi ve yeni karar (2026-10-06)
+
+Gradio arayüzü denendi. Geri bildirim:
+1. Kaynaklar tıklanabilir olmalı: "Yatay Geçiş Yönergesi, Madde 8"e basınca o yer gösterilmeli.
+2. Tasarım başarısız: çok geniş, yazılar büyük, okuması zor.
+3. Doğruluk ölçümü: 👍/👎 kalsın, ayrıca elle değerlendirme. LLM-as-judge şimdilik yok.
+
+**Karar: Gradio yerine kendi frontend'imiz (HTML + CSS + vanilla JavaScript), FastAPI'den servis ediliyor.**
+- *Alternatif: Gradio + özel CSS.* Genişlik ve font kolayca düzelirdi, ama "cevaptaki atfa tıklayınca yan panel aç"
+  gibi etkileşimler Gradio'nun bileşen ve event modelinin dışında kalıyor.
+- *Neden framework'süz (React değil)?* React'in build aracı (npm, bundler) ve kendi öğrenme eğrisi var. Projenin asıl
+  konusu RAG. Düz JavaScript ile temeller (DOM, `fetch`, event'ler) öğreniliyor; React'e geçmek istenirse bu temel
+  zaten gerekli.
+- **Adım 0'daki katmanlı mimarinin karşılığı burada alındı:** arayüz tamamen değişti; `service.py` ve `api.py`'ye sadece
+  yeni özellikler (kaynak paneli, değerlendirme) için ekleme yapıldı, mevcut endpoint'lerin hiçbiri değişmedi.
+
+---
+
+## Adım 6 — Backend: kaynak gösterimi ve değerlendirme API'si (2026-10-06)
+
+### Ne yapıldı?
+**Service (`app/service.py`):**
+- Log'daki her kaynak artık `source` (PDF dosya adı), `title`, `page`, `madde` alanlarını da tutuyor. Arayüz bunlarla
+  PDF'e link veriyor ve cevaptaki atıfları kaynaklarla eşleştiriyor.
+- `chunk(chunk_id)`: tek bir chunk'ın metni (kaynak paneli için).
+- `pdf_path(source)`: PDF'in yolu, **sadece corpus'taki dosya adları için** (aşağıda: path traversal).
+- `evaluate(...)`: elle değerlendirme → `logs/degerlendirme.jsonl` (append-only, `id` ile bağlı, en son yazılan geçerli).
+- `records()`: bütün soru-cevaplar, son 👍/👎 ve son değerlendirmeyle birleştirilmiş halde (yeniden eskiye).
+- `summary()`: etiket dağılımı, doğruluk, kaynak doğruluğu, hata aşamaları, 👍/👎 sayıları.
+- Yeni alanlar eklenmeden önce yazılmış kayıtlar gösterim için `chunk_id`'den tamamlanıyor, ama **sadece kayıt şu anki
+  config ile üretildiyse**. `chunk_id` bir index içindeki sıra numarası; başka bir config'in index'inde aynı numara başka
+  bir chunk'ı gösterir. Dosyadaki kayıt değişmiyor.
+
+**API (`app/api.py`):**
+
+| Endpoint | Ne yapar |
+|---|---|
+| `GET /chunks/{chunk_id}` | Chunk'ın tam metni + kaynak bilgisi |
+| `GET /files/{source}` | Orijinal PDF (`inline`: tarayıcı indirmek yerine kendi görüntüleyicisinde açar) |
+| `GET /admin/records` | Değerlendirme sayfasının verisi |
+| `POST /admin/evaluations` | Elle değerlendirme kaydı |
+| `GET /admin/summary` | Özet istatistikler |
+
+### Değerlendirme etiketleri
+| Alan | Değerler | Ne ölçer |
+|---|---|---|
+| Cevap | `dogru` / `kismen` / `yanlis` / `cevapsiz` | Gerçek kullanımda answer accuracy. `cevapsiz` = bilgi corpus'ta yokken doğru şekilde "bilgim yok" dedi; doğru davranış sayılır |
+| Doğru kaynak geldi mi? | `evet` / `hayir` / `emin_degil` | Gerçek sorularda retrieval kalitesi |
+| Hata nerede? | `rewrite` / `retrieval` / `generation` / `corpus_yok` | Sadece `yanlis` / `kismen` için. Hangi pipeline aşamasının düzeltilmesi gerektiğini gösterir |
+
+`doğruluk = (dogru + cevapsiz) / değerlendirilen`. `kismen` ayrı raporlanır. İleride LLM-as-judge'a geçilirse, bu elle
+etiketler judge'ın doğruluğunu ölçmek için referans (ground truth) olacak.
+
+### Kavram: Path traversal
+- **Nedir?** Kullanıcının verdiği bir dosya adının içine `../` koyarak sunucunun izin verilen klasörünün dışındaki
+  dosyalara ulaşması.
+- **Basit örnek:** `/files/{source}` endpoint'i `data/` + `source` yolunu açsaydı, `/files/..%2F.env` isteği
+  `data/../.env` yani **Gemini API anahtarının bulunduğu dosyayı** döndürebilirdi.
+- **Bizim projede:** Dosya adı yola eklenmeden önce corpus'taki adların listesinde mi diye bakılıyor (whitelist).
+  Listede yoksa 404. Testte `../.env`, `%2E%2E%2Fconfig.py`, `config.py` denendi; hepsi 404.
+- **Dikkat:** "`..` içeriyor mu?" diye kontrol etmek (blacklist) yetersiz kalabilir: URL encoding, farklı yol
+  ayraçları gibi atlatma yolları var. "Sadece bilinen iyi değerler" (whitelist) her zaman daha güvenli.
+
+### Kavram: Geriye dönük uyumluluk (backward compatibility)
+`Source` şemasına eklenen yeni alanlar (`source`, `title`, `page`, `madde`) isteğe bağlı (`None` olabilir). Eski log
+kayıtlarında bu alanlar yok. Zorunlu olsalardı `/admin/records` eski kayıtlarda hata verirdi. API'ye alan eklemek
+mevcut istemcileri bozmaz; alan silmek veya yeniden adlandırmak bozar.
+
+---
+
+## Adım 7 — Yeni frontend: sohbet ve belgeler (2026-10-06)
+
+### Dosyalar (`app/static/`)
+| Dosya | İçerik |
+|---|---|
+| `style.css` | Ortak tasarım: renk değişkenleri, koyu tema, sohbet, panel, sayfalar |
+| `common.js` | `api()` (fetch yardımcısı), güvenli markdown, atıf eşleştirme, kaynak paneli |
+| `index.html` + `chat.js` | Sohbet sayfası |
+| `belgeler.html` | Belge listesi, arama, chunk'lar panelde |
+| `admin.html` + `admin.js` | Değerlendirme sayfası (Adım 8) |
+
+`app/main.py`: `/` → sohbet, `/belgeler`, `/admin`, `/static/*` (StaticFiles). Gradio şimdilik `/ui`'da duruyor.
+
+### Tasarım kararları (kullanıcının şikayetlerine karşılık)
+- **"Çok geniş":** Sohbet sütunu en fazla 720px. Okunabilirlik araştırmalarında ideal satır uzunluğu ~60-80 karakter;
+  ekranın tamamına yayılan metinde göz satır sonundan sonraki satırın başını bulmakta zorlanır.
+- **"Yazılar büyük":** Gövde 15px, satır yüksekliği 1.6; kaynaklar ve meta bilgiler 12-13px ve soluk renkte.
+  Görsel hiyerarşi: önce cevap, sonra kaynaklar, en son süre ve 👍/👎.
+- **Koyu tema:** `prefers-color-scheme` ile işletim sisteminin temasına otomatik uyuyor. Renkler CSS değişkeni
+  (`--bg`, `--text`...) olduğu için koyu temada sadece değişkenler yeniden tanımlanıyor.
+- **PDF metnindeki satır kırılmaları:** PDF'ten okunan metin sayfa genişliğinde kırılmış ("...dönemlere ait⏎genel not...").
+  Panelde gösterirken `reflow()` bu kırılmaları birleştiriyor, fıkra `(3)` ve bent `a)` başlarını koruyor. Sadece
+  gösterim; retrieval'da kullanılan chunk metni değişmiyor.
+
+### Kaynak gösterimi (kullanıcının 1. isteği)
+1. **Kaynak düğmeleri:** Cevabın altındaki her kaynak tıklanabilir → sağdan panel açılır, chunk'ın tam metni ve
+   **"PDF'te aç (s. 3)"** link'i. Link `/files/yatay-gecis-yonergesi.pdf#page=3`: `#page=N`'i tarayıcının PDF
+   görüntüleyicisi anlıyor ve o sayfadan açıyor.
+2. **Cevap içindeki atıflar:** LLM `[Yatay Geçiş Yönergesi, Madde 8]` yazıyor (prompt'ta istendiği için).
+   `linkCitations()` bunu kaynaklarla eşleştirip link yapıyor. Kurallar:
+   - Atıfta madde numarası varsa, kaynağın madde numarası **birebir** aynı olmalı.
+   - Atıftaki belge adı kelimelerinin en az %60'ı kaynağın başlığında geçmeli (Türkçe küçük harf, "BAİBÜ" yok sayılır).
+   - Bir parantezde `;` ile ayrılmış birden fazla atıf olabilir.
+   - Eşleşmeyen atıf düz metin kalır. **Yanlış maddeye link vermek, hiç link vermemekten kötü.**
+
+Fıkra seviyesi ("Madde 8/2"): panel maddenin tamamını gösteriyor; atıftaki fıkrayı vurgulamak ileride eklenebilir.
+
+### Kavram: XSS (Cross-Site Scripting) ve sanitization
+- **Nedir?** Sayfaya dışarıdan gelen bir metin HTML olarak eklenirse, içindeki `<script>` veya `onerror=...` kodu
+  kullanıcının tarayıcısında çalışır.
+- **Bizim projede iki kaynak var:**
+  - *Kullanıcının sorusu:* `textContent` ile ekleniyor; HTML olarak yorumlanmıyor.
+  - *LLM'in cevabı:* markdown (kalın, liste) içerdiği için HTML'e çevrilmesi gerekiyor (`marked`). Ama LLM'in çıktısı
+    güvenilir değil: belgelerdeki veya sorudaki bir metin LLM'i `<img src=x onerror=...>` yazmaya yönlendirebilir
+    (prompt injection). Bu yüzden HTML sayfaya eklenmeden önce **DOMPurify** ile temizleniyor: çalıştırılabilir her şey
+    siliniyor, `<strong>`, `<ul>`, `<a>` gibi zararsız etiketler kalıyor.
+- **Dikkat:** `innerHTML`'e giden her dış veri ya `escapeHtml()` ile kaçırılmalı ya da sanitize edilmeli. Kodda bunun
+  istisnası yok.
+
+### Kavram: DOM, fetch ve async/await
+- **DOM:** Tarayıcının HTML'i temsil ettiği ağaç. JavaScript bu ağacı değiştirerek sayfayı günceller
+  (`document.createElement`, `appendChild`, `textContent`).
+- **fetch:** Tarayıcıdan HTTP isteği atmak. Python'daki `httpx`'in karşılığı.
+- **async/await:** `await api("/ask", ...)` cevap gelene kadar o fonksiyonu bekletir ama sayfayı dondurmaz; kullanıcı
+  bu sırada kaydırabilir, paneli açabilir. Python'daki `async def` ile aynı fikir.
+- **Bizim projede:** `chat.js`'teki `ask()`: soruyu ekrana yaz → "Cevap hazırlanıyor" göster → `await fetch` →
+  cevabı çiz → geçmişe ekle. Hata olursa mesaj gösterilir, geçmişe eklenmez.
+
+### Kavram: Event delegation
+Sayfadaki her atıf ve kaynak düğmesine ayrı ayrı tıklama dinleyicisi eklemek yerine `document`'a **tek** bir dinleyici
+eklendi: tıklanan eleman (veya üstündekilerden biri) `data-chunk` özelliği taşıyorsa panel açılıyor. Sonradan eklenen
+mesajlardaki düğmeler de otomatik çalışıyor, çünkü tıklama olayı DOM ağacında yukarı doğru kabarıyor (event bubbling).
+
+---
+
+## Adım 8 — Değerlendirme sayfası (2026-10-06)
+
+`/admin`: üstte özet kartları (soru sayısı, değerlendirilen, doğruluk, kısmen/yanlış, doğru kaynak oranı, 👍/👎) ve hata
+aşamaları; altta kayıtlar. Varsayılan olarak sadece değerlendirilmemiş kayıtlar gösteriliyor. Her kayıtta soru,
+"Aranan" (rewrite), cevap (atıflar tıklanabilir), kaynaklar, 👍/👎, zaman, config ve commit ve etiket formu var.
+- "Hata nerede?" seçenekleri sadece "Yanlış" veya "Kısmen" seçilince açılıyor. Aynı kural backend'de de kontrol
+  ediliyor (`doğru` + hata aşaması → 422). **Frontend doğrulaması kullanıcıya kolaylık içindir, güvenlik için değil:**
+  API'ye Swagger'dan veya başka bir istemciden doğrudan istek atılabilir.
+- Hatalı istekler (kota vb.) listede görünüyor ama değerlendirilmiyor; özette "hatalı istek" olarak sayılıyor.
+
+**Güvenlik notu:** `/admin` şu an korumasız. Sistem başkalarına açılmadan önce kimlik doğrulama eklenmeli: kullanıcıların
+soruları kişisel veri sayılır.
+
+### Nasıl doğrulandı? (Adım 6-8)
+1. **TestClient (sahte servis):** yeni kaynak alanları, `/chunks`, `/files` (content-type `application/pdf`, `inline`),
+   path traversal denemeleri → 404, değerlendirme kuralları (geçersiz etiket / doğru + hata aşaması → 422, bilinmeyen id
+   → 404, ikinci değerlendirmenin geçerli olması), kayıt birleştirme ve özet sayıları. Eski testler de geçti.
+2. **Atıf eşleştirme (Node.js):** gerçek bir cevaptaki çoklu atıf, madde numarası farklı (link yok), belge kaynaklarda yok
+   (link yok), büyük harfli atıf, takvim bölümü, markdown link'i.
+3. **Tarayıcıda (gerçek sunucu, EXP-020):** log'daki gerçek bir cevap ekrana basıldı. 5 atıf link'lendi, Madde 8'e
+  tıklayınca panel doğru chunk'ı ve "PDF'te aç (s. 3)" link'ini gösterdi. Belgeler sayfasında arama ve panel,
+  değerlendirme sayfasında özet ve form davranışı kontrol edildi. Konsolda hata yok. Gemini kotası harcanmadı;
+  değerlendirme formu, kullanıcının gerçek log'una yazmamak için gönderilmedi.

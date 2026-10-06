@@ -7,6 +7,8 @@ işlenir ve kaydedilir.
 Kayıtlar append-only JSONL dosyalarıdır (her satır bir JSON nesnesi, satırlar sonradan değiştirilmez):
   logs/sohbet.jsonl         her soru-cevap (hata alanları dahil)
   logs/geri_bildirim.jsonl  👍/👎 geri bildirimi; "id" alanıyla sohbet kaydına bağlanır
+  logs/degerlendirme.jsonl  elle değerlendirme (cevap etiketi, kaynak doğru mu, hata aşaması); "id" ile bağlı
+Aynı cevaba birden fazla geri bildirim / değerlendirme yazılabilir; en son yazılan geçerlidir.
 """
 import json
 import subprocess
@@ -20,6 +22,11 @@ import config
 from rag import RagBot, source_label
 
 LOG_DIR = config.ROOT / "logs"
+
+# Elle değerlendirme etiketleri (API şemaları da aynı değerleri kullanır).
+ANSWER_LABELS = ("dogru", "kismen", "yanlis", "cevapsiz")  # cevapsiz: bilgi yokken doğru şekilde "bilgim yok" dedi
+SOURCE_OK = ("evet", "hayir", "emin_degil")                # LLM'e doğru kaynak gitti mi?
+ERROR_STAGES = ("rewrite", "retrieval", "generation", "corpus_yok")  # yalnız yanlis / kismen için
 
 
 def _git(*args):
@@ -43,6 +50,8 @@ class ChatService:
         self.log_dir.mkdir(parents=True, exist_ok=True)
         self.chat_log = log_dir / "sohbet.jsonl"
         self.feedback_log = log_dir / "geri_bildirim.jsonl"
+        self.evaluation_log = log_dir / "degerlendirme.jsonl"
+        self._chunks = {c.metadata["chunk_id"]: c for c in bot.retriever.chunks}
         # Sunucu açılırken bir kez okunur: hangi kod sürümü cevap veriyor? (commit edilmemiş değişiklik varsa "-dirty")
         commit = _git("rev-parse", "--short", "HEAD")
         dirty = bool(_git("status", "--porcelain", "--untracked-files=no"))
@@ -72,6 +81,13 @@ class ChatService:
             return []
         return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
+    @staticmethod
+    def _source_info(doc):
+        m = doc.metadata
+        # source/title/page/madde: arayüz kaynağa link verebilsin ve cevaptaki atıfları eşleştirebilsin diye.
+        return {"chunk_id": m["chunk_id"], "etiket": source_label(doc), "source": m["source"],
+                "title": m["title"], "page": m.get("page"), "madde": m.get("madde")}
+
     # --- İş mantığı ---
 
     def ask(self, question, history=None, session_id=None):
@@ -96,8 +112,7 @@ class ChatService:
             record["cevap"] = result["answer"]
             if result["query"] != question:  # rewrite yapılmadıysa null kalır
                 record["rewritten_query"] = result["query"]
-            record["kaynaklar"] = [{"chunk_id": d.metadata["chunk_id"], "etiket": source_label(d)}
-                                   for d in result["docs"]]
+            record["kaynaklar"] = [self._source_info(d) for d in result["docs"]]
             return record
         except Exception as e:
             record["hata"] = f"{type(e).__name__}: {str(e)[:500]}"
@@ -135,3 +150,72 @@ class ChatService:
         if not rows:
             raise KeyError(source)
         return rows
+
+    def chunk(self, chunk_id):
+        """Tek bir chunk'ın metni ve kaynağı (kaynak paneli için). Yoksa KeyError."""
+        c = self._chunks[chunk_id]
+        return {**self._source_info(c), "metin": c.page_content}
+
+    def pdf_path(self, source):
+        """Corpus'taki bir belgenin PDF yolu. Corpus'ta olmayan her ad KeyError.
+
+        Kullanıcının verdiği ad doğrudan dosya yoluna eklenmez; yalnız corpus listesindeki adlar kabul edilir
+        (whitelist). Böylece "../.env" gibi bir adla data/ dışındaki dosyalara ulaşılamaz (path traversal).
+        """
+        allowed = {c.metadata["source"] for c in self._chunks.values()}
+        if source not in allowed:
+            raise KeyError(source)
+        return config.DATA_DIR / source
+
+    # --- Elle değerlendirme ---
+
+    def evaluate(self, answer_id, answer_label, source_ok, error_stage=None, note=None):
+        if answer_id not in self._known_ids:
+            raise KeyError(answer_id)
+        if answer_label not in ANSWER_LABELS or source_ok not in SOURCE_OK:
+            raise ValueError("geçersiz etiket")
+        if error_stage is not None and (error_stage not in ERROR_STAGES or answer_label not in ("yanlis", "kismen")):
+            raise ValueError("hata aşaması yalnız 'yanlis' ve 'kismen' cevaplar için verilir")
+        record = {"id": answer_id, "cevap_etiketi": answer_label, "kaynak_dogru": source_ok,
+                  "hata_asamasi": error_stage, "not": note, "zaman": _now()}
+        self._append(self.evaluation_log, record)
+        return record
+
+    def records(self):
+        """Tüm soru-cevaplar (yeniden eskiye), her birinin son geri bildirimi ve son değerlendirmesiyle."""
+        # Dosyalar sırayla okunduğu için sözlükte aynı id'nin en son satırı kalır ("en son yazılan geçerli").
+        feedback = {r["id"]: r["puan"] for r in self._read(self.feedback_log)}
+        evaluation = {r["id"]: r for r in self._read(self.evaluation_log)}
+        return [{**self._complete_sources(r), "geri_bildirim": feedback.get(r["id"]),
+                 "degerlendirme": evaluation.get(r["id"])}
+                for r in reversed(self._read(self.chat_log))]
+
+    def _complete_sources(self, record):
+        """Kaynaklara source/title/page/madde eklenmeden önce yazılmış kayıtları gösterim için tamamlar.
+
+        chunk_id yalnız aynı index içinde anlamlıdır; bu yüzden yalnız kayıt şu anki config ile üretildiyse
+        tamamlanır. Dosyadaki kayıt değişmez (append-only).
+        """
+        if record["config"] != self.experiment_id:
+            return record
+        sources = [s if "source" in s or s["chunk_id"] not in self._chunks
+                   else {**s, **self._source_info(self._chunks[s["chunk_id"]])} for s in record["kaynaklar"]]
+        return {**record, "kaynaklar": sources}
+
+    def summary(self):
+        rows = self.records()
+        answered = [r for r in rows if not r["hata"]]
+        evaluated = [r["degerlendirme"] for r in answered if r["degerlendirme"]]
+        labels = Counter(e["cevap_etiketi"] for e in evaluated)
+        return {
+            "toplam": len(rows),
+            "hatali_istek": len(rows) - len(answered),
+            "degerlendirilen": len(evaluated),
+            "cevap_etiketleri": {k: labels.get(k, 0) for k in ANSWER_LABELS},
+            # "dogru" + "cevapsiz" doğru davranıştır; kismen ayrı raporlanır.
+            "dogruluk": round((labels["dogru"] + labels["cevapsiz"]) / len(evaluated), 3) if evaluated else None,
+            "kaynak_dogru": dict(Counter(e["kaynak_dogru"] for e in evaluated)),
+            "hata_asamalari": dict(Counter(e["hata_asamasi"] for e in evaluated if e["hata_asamasi"])),
+            "geri_bildirim": {"olumlu": sum(r["geri_bildirim"] == 1 for r in rows),
+                              "olumsuz": sum(r["geri_bildirim"] == -1 for r in rows)},
+        }

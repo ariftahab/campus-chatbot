@@ -9,15 +9,18 @@
    - [x] **Sohbet sekmesi:** soru sor, cevabı ve kaynakları (belge + madde) gör.
    - [x] **Soru-cevap kaydı (logging):** Sorulan her soru, verilen cevap, retrieve edilen chunk'lar, kullanılan
          config / commit hash ve zaman bir dosyaya yazılır (ör. `logs/sohbet.jsonl`).
-   - [ ] **Doğruluk ölçümü:** Kaydedilen cevaplar sonradan doğru / yanlış / kısmen olarak işaretlenir (UI'dan geri
-         bildirim butonu ve/veya sonradan elle ya da LLM ile değerlendirme).
+   - [x] **Doğruluk ölçümü:** 👍/👎 + `/admin` sayfasında elle değerlendirme (cevap etiketi, doğru kaynak geldi mi,
+         hata aşaması). LLM-as-judge şimdilik yok; elle etiketler ileride judge için referans olur.
+   - [x] **Tıklanabilir kaynaklar:** kaynak düğmeleri ve cevaptaki atıflar → panelde chunk metni + PDF'te o sayfa.
+   - [ ] Gradio arayüzünü (`/ui`, `app/ui.py`) yeni arayüz oturunca kaldır.
+   - [ ] `/admin` için kimlik doğrulama (sistem başkalarına açılmadan önce).
+   - [ ] Atıftaki fıkrayı ("Madde 8/2") panelde vurgulama.
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir ve model / pipeline buna göre güncellenir. Gerçek sorulardan seçilenler yeni bir soru seti
          sürümü olarak eklenebilir (eski setler değiştirilmez).
    - [x] **Data sekmesi:** Corpus'taki belgeleri listele (başlık, tür, chunk sayısı), bir belgenin chunk'larını gör.
    - (UI'dan belge ekleme şimdilik kapsam dışı; belgeler eskisi gibi `data/` + yeni corpus sürümüyle eklenir.)
-   - Konuşulacaklar: hangi framework (Streamlit / Gradio / FastAPI + web sayfası), log dosyasında kişisel veri
-     tutulmaması.
+   - Karar: FastAPI backend + kendi HTML/CSS/JS frontend'imiz (ayrıntılar `app/gelistirme_gunlugu.md`).
 
 2. [ ] **Ders programları ve akademik takvim (scraping)** — okulun sitesinde her dönem güncelleniyor; her dönem elle
        indirip yüklemek yerine scrape edilecek.
