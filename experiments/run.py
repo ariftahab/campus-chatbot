@@ -7,7 +7,7 @@
   python -m experiments.run EXP-003 --yeniden  # var olan sonucu yeniden üret
 
 Her deney experiments/configs/EXP-*.json dosyasıyla tanımlanır. Sonuç experiments/results/EXP-*.json'a
-yazılır ve learning_log/experiment_log.md yeniden üretilir.
+yazılır ve experiments/experiment_log.md yeniden üretilir.
 """
 import argparse
 import json

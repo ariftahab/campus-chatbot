@@ -40,11 +40,11 @@ Yoğun, ansiklopedik metin yazma. Biçim için `learning_log/2026-09-29.md`'ye b
 - Kısa deney tablosu ve 2-3 ana ders
 Kullanıcının kendi notlarının yerine geçmemeli; amaç anlamasını sağlamak. Aynı gün ikinci oturumsa `YYYY-MM-DD-2.md`.
 
-**Bütün günlükler `learning_log/` altında:**
-- `YYYY-MM-DD.md`: study notes (yukarıdaki biçim).
-- `YYYY-MM-DD-bugun-ne-yaptik.md`: günün yapılan işler özeti (tablo + commit'ler). Biçim: `learning_log/2026-10-01-bugun-ne-yaptik.md`.
-- `ui_api_log.md`: UI/API'deki her adım (ne, neden, alternatifler, kavram kartları).
-- `experiment_log.md`: deney günlüğü (elle düzenlenmez, `experiments.report` üretir).
+**Günlüklerin yeri:**
+- `learning_log/YYYY-MM-DD.md`: study notes (yukarıdaki biçim).
+- `daily_log/YYYY-MM-DD.md`: günün yapılan işler özeti (tablo + commit'ler). Biçim: `daily_log/2026-10-06.md`.
+- `learning_log/frontend_backend_log.md`: arayüz ve API'deki her adım (ne, neden, alternatifler, kavram kartları).
+- `experiments/experiment_log.md`: deney günlüğü (elle düzenlenmez, `experiments.report` üretir).
 
 **Dil / terim kuralı:** Cümleler Türkçe, **teknik terimler İngilizce** ve çevrilmeden: branch, commit, push, chunk,
 chunking, embedding, token, retrieval, reranker, vector store, index, pipeline, baseline, hypothesis, evaluation,
@@ -57,7 +57,7 @@ sohbet. Her zaman **sorunun kendisi** ("Üniversitenin öğretim dili nedir?") v
 başvuru şartları maddesi") yazılır. Kimlikler yalnız `eval/*.json` ve `results/*.json` gibi makine dosyalarında kalır.
 
 `my_notes/` kullanıcının kendi notları ve notebook'ları içindir; yalnız istendiğinde dosya ekle. (Claude'un yazdığı
-özetler 2026-10-06'da `learning_log/`'a taşındı.)
+özetler `daily_log/` ve `learning_log/` klasörlerinde.)
 ## Deney disiplini (önemli)
 RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)
 her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
@@ -72,7 +72,7 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Kod önce commit edilir, sonra `python -m experiments.run EXP-XXX` koşulur. Sonuç dosyası commit hash'ini kaydeder;
   `git_dirty: true` sonuçlar tekrar üretilebilir sayılmaz.
 - Sonuç yorumu config'in `notlar` alanına yazılır. Beklenen iyileşme çıkmadıysa bu da açıkça yazılır.
-- `learning_log/experiment_log.md` elle düzenlenmez, `python -m experiments.report` ile üretilir. Log **kısa** kalmalı:
+- `experiments/experiment_log.md` elle düzenlenmez, `python -m experiments.report` ile üretilir. Log **kısa** kalmalı:
   setup (hyperparameter) tablosu, results tablosu ve deney başına tek satır (`kisa_not`). Ayrıntılar `results/*.json` içinde.
 - Soru setleri değiştirilmez: bir set değişirse hash'i değişir ve eski sonuçlarla karşılaştırma geçersiz olur. Yeni
   sorular yeni bir set dosyası olarak eklenir; deney config'inde `veri_seti` alanıyla seçilir (yoksa `sorular`).
@@ -99,14 +99,13 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - `chat.py` — CLI.
 - `app/` — UI / API: `service.py` (iş mantığı; `logs/` altında sohbet, geri bildirim, elle değerlendirme JSONL'leri),
   `api.py` (FastAPI), `static/` (HTML/CSS/vanilla JS frontend: sohbet, belgeler, /admin değerlendirme), `main.py`
-  (hepsi tek sunucuda), `ui.py` (eski Gradio arayüzü, /ui). Her adım `learning_log/ui_api_log.md` dosyasına yazılır.
+  (hepsi tek sunucuda), `ui.py` (eski Gradio arayüzü, /ui). Her adım `learning_log/frontend_backend_log.md` dosyasına yazılır.
 - `experiments/evaluation.py` — kanıt tabanlı ilgililik (parçalamadan bağımsız), metrikler (MRR@10, Hit@k, bağlam isabeti,
   bağlam uzunluğu, gecikme, cevap doğruluğu), McNemar/Wilcoxon, ortam kaydı.
 - `experiments/run.py` — deney koşucu, `experiments/report.py` — günlük üretici.
 - `eval/sorular.json` (set 2.0) — 27 cevaplı + 3 kapsam dışı soru, yalnız ilk 3 belgeden; EXP-000..016.
 - `eval/sorular_v3.json` (set 3.0) — 77 soru: eski 30 + yeni 47 (31 belge). `kaynaklar`: birden fazla doğru kaynak
   (her biri kendi `kanit`'iyle), `stil` (belge/ogrenci dili), `kategori`, cevapsızlarda isteğe bağlı `kabul`.
-  Okunabilir hali: `learning_log/eval_v3_taslak.md`.
 
 ## Notlar
 - LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. Ücretsiz kota günde 20 istek (gemini-2.5-flash);

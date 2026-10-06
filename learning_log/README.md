@@ -1,14 +1,11 @@
 # learning_log
 
-Projenin bütün günlükleri bu klasörde:
-
 | Dosya | Ne |
 |---|---|
 | `YYYY-MM-DD.md` | O günün **study notes**'u: ders çalışır gibi okunur (aynı gün ikinci oturum: `YYYY-MM-DD-2.md`) |
-| `YYYY-MM-DD-bugun-ne-yaptik.md` | O günün **yapılan işler özeti**: tablo, sonuçlar, commit'ler |
-| `ui_api_log.md` | UI / API geliştirme günlüğü: her adımda ne, neden, alternatifler, kavram kartları |
-| `experiment_log.md` | Deney günlüğü. Elle düzenlenmez, `python -m experiments.report` üretir |
-| `eval_v3_taslak.md` | Soru seti 3.0'ın okunabilir hali |
+| `frontend_backend_log.md` | Arayüz ve API'nin geliştirme günlüğü: her adımda ne, neden, alternatifler, kavram kartları |
+
+Günün yapılan işler özeti `daily_log/`, deney günlüğü `experiments/experiment_log.md`.
 
 Study notes'un yapısı:
 
