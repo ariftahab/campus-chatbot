@@ -1,6 +1,6 @@
 # Experiment Log
 
-> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-014**. Ayrıntılar: `experiments/results/EXP-*.json`.
+> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-020**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
 **Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
@@ -32,6 +32,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-017 | EXP-016 | v2 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 4045 |
 | EXP-018 | EXP-017 | v2 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v3_kapsam** | 3.1-flash-lite | 4045 |
 | EXP-019 | EXP-017 | **v3** | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v2 | 3.1-flash-lite | 3785 |
+| EXP-020 | EXP-019 | v3 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v3_kapsam** | 3.1-flash-lite | 3785 |
 
 ## 2. Results
 
@@ -57,6 +58,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-017 | Referans: değerlendirme seti 2.0 → 3.0 (77 soru, 31 belge) | 3.0 | 0.852 | 0.789 | 0.930 | 0.930 | 5798 | 397 ms | referans (yeni soru seti, karşılaştırma yok) | – |
 | EXP-018 | Prompt: v2 → v3_kapsam (kurallar kapsama göre farklıysa hepsi kapsamıyla) | 3.0 | 0.852 | 0.789 | 0.930 | 0.930 | 5798 | 394 ms | answer acc. ↓ kötüleşti (p=1.00, anlamlı değil) | ✗ |
 | EXP-019 | Corpus: kopyalar çıkarıldı (v2 → v3, 139 → 131 belge) | 3.0 | 0.852 | 0.789 | 0.930 | 0.930 | 5728 | 407 ms | MRR@10 ↓ kötüleşti (p=1.00, anlamlı değil) | ✗ |
+| EXP-020 | Prompt v3 (kapsam) kopyasız corpus'ta (v2_kaynakli → v3_kapsam, corpus v3) | 3.0 | 0.852 | 0.789 | 0.930 | 0.930 | 5728 | 366 ms | MRR@10 = değişmedi (p=1.00, anlamlı değil) | ✓ |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -72,6 +74,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-017 | 0.674 | 0.588 | 0.687 | 0.944 | 0.852 |
 | EXP-018 | 0.674 | 0.588 | 0.687 | 0.944 | 0.852 |
 | EXP-019 | 0.682 | 0.593 | 0.680 | 0.958 | 0.852 |
+| EXP-020 | 0.682 | 0.593 | 0.680 | 0.958 | 0.852 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -82,6 +85,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-017 | 0.900 (27) | 0.822 (44) | 0.921 (42) | 0.751 (29) | 1.000 (3) | 1.000 (2) |
 | EXP-018 | 0.900 (27) | 0.822 (44) | 0.921 (42) | 0.751 (29) | 1.000 (3) | 1.000 (2) |
 | EXP-019 | 0.932 (27) | 0.802 (44) | 0.923 (42) | 0.748 (29) | 1.000 (3) | 0.550 (2) |
+| EXP-020 | 0.932 (27) | 0.802 (44) | 0.923 (42) | 0.748 (29) | 1.000 (3) | 0.550 (2) |
 
 ## 5. Notes
 
@@ -105,3 +109,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-017:** Yeni baseline: MRR@10 0,852, answer_acc 0,896. Öğrenci dili 0,75 / belge dili 0,92 (MRR). Bazı hatalar eksik etiket ve anahtar kelime eşleşmesi.
 - **EXP-018:** answer_acc 0,896 → 0,883 (anlamsız). Değişen 3 sorudan biri gerçek iyileşme (iki kapsamı ayırdı), biri kelime artefaktı, biri boş API cevabı.
 - **EXP-019:** Context'teki kopya madde tekrarı 31 → 0; MRR@10 aynı (0,852). Büyük sıra değişimleri reranker penceresinin (8 aday) sınırından.
+- **EXP-020:** Retrieval EXP-019 ile birebir aynı (beklenen). Production'a alındı; prompt etkisi gerçek kullanım kayıtlarıyla ölçülecek.

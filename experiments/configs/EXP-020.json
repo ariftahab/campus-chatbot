@@ -27,5 +27,7 @@
     "llm_model": "gemini-3.1-flash-lite",
     "llm_temperature": 0.3,
     "prompt_version": "v3_kapsam"
-  }
+  },
+  "notlar": "Hipotez doğrulandı: retrieval metrikleri EXP-019 ile birebir aynı (MRR@10 0,8516, Hit@1 0,789, Hit@5 0,930, context hit 0,930, context uzunluğu aynı; değişen soru yok). Prompt yalnız LLM'e giden metni değiştirdiği için beklenen sonuç; koşunun amacı v3 corpus + prompt v3 kombinasyonunu kayda geçirip production'a almaktı. Latency 407 → 366 ms (p<0,001) bir ölçüm artefaktı: retrieval kodu ve girdiler aynı, fark GPU'nun ısınma / çalışma koşullarından. Prompt'un asıl etkisi (çok kapsamlı sorularda kuralları kapsamlarıyla ayrı verme) bu koşuda ölçülmedi; answer accuracy için --llm gerekir (77 istek). Kanıt arayüzün soru-cevap kayıtlarından ve sonraki soru setine eklenecek çok kapsamlı sorulardan gelecek. 2026-10-06'dan itibaren production config'i (config.PRODUCTION_EXPERIMENT).",
+  "kisa_not": "Retrieval EXP-019 ile birebir aynı (beklenen). Production'a alındı; prompt etkisi gerçek kullanım kayıtlarıyla ölçülecek."
 }
