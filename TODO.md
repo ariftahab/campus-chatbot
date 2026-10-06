@@ -6,15 +6,15 @@
        v3 = kopyalar çıkarılmış 131 belge). Corpus artık deney config'inde bir parametre (`corpus`).
 
 1. [ ] **UI (chatbot arayüzü)** — terminal yerine sohbet arayüzü.
-   - [ ] **Sohbet sekmesi:** soru sor, cevabı ve kaynakları (belge + madde) gör.
-   - [ ] **Soru-cevap kaydı (logging):** Sorulan her soru, verilen cevap, retrieve edilen chunk'lar, kullanılan
+   - [x] **Sohbet sekmesi:** soru sor, cevabı ve kaynakları (belge + madde) gör.
+   - [x] **Soru-cevap kaydı (logging):** Sorulan her soru, verilen cevap, retrieve edilen chunk'lar, kullanılan
          config / commit hash ve zaman bir dosyaya yazılır (ör. `logs/sohbet.jsonl`).
    - [ ] **Doğruluk ölçümü:** Kaydedilen cevaplar sonradan doğru / yanlış / kısmen olarak işaretlenir (UI'dan geri
          bildirim butonu ve/veya sonradan elle ya da LLM ile değerlendirme).
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir ve model / pipeline buna göre güncellenir. Gerçek sorulardan seçilenler yeni bir soru seti
          sürümü olarak eklenebilir (eski setler değiştirilmez).
-   - [ ] **Data sekmesi:** Corpus'taki belgeleri listele (başlık, tür, chunk sayısı), bir belgenin chunk'larını gör.
+   - [x] **Data sekmesi:** Corpus'taki belgeleri listele (başlık, tür, chunk sayısı), bir belgenin chunk'larını gör.
    - (UI'dan belge ekleme şimdilik kapsam dışı; belgeler eskisi gibi `data/` + yeni corpus sürümüyle eklenir.)
    - Konuşulacaklar: hangi framework (Streamlit / Gradio / FastAPI + web sayfası), log dosyasında kişisel veri
      tutulmaması.
