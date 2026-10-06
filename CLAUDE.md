@@ -73,7 +73,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Commit mesajları ayrıntılı olmalı (ne, neden, sayısal sonuç); tezde kaynak olarak kullanılacak.
 
 ## Komutlar
-- `venv/Scripts/python.exe chat.py` — sohbet (`config.PRODUCTION_EXPERIMENT` yapılandırmasıyla)
+- `venv/Scripts/python.exe -m uvicorn app.main:app --port 8000` — arayüz (http://localhost:8000/ui) + API (/docs)
+- `venv/Scripts/python.exe chat.py` — terminal sohbeti (`config.PRODUCTION_EXPERIMENT` yapılandırmasıyla)
 - `venv/Scripts/python.exe -m experiments.run EXP-XXX [--llm] [--yeniden]` / `--all`
 - `venv/Scripts/python.exe -m experiments.report`
 - `venv/Scripts/python.exe ingest.py [EXP-ID]`
@@ -89,7 +90,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
   v3_kapsam: kurallar kapsama göre farklıysa her birini kapsamıyla verir).
   `RagBot` (stateless): geçmişi `ask(question, history)` ile dışarıdan alır, varsa soruyu bağımsız hale getirir, Gemini ile cevaplar.
 - `chat.py` — CLI.
-- `app/` — UI / API (FastAPI + Gradio, yapım aşamasında). Her adım `app/gelistirme_gunlugu.md` dosyasına yazılır.
+- `app/` — UI / API: `service.py` (iş mantığı, `logs/*.jsonl` kaydı), `api.py` (FastAPI), `ui.py` (Gradio, API'ye HTTP
+  ile bağlanır), `main.py` (ikisi tek sunucuda). Her adım `app/gelistirme_gunlugu.md` dosyasına yazılır.
 - `experiments/evaluation.py` — kanıt tabanlı ilgililik (parçalamadan bağımsız), metrikler (MRR@10, Hit@k, bağlam isabeti,
   bağlam uzunluğu, gecikme, cevap doğruluğu), McNemar/Wilcoxon, ortam kaydı.
 - `experiments/run.py` — deney koşucu, `experiments/report.py` — günlük üretici.

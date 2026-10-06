@@ -334,4 +334,81 @@ içinde bloklayan kod çalıştırılırsa bütün sunucu donar, cevap gelene ka
    kota hatası → 503, başka hata → 500, geçersiz puan → 422, bilinmeyen id → 404, olmayan belge → 404.
    `TestClient` `with` bloğu olmadan kullanıldığı için lifespan (gerçek model yükleme) çalışmadı.
 2. **Gerçek sunucu (uvicorn, EXP-020 modelleri):** `/health` ve `/documents` çağrıldı. `/ask` kotayı korumak için
-   otomatik testte çağrılmadı; Swagger'dan elle denenecek.
+   otomatik testte çağrılmadı; Swagger'dan elle denendi ve çalıştı (log'a 1 soru, 1 geri bildirim düştü).
+
+---
+
+## Adım 5 — Gradio arayüzü (2026-10-06)
+
+### Ne yapıldı?
+- `app/ui.py`: Gradio arayüzü. İki sekme:
+  - **Sohbet:** soru sor, cevabın altında kaynaklar, rewrite yapıldıysa "Aranan soru" ve süre. Her cevapta 👍/👎.
+    "Yeni sohbet" butonu geçmişi sıfırlar.
+  - **Belgeler:** 131 belgenin tablosu (başlık, tür, chunk sayısı), adla arama, seçilen belgenin chunk'ları.
+  - Üstte durum satırı: hangi config ve commit ile çalışıyor (`/health`'ten).
+- `app/main.py`: API ile arayüzü tek sunucuda birleştirir (`gr.mount_gradio_app`). `/` adresi `/ui`'a yönlendirir.
+
+Çalıştırma: `venv/Scripts/python.exe -m uvicorn app.main:app --port 8000` → http://localhost:8000/ui
+
+### Veri akışı (bir soru nasıl yolculuk ediyor?)
+```
+Tarayıcı ──(Gradio'nun kendi protokolü)──▶ ui.respond()
+   ui.respond() ──HTTP POST /ask (httpx)──▶ api.ask() ──▶ service.ask() ──▶ RagBot.ask()
+                                                              └─ logs/sohbet.jsonl
+   ◀── JSON {id, answer, sources, rewritten_query, latency_ms}
+ui.respond(): cevabı ekrana yazar, id'yi saklar, geçmişe ekler
+👍 tıklanınca: ui.on_feedback() ──HTTP POST /feedback──▶ ... ──▶ logs/geri_bildirim.jsonl
+```
+Arayüz ve API aynı süreçte, ama arayüz service'i doğrudan çağırmıyor. Okul sistemi de bağlansa aynı `/ask`'i kullanacak.
+
+### Önemli tasarım kararları
+
+**1. Oturum durumu `gr.State` ile.** Her tarayıcı sekmesinin kendi durumu var:
+- `history`: API'ye gönderilen sade geçmiş.
+- `answer_ids`: ekrandaki mesaj sırası → cevap id'si. 👍'ya basıldığında Gradio sadece "kaçıncı mesaj" bilgisini verir;
+  hangi log kaydına ait olduğunu bu eşleme söyler.
+- `session_id`: sayfa her açıldığında yeni bir UUID; log'da aynı sohbetin sorularını gruplar.
+
+Sunucu (API) stateless kaldı; durum istemcide, yani Gradio'da. Adım 1'deki kararın sonucu.
+
+**2. Ekranda görünen ile API'ye giden geçmiş farklı.** Ekranda cevabın altında kaynak listesi, süre ve "Aranan soru"
+var. Bunlar geçmişe eklenseydi LLM ve rewrite sonraki soruda bu metinleri de görürdü: gereksiz token ve rewrite'ı
+şaşırtma riski. Bu yüzden `history` sadece soru ve saf cevap metnini tutar.
+
+**3. Hata mesajları geçmişe girmez.** Kota dolduğunda ekranda "⚠️ LLM kotası doldu (HTTP 503)" görünür, ama bu mesaj
+geçmişe eklenmez ve 👍/👎 eşlemesi yoktur (ona tıklanırsa istek gönderilmez).
+
+**4. Tek `httpx.Client`.** Her istekte yeni bağlantı açmak yerine bir client yeniden kullanılır (connection pooling).
+Timeout 120 sn, çünkü cevap üretimi (rewrite + retrieval + LLM) birkaç saniye sürebilir.
+
+**5. `analytics_enabled=False`.** Gradio varsayılan olarak kullanım istatistiklerini kendi sunucularına gönderir. Kullanıcı
+sorularını toplayan bir uygulamada üçüncü tarafa veri gitmemesi için kapatıldı. (Sunucuyu açınca config çıktısında
+`"analytics_enabled": true` görülerek fark edildi.)
+
+**6. Arayüz iki şekilde çalışabilir.** `app.main` ile API'yle aynı sunucuda, ya da `python -m app.ui` ile ayrı süreçte
+(`API_URL` ortam değişkeniyle başka bir sunucudaki API'ye bağlanır). Gevşek bağlılığın (loose coupling) somut hali:
+arayüz API'nin nerede çalıştığını bilmek zorunda değil.
+
+### Kavram: Event tabanlı arayüz (event-driven UI)
+- **Nedir?** Kod yukarıdan aşağı akmaz. "Şu olay olursa şu fonksiyon çalışsın" diye bağlanır.
+- **Basit örnek:** Kapı zili. Biri basınca zil çalar; kimse basmazsa hiçbir şey olmaz.
+- **Bizim projede:** `question.submit(respond)` (Enter), `send.click(respond)`, `chatbot.like(on_feedback)` (👍/👎),
+  `demo.load(load_documents)` (sayfa açılışı). Her fonksiyon `inputs` bileşenlerinin değerini alır, döndürdüğü değerler
+  `outputs` bileşenlerine yazılır.
+- **Dikkat:** Fonksiyonlar durumu değiştirmez, yeni değer döndürür (`chat + [...]`). Gradio ekranı döndürülen değere
+  göre günceller. Listeyi yerinde değiştirmek (`chat.append`) bazen ekranın güncellenmemesine yol açar.
+
+### Kavram: Mock transport ile HTTP istemcisini test etmek
+- **Nedir?** `httpx.MockTransport`, istekleri ağa göndermek yerine bizim yazdığımız bir fonksiyona verir; o fonksiyon
+  sahte cevap döner.
+- **Bizim projede:** Arayüz fonksiyonları gerçek API, model veya kota olmadan test edildi. 503 hatası, olmayan belge
+  (404) ve kapalı sunucu (bağlantı hatası) durumları da kolayca üretildi.
+- **Dikkat:** Mock, gerçek API'nin davranışını taklit ettiği kadar iyidir. Bu yüzden ardından gerçek sunucuyla da
+  denendi.
+
+### Nasıl doğrulandı?
+1. **Mock transport ile:** sohbet, geçmişin API'ye kaynaklar olmadan gitmesi, rewrite gösterimi, 503 mesajı ve geçmişe
+   girmemesi, boş soru, 👍/👎'nin doğru cevap id'sine gitmesi, hata mesajına tıklanınca istek gönderilmemesi, belge
+   listesi, arama, chunk görüntüleme, 404, kapalı sunucu.
+2. **Gerçek sunucu (`app.main`):** `/`, `/ui`, `/docs`, `/health` 200 döndü; arayüz fonksiyonları gerçek API'den 131 belgeyi
+   ve Yatay Geçiş Yönergesi'nin chunk'larını aldı. Sohbet elle denenecek (Gemini kotası).
