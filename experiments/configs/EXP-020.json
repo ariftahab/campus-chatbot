@@ -1,0 +1,31 @@
+{
+  "id": "EXP-020",
+  "baslik": "Prompt v3 (kapsam) kopyasız corpus'ta (v2_kaynakli → v3_kapsam, corpus v3)",
+  "ust_deney": "EXP-019",
+  "veri_seti": "sorular_v3",
+  "neden": "Arayüzün (production) hem kopyasız corpus v3'ü hem kapsam ayıran prompt v3'ü kullanması isteniyor. EXP-018'de prompt v3 corpus v2 ile denendi; answer accuracy'de anlamlı fark çıkmadı (0,896 → 0,883), ama değişen sorulardan biri gerçek bir iyileşmeydi: yatay geçiş sorusunda lisans ve lisansüstü kurallarını kapsamlarıyla ayrı ayrı verdi; kullanıcı da elle denemede bu davranışı gözlemledi. Set 3.0'da prompt v3'ün hedeflediği çok kapsamlı soru yalnız 2 tane; anlamlı fark çıkmaması bu kategoride istatistiksel güç eksikliğinden (soru azlığından) kaynaklanıyor, etkisizlik kanıtı değil. v3 corpus ile prompt v3 kombinasyonu hiç ölçülmediği için production'a alınmadan önce config olarak kayda geçiriliyor. Bu koşu retrieval-only (LLM yok): prompt retrieval'ı etkilemediği için retrieval metrikleri EXP-019 ile aynı çıkmalı. Prompt'un asıl etkisi set 3.0 ile ölçülemez; arayüzden toplanacak gerçek soru-cevap kayıtları (👍/👎) ve sonraki soru setine eklenecek çok kapsamlı sorularla değerlendirilecek. --llm ile answer accuracy 77 Gemini isteği gerektirir (günde 20 istek kotasıyla ~4 gün); ileride ayrıca koşulabilir.",
+  "hipotez": "Retrieval metrikleri EXP-019 ile birebir aynı kalır (MRR@10 0,852), çünkü prompt yalnız LLM'e giden metni değiştirir, retrieval'a giren soruyu değiştirmez. Çok kapsamlı sorularda cevap her kuralı kapsamıyla ayrı verir; genel answer accuracy düşmez (bu kısım bu koşuda ölçülmez).",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "degisim_yok",
+  "params": {
+    "corpus": "v3",
+    "device": "cuda",
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural_v2",
+    "chunk_size": 1500,
+    "chunk_overlap": 150,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "hybrid",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "reranker_max_length": 512,
+    "rerank_candidates": 8,
+    "final_k": 5,
+    "llm_model": "gemini-3.1-flash-lite",
+    "llm_temperature": 0.3,
+    "prompt_version": "v3_kapsam"
+  }
+}
