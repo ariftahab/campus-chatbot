@@ -114,8 +114,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
   (her biri kendi `kanit`'iyle), `stil` (belge/ogrenci dili), `kategori`, cevapsızlarda isteğe bağlı `kabul`.
 
 ## Notlar
-- LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. Ücretsiz kota günde 20 istek (gemini-2.5-flash);
-  `--llm` değerlendirmesi 30 istek sürer, günlere bölünmesi gerekebilir.
+- LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. EXP-013'ten beri `gemini-3.1-flash-lite`:
+  ücretsiz kota günde 500 istek (eski `gemini-2.5-flash` günde 20 istekti).
 - Donanım: NVIDIA RTX 4050 Laptop (6 GB). torch CUDA build'i (`2.9.0+cu128`) kurulu; embedding ve reranker GPU'da
   çalışır. 2026-10-01'e kadar CPU build kuruluydu: EXP-000..013 CPU ile koşuldu, `latency_ms` karşılaştırılamaz.
   GPU, CPU ile birebir aynı sıralamayı veriyor (EXP-013 ile 27/27 soru doğrulandı).
