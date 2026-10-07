@@ -28,7 +28,7 @@
          sürümü olarak eklenebilir (eski setler değiştirilmez).
    - [x] **Data sekmesi:** Corpus'taki belgeleri listele (başlık, tür, chunk sayısı), bir belgenin chunk'larını gör.
    - (UI'dan belge ekleme şimdilik kapsam dışı; belgeler eskisi gibi `data/` + yeni corpus sürümüyle eklenir.)
-   - Karar: FastAPI backend + kendi HTML/CSS/JS frontend'imiz (ayrıntılar `learning_log/frontend_backend_log.md`).
+   - Karar: FastAPI backend + kendi HTML/CSS/JS frontend'imiz (ayrıntılar RAG-Study-Notes reposundaki `learning_log/frontend_backend_log.md`).
 
 2. [ ] **Ders programları ve akademik takvim (scraping)** — okulun sitesinde her dönem güncelleniyor; her dönem elle
        indirip yüklemek yerine scrape edilecek.
