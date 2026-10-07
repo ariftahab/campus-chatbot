@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) için RAG chatbot. **Bitirme projesi; sonunda akademik tez yazılacak.**
-Python 3.11, venv `venv/` içinde. Kullanıcıya dönük metinler, yorumlar ve commit mesajları Türkçe.
+Python 3.11, venv `venv/` içinde. Kullanıcıya dönük metinler ve yorumlar Türkçe; commit mesajları İngilizce (aşağıya bak).
 
 ## Öğretim rolü (önemli)
 Claude bu projede yalnız kod yazan bir araç değil, öğretici bir pair programmer / mentor. Bitirme projesi; kullanıcının
@@ -40,7 +40,9 @@ Yoğun, ansiklopedik metin yazma. Biçim için `learning_log/2026-09-29.md`'ye b
 - Kısa deney tablosu ve 2-3 ana ders
 Kullanıcının kendi notlarının yerine geçmemeli; amaç anlamasını sağlamak. Aynı gün ikinci oturumsa `YYYY-MM-DD-2.md`.
 
-**Günlüklerin yeri:**
+**Günlüklerin yeri:** Study notes ve günlükler bu repoda değil, ayrı private repo **RAG-Study-Notes**'ta
+(GitHub: `Kuwoka/RAG-Study-Notes`, yerelde `C:\GitHub\RAG-Study-Notes`). Aşağıdaki yollar o repoya göredir;
+o repodaki değişiklikler orada ayrıca commit/push edilir.
 - `learning_log/YYYY-MM-DD.md`: study notes (yukarıdaki biçim).
 - `daily_log/YYYY-MM-DD.md`: günün yapılan işler özeti (tablo + commit'ler). Biçim: `daily_log/2026-10-06.md`.
 - `learning_log/frontend_backend_log.md`: arayüz ve API'deki her adım (ne, neden, alternatifler, kavram kartları).
@@ -56,8 +58,12 @@ kullanılmaz.) Sohbet, learning_log, experiment log ve deney başlıkları için
 sohbet. Her zaman **sorunun kendisi** ("Üniversitenin öğretim dili nedir?") ve **bağlamı** ("Yatay Geçiş Yönergesi'nin
 başvuru şartları maddesi") yazılır. Kimlikler yalnız `eval/*.json` ve `results/*.json` gibi makine dosyalarında kalır.
 
-`my_notes/` kullanıcının kendi notları ve notebook'ları içindir; yalnız istendiğinde dosya ekle. (Claude'un yazdığı
-özetler `daily_log/` ve `learning_log/` klasörlerinde.)
+`my_notes/` (RAG-Study-Notes içinde) kullanıcının kendi notları ve notebook'ları içindir; yalnız istendiğinde dosya ekle.
+(Claude'un yazdığı özetler `daily_log/` ve `learning_log/` klasörlerinde.)
+
+## Commit kuralları
+Her commit tek bir mantıksal değişiklik içersin, Conventional Commits formatında, İngilizce, ilk satır 70 karakteri
+geçmesin, gövdede sadece neden yazılsın.
 ## Deney disiplini (önemli)
 RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)
 her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
@@ -77,7 +83,7 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Soru setleri değiştirilmez: bir set değişirse hash'i değişir ve eski sonuçlarla karşılaştırma geçersiz olur. Yeni
   sorular yeni bir set dosyası olarak eklenir; deney config'inde `veri_seti` alanıyla seçilir (yoksa `sorular`).
   Soru eklemek gerekiyorsa sürümü artır ve referans zinciri yeniden koşulmalı.
-- Commit mesajları ayrıntılı olmalı (ne, neden, sayısal sonuç); tezde kaynak olarak kullanılacak.
+- Deney commit'leri de "Commit kuralları"na uyar; deneyin ayrıntılı sonucu config `notlar` alanında ve `results/*.json` içindedir.
 
 ## Komutlar
 - `venv/Scripts/python.exe -m uvicorn app.main:app --port 8000` — arayüz (http://localhost:8000/, /belgeler, /admin) + API (/docs)
@@ -99,7 +105,7 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - `chat.py` — CLI.
 - `app/` — UI / API: `service.py` (iş mantığı; `logs/` altında sohbet, geri bildirim, elle değerlendirme JSONL'leri),
   `api.py` (FastAPI), `static/` (HTML/CSS/vanilla JS frontend: sohbet, belgeler, /admin değerlendirme), `main.py`
-  (hepsi tek sunucuda), `ui.py` (eski Gradio arayüzü, /ui). Her adım `learning_log/frontend_backend_log.md` dosyasına yazılır.
+  (hepsi tek sunucuda), `ui.py` (eski Gradio arayüzü, /ui). Her adım RAG-Study-Notes'taki `learning_log/frontend_backend_log.md` dosyasına yazılır.
 - `experiments/evaluation.py` — kanıt tabanlı ilgililik (parçalamadan bağımsız), metrikler (MRR@10, Hit@k, bağlam isabeti,
   bağlam uzunluğu, gecikme, cevap doğruluğu), McNemar/Wilcoxon, ortam kaydı.
 - `experiments/run.py` — deney koşucu, `experiments/report.py` — günlük üretici.
@@ -114,4 +120,4 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
   çalışır. 2026-10-01'e kadar CPU build kuruluydu: EXP-000..013 CPU ile koşuldu, `latency_ms` karşılaştırılamaz.
   GPU, CPU ile birebir aynı sıralamayı veriyor (EXP-013 ile 27/27 soru doğrulandı).
 - `langchain-core` 1.0.4'e sabit; yükseltme diğer langchain paketleriyle uyumu bozabilir.
-- Eski tek dosyalık prototip `main` dalında ve `yedek-oncesi` etiketinde (`prototip-chat.py`); EXP-000 onu yeniden üretir.
+- Eski tek dosyalık prototip `yedek-oncesi` etiketinde (`prototip-chat.py`); EXP-000 onu yeniden üretir.
