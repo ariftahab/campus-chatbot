@@ -280,10 +280,14 @@ def get_embeddings(cfg):
 def fingerprint(cfg):
     """Belge kümesindeki PDF içerikleri + indeks parametreleri + belge ayarları + bu dosyanın kaynak kodu."""
     h = hashlib.sha256()
-    for path in config.corpus_paths(cfg.corpus):
+    paths = config.corpus_paths(cfg.corpus)
+    for path in paths:
         h.update(path.name.encode())
         h.update(path.read_bytes())
-    settings = [cfg.index_params(), config.DOCUMENTS]
+    # Yalnız bu küme içindeki belgelerin başlık/tür ayarları: DOCUMENTS'a başka bir kümenin belgesi
+    # eklenince bu kümenin indeksi gereksiz yere yeniden kurulmasın.
+    documents = {p.name: config.DOCUMENTS[p.name] for p in paths if p.name in config.DOCUMENTS}
+    settings = [cfg.index_params(), documents]
     h.update(json.dumps(settings, sort_keys=True, ensure_ascii=False).encode())
     # Satır sonları normalize edilir: git'in CRLF/LF dönüşümü aynı kod için farklı parmak izi üretmesin.
     h.update(Path(__file__).read_bytes().replace(b"\r\n", b"\n"))
