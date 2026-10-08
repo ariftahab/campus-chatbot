@@ -5,46 +5,46 @@
 0. [x] **PDF'ler:** Sitedeki yönergeler, yönetmelikler ve mevzuat `data/` içine eklendi (corpus v2 = 139 belge,
        v3 = kopyalar çıkarılmış 131 belge). Corpus artık deney config'inde bir parametre (`corpus`).
 
-1. [ ] **UI (chatbot arayüzü)** — terminal yerine sohbet arayüzü.
-   - [x] **Sohbet sekmesi:** soru sor, cevabı ve kaynakları (belge + madde) gör.
-   - [x] **Soru-cevap kaydı (logging):** Sorulan her soru, verilen cevap, retrieve edilen chunk'lar, kullanılan
-         config / commit hash ve zaman bir dosyaya yazılır (ör. `logs/sohbet.jsonl`).
-   - [x] **Doğruluk ölçümü:** 👍/👎 + `/admin` sayfasında elle değerlendirme (cevap etiketi, doğru kaynak geldi mi,
-         hata aşaması). LLM-as-judge şimdilik yok; elle etiketler ileride judge için referans olur.
-   - [x] **Tıklanabilir kaynaklar:** kaynak düğmeleri ve cevaptaki atıflar → panelde chunk metni + PDF'te o sayfa.
-   - [ ] Gradio arayüzünü (`/ui`, `app/ui.py`) yeni arayüz oturunca kaldır.
-   - [x] `/admin` için kimlik doğrulama (HTTP Basic Auth, `.env`'de `ADMIN_PASSWORD`).
-   - [ ] Atıftaki fıkrayı ("Madde 8/2") panelde vurgulama.
-   - [x] **Başka biri tarafından test (deploy):** 2026-10-08'de Cloudflare Quick Tunnel ile açıldı (`/ask` sınırı şimdilik yok).
-     - Kısa test için: **Cloudflare Quick Tunnel** (`cloudflared tunnel --url http://localhost:8000`). Uygulama
-       laptopta GPU ile çalışır, ücretsiz geçici link verir. Laptop açık kalmalı, link her açılışta değişir.
-     - Kalıcı demo için: **Hugging Face Spaces** (ücretsiz CPU, 16 GB RAM yeterli; Docker, index + PDF yükleme,
+1. [x] **UI (chatbot arayüzü)** — FastAPI backend + kendi HTML/CSS/JS frontend'imiz (ayrıntılar RAG-Study-Notes
+       reposundaki `learning_log/frontend_backend_log.md`). 2026-10-08'de tamamlandı.
+   - [x] Sohbet sekmesi, soru-cevap kaydı (`logs/sohbet.jsonl`), 👍/👎 ve `/admin`'de elle değerlendirme.
+   - [x] Tıklanabilir kaynaklar (panelde chunk metni + PDF'te o sayfa), Belgeler sekmesi.
+   - [x] `/admin` için HTTP Basic Auth (`.env`'de `ADMIN_PASSWORD`).
+   - [x] Değerlendirme sayfasından soru-cevabı kalıcı olarak silme (uygunsuz sorular için).
+   - [x] Mobil düzen (yalnız mesaj listesi ve üst bar kayar) ve cache busting.
+   - [x] Eski Gradio arayüzü (`/ui`) kaldırıldı.
+   - [x] **Başka biri tarafından test:** Cloudflare Quick Tunnel (`cloudflared tunnel --url http://localhost:8000`).
+         Laptop açık kalmalı, link her açılışta değişir. `/ask` için günlük sınır şimdilik yok (Gemini kotası paylaşılıyor).
+     - Kalıcı demo gerekirse: **Hugging Face Spaces** (ücretsiz CPU, 16 GB RAM; Docker, index + PDF yükleme,
        API anahtarı secret). CPU'da retrieval soru başına ~5 sn.
-     - Açmadan önce: Gemini günlük kotası (link herkese açık, kotayı başkası tüketebilir) → `/ask` için günlük istek
-       sınırı; `/admin` için şifre (HTTP Basic Auth), çünkü linki bilen herkes değerlendirme verisine etiket
-       yazabilir; test edene soruların kaydedildiğini söylemek.
+   - (UI'dan belge ekleme kapsam dışı; belgeler eskisi gibi `data/` + yeni corpus sürümüyle eklenir.)
+
+2. [ ] **Deneylere geri dönüş / optimizasyon** — büyüyen corpus, gerçek kullanıcı soruları ve yeni soru setiyle RAG
+       bileşenleri (chunking, embedding, retrieval, reranker, prompt, LLM) yeniden deneylerle optimize edilecek.
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
-         analiz edilir ve model / pipeline buna göre güncellenir. Gerçek sorulardan seçilenler yeni bir soru seti
-         sürümü olarak eklenebilir (eski setler değiştirilmez).
-   - [x] **Data sekmesi:** Corpus'taki belgeleri listele (başlık, tür, chunk sayısı), bir belgenin chunk'larını gör.
-   - (UI'dan belge ekleme şimdilik kapsam dışı; belgeler eskisi gibi `data/` + yeni corpus sürümüyle eklenir.)
-   - Karar: FastAPI backend + kendi HTML/CSS/JS frontend'imiz (ayrıntılar RAG-Study-Notes reposundaki `learning_log/frontend_backend_log.md`).
+         analiz edilir. Gerçek sorulardan seçilenler yeni bir soru seti sürümü olarak eklenebilir (eski setler değiştirilmez).
+   - [ ] **Atıfta fıkra:** LLM şu an atıflarda fıkra yazmıyor (2026-10-08: log'daki 64 atıfın hiçbirinde yok), bu
+         yüzden panelde fıkra vurgulanamıyor. Fıkrayı yazdırmak bir prompt değişikliği, yani deney.
 
-2. [ ] **Ders programları ve akademik takvim (scraping)** — okulun sitesinde her dönem güncelleniyor; her dönem elle
-       indirip yüklemek yerine scrape edilecek.
-   - [ ] Sitenin yapısını incele: program/takvim HTML tablo mu, PDF mi, Excel mi? `robots.txt` ve kullanım koşulları;
-         istekler yavaş gönderilmeli (rate limit).
-   - [ ] Scraper yaz; her dönemin verisini `donem` / `gecerlilik` metadata'sıyla sakla (eski dönem yenisiyle karışmasın).
-   - [ ] **Chunking geliştirmesi:** Bu veriler mevcut structural chunking'e ("Madde N-" ve takvim tablosu) uymayabilir;
-         yeni bir chunking yöntemi (veya tablo verisini yapılandırılmış saklama, ör. SQL) gerekebilir. Deney olarak yapılır.
-   - [ ] **Soru seti:** Ders programı ve takvim için yeni sorular eklenerek yeni bir set sürümü oluşturulur
-         (ör. "Salı günü 3. sınıfın hangi dersleri var?"); referans zinciri yeni setle yeniden koşulur.
+3. [ ] **Ders programları ve akademik takvim (scraping)** — en sona bırakıldı: her bölümün programı farklı
+       biçimde; tek başına bitirme projesi büyüklüğünde bir iş. Yapılırsa önce yalnız bir bölüm (Bilgisayar Müh.).
+   - [ ] Program/takvim HTML tablo mu, PDF mi, Excel mi? Her dönemin verisi `donem` / `gecerlilik` metadata'sıyla.
+   - [ ] Tablo verisi için yeni chunking veya yapılandırılmış saklama (ör. SQL) — deney olarak.
+   - [ ] Ders programı soruları için yeni soru seti sürümü (ör. "Salı günü 3. sınıfın hangi dersleri var?").
 
-3. [ ] **Deneylere geri dönüş / optimizasyon** — 1 ve 2 bittikten sonra, büyüyen corpus, gerçek kullanıcı soruları ve
-       yeni soru setiyle RAG bileşenleri (chunking, embedding, retrieval, reranker, prompt, LLM) yeniden deneylerle
-       optimize edilecek.
+4. [ ] Diğer bilgiler (birim sayfaları, iletişim...).
 
-4. [ ] Diğer bilgiler (duyurular, birim sayfaları, iletişim...). Gerekirse web scraping.
+## Belki (kesin değil)
+
+Yapılıp yapılmayacağı henüz belli değil; karar verilirse numaralı sıraya alınır.
+
+- [ ] **Duyurular (web scraping)** — sitedeki duyurular listesinden her duyurunun sayfasına girip metnini almak.
+   - [ ] Sitenin yapısını incele: liste sayfası, sayfalama (pagination), duyuru sayfasının HTML'i; `robots.txt` ve
+         kullanım koşulları; istekler yavaş gönderilmeli (rate limit).
+   - [ ] Scraper: liste sayfası → duyuru linkleri → her duyurunun sayfası → ana metin. `url`, `tarih`, `baslik`
+         metadata'sı; aynı duyuru iki kez eklenmesin (URL ile).
+   - [ ] Güncellik: eski duyurular ne olacak? (süresi geçen başvuru duyurusu yanlış cevaba yol açabilir)
+   - [ ] Index'e ekleme yeni bir corpus sürümüyle; duyurular için yeni sorularla yeni bir soru seti sürümü.
 
 ## Bu plan mimariyi nasıl etkiler? (uygulamadan önce konuşulacak)
 
@@ -53,7 +53,7 @@ onaylanacak ve RAG bileşenini etkileyenler deney olarak kaydedilecek.
 
 - **UI ve deney ayrımı:** UI production config'i (`config.PRODUCTION_EXPERIMENT`) kullanır; deney koşucusundan bağımsızdır.
 - **Kullanıcı sorularının değerlendirilmesi:** Gerçek sorularda "doğru cevap" önceden bilinmiyor. Etiketleme (elle,
-  kullanıcı geri bildirimi, LLM-as-judge) yöntemi seçilmeli; Gemini ücretsiz kotası (günde 20 istek) sınırlayıcı.
+  kullanıcı geri bildirimi, LLM-as-judge) yöntemi seçilmeli; Gemini ücretsiz kotası (günde 500 istek) sınırlayıcı.
 - **Güncellik (freshness):** Ders programı ve takvim her dönem değişiyor. Eski sürümler arşive mi alınacak, silinecek mi?
 - **Yeniden indexleme:** Yeni belge geldiğinde bütün index'i baştan kurmak yerine sadece yeni belgeyi eklemek
   (incremental indexing) gerekebilir. Şu anki fingerprint sistemi her değişiklikte hepsini yeniden kuruyor.
