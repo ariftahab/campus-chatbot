@@ -234,12 +234,16 @@ class RagBot:
         llm = ChatGoogleGenerativeAI(model=cfg.llm_model, temperature=cfg.llm_temperature, max_retries=2)
         return cls(cfg, Retriever(cfg, store, chunks), llm)
 
+    def rewrite(self, question, history=None):
+        """Geçmiş varsa (ve prompt geçmiş kullanıyorsa) soruyu bağımsız hale getirir; yoksa aynen döndürür."""
+        messages = _to_messages(history)
+        if messages and self.prompt["history"]:
+            return self.rewrite_chain.invoke({"history": messages, "question": question}).text.strip()
+        return question
+
     def retrieve(self, question, history=None):
         """Geçmiş varsa soruyu bağımsız hale getirip ilgili parçaları döndürür."""
-        messages = _to_messages(history)
-        query = question
-        if messages and self.prompt["history"]:
-            query = self.rewrite_chain.invoke({"history": messages, "question": question}).text.strip()
+        query = self.rewrite(question, history)
         return query, self.retriever.search(query)
 
     def ask(self, question, history=None):
