@@ -283,7 +283,15 @@ a.cite:hover { text-decoration: underline; }
 @media (max-width: 640px) {
   .status { display: none; }
   .brand small { display: none; }
-  .topbar-inner { gap: 10px; padding: 8px 12px; }
+  /* Mobilde başlık da sekmelerle birlikte kayar: bütün üst bar tek bir yatay şerit olur. Sekme şeridinin kendi
+     kaydırması kapatılır (iç içe iki yatay kaydırma olmasın). */
+  .topbar-inner {
+    gap: 10px; padding: 8px 12px;
+    overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+  }
+  .topbar-inner::-webkit-scrollbar { display: none; }
+  .nav { flex-shrink: 0; overflow-x: visible; }
+  .brand { font-size: 14px; }
   .messages { padding: 16px 12px 8px; }
   .composer { padding: 8px 12px 12px; }
   .composer-hint { justify-content: flex-end; }
