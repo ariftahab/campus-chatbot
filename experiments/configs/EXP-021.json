@@ -1,0 +1,33 @@
+{
+  "id": "EXP-021",
+  "baslik": "Reranker penceresi havuzun tamamı (rerank_candidates 8 → 30)",
+  "ust_deney": "EXP-020",
+  "veri_seti": "sorular_v3",
+  "neden": "EXP-015 ve EXP-019'da büyük sıra değişimleri reranker'ın 8 adaylık penceresinden kaynaklandı: ilgili chunk RRF'te 9. sıraya veya aşağısına düşünce reranker onu hiç görmüyor, pencereye girince 1. sıraya taşıyabiliyor (EXP-019: 'Güz yarıyılında dersler ne zaman başlıyor?' 9 → 1; 'Yatay geçiş hangi dönemlerde yapılamaz?' 1 → 10). EXP-020'de 71 sorunun 2'sinde ilgili chunk pencere dışında ('İkinci bir bölüm okumak istiyorum, sınıfımda başarı sıralamasında ilk yüzde kaçta olmalıyım?' RRF 17. sıra; 'Yatay geçiş hangi dönemlerde yapılamaz?' RRF 10. sıra), 2'sinde tam sınırda (RRF 8. sıra). Ön ölçüm (2026-10-08, deney değil): vector_k = bm25_k = 15 havuzu ortalama 23, en fazla 30 aday üretiyor; 30 'havuzun tamamı' demek. Havuzu 30/50/100'e büyütüp RRF'in ilk 30'unu seçmek v3'te recall kazandırmadı (hep 70/71), bu yüzden havuz sabit tutuluyor ve yalnız pencere açılıyor. Reranker gecikmesi (fp32, RTX 4050, batch_size=8) chunk başına ~40 ms: 8 aday 326 ms, 30 aday 1227 ms. Varsayılan batch_size=32 ile 30 aday 6 GB GPU belleğini taşırıp ~5,9 sn sürdüğü için rag.py'de batch_size=8 yapıldı; EXP-020 config'inde 71/71 soruda sıralama ve puanlar birebir aynı (puan farkı 0). Gerçek kullanıcı sorularındaki kapsam hatası (ör. mezuniyet kredisinde tıp ve diş maddelerinin gelmemesi) bu deneyin konusu değil: teşhiste bu chunk'lar ya havuzda yok ya da reranker puanları LLM'e giden 5'ten düşük.",
+  "hipotez": "Pencere havuzun tamamına açılınca darboğaz kalkar: (1) rerank input recall 0,958 → 0,986 (yalnız havuzda hiç olmayan 'Ders kaydımda seçtiğim dersleri kim onaylıyor?' sorusu eksik kalır); (2) pencere dışındaki 2 sorunun son sırası iyileşir, MRR@10 artar; (3) diğer sorularda belirgin kötüleşme olmaz (reranker yeni gelen ~15 adaydan alakasızları öne almaz); (4) gecikme reranker kısmında ~0,33 sn → ~1,2 sn artar. Değişmesi beklenen soru sayısı az olduğu için istatistiksel anlamlılık beklenmiyor; karar soru bazındaki değişimlere göre verilecek.",
+  "birincil_metrik": "mrr@10",
+  "beklenen_yon": "artis",
+  "params": {
+    "corpus": "v3",
+    "device": "cuda",
+    "pdf_parser": "pdfplumber",
+    "chunking": "structural_v2",
+    "chunk_size": 1500,
+    "chunk_overlap": 150,
+    "embedding_model": "BAAI/bge-m3",
+    "normalize_embeddings": true,
+    "retrieval": "hybrid",
+    "vector_k": 15,
+    "bm25_k": 15,
+    "rrf_k": 60,
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "reranker_max_length": 512,
+    "rerank_candidates": 30,
+    "final_k": 5,
+    "llm_model": "gemini-3.1-flash-lite",
+    "llm_temperature": 0.3,
+    "prompt_version": "v3_kapsam"
+  },
+  "notlar": "",
+  "kisa_not": ""
+}
