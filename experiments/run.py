@@ -84,13 +84,42 @@ def ensure_index(exp_id, cfg):
         subprocess.run([sys.executable, "ingest.py", exp_id], cwd=config.ROOT, check=True)
 
 
-def evaluate_retrieval(cfg, retriever, items):
+REWRITE_CACHE = config.EXPERIMENTS_DIR / "rewrite_cache.json"
+
+
+def make_rewriter(cfg, retriever):
+    """Sohbet geçmişli sorular için production'daki rewrite adımı (RagBot.rewrite), önbellekli.
+
+    Rewrite bir LLM çağrısıdır ve sıcaklık > 0 olduğu için her koşuda biraz farklı sorgu üretebilir. Retrieval
+    parametresini değiştiren bir deneyde bu fark gürültüdür; bu yüzden sonuç; LLM modeli, sıcaklık, rewrite prompt'u,
+    geçmiş ve soru aynı kaldıkça önbellekten okunur. Yalnız rewrite'ı etkileyen bir değişiklik yeni sorgu üretir.
+    """
+    import hashlib
+    from langchain_google_genai import ChatGoogleGenerativeAI
+    import rag
+    bot = rag.RagBot(cfg, retriever, ChatGoogleGenerativeAI(model=cfg.llm_model, temperature=cfg.llm_temperature,
+                                                            max_retries=2))
+    cache = json.loads(REWRITE_CACHE.read_text(encoding="utf-8")) if REWRITE_CACHE.exists() else {}
+
+    def rewrite(item):
+        key = hashlib.sha256(json.dumps([cfg.llm_model, cfg.llm_temperature, bot.prompt["history"], rag.REWRITE_SYSTEM,
+                                         item["gecmis"], item["soru"]], ensure_ascii=False).encode()).hexdigest()[:16]
+        if key not in cache:
+            cache[key] = bot.rewrite(item["soru"], item["gecmis"])
+            REWRITE_CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=1), encoding="utf-8")
+        return cache[key]
+    return rewrite
+
+
+def evaluate_retrieval(cfg, retriever, items, rewrite=None):
     retriever.rank(items[0]["soru"])  # ısınma: ilk çağrıdaki model/önbellek yüklemesi süreye katılmasın
     rows = []
     for item in items:
+        # Sohbet geçmişli (takip) sorularda retrieval, production'daki gibi rewrite edilmiş sorguyla yapılır.
+        query = rewrite(item) if item.get("gecmis") else item["soru"]
         trace = {}
         started = time.perf_counter()
-        ranking = retriever.rank(item["soru"], depth=ev.EVAL_DEPTH, trace=trace)
+        ranking = retriever.rank(query, depth=ev.EVAL_DEPTH, trace=trace)
         latency = (time.perf_counter() - started) * 1000
         top = ranking[:ev.EVAL_DEPTH]
         relevant = [ev.is_relevant(item, ev.norm(c.page_content), c.metadata["source"]) for c in top]
@@ -108,6 +137,13 @@ def evaluate_retrieval(cfg, retriever, items):
         }
         for k in ev.HIT_KS:
             row[f"hit@{k}"] = int(bool(first and first <= k))
+        if query != item["soru"]:
+            row["query"] = query
+        if item.get("kategori") == "coklu_kapsam":
+            # Kapsam isabeti: doğru kaynakların kaçı LLM'e giden context'te? (herhangi biri yetmez; hepsi gerekir)
+            covered = set().union(*(ev.matched_sources(item, ev.norm(c.page_content), c.metadata["source"])
+                                    for c in context))
+            row["kapsam_isabeti"] = round(len(covered) / len(ev.sources(item)), 4)
         row["asamalar"] = stage_ranks(item, retriever.chunks, trace)
         rows.append(row)
     return rows
@@ -153,6 +189,10 @@ def retrieval_metrics(rows):
     for k in ev.HIT_KS:
         m[f"hit@{k}"] = summarize(rows, f"hit@{k}")
     m["context_hit"] = summarize(rows, "context_hit")
+    coverage = [r["kapsam_isabeti"] for r in rows if "kapsam_isabeti" in r]
+    if coverage:
+        m["kapsam_isabeti"] = round(statistics.mean(coverage), 4)
+        m["kapsam_isabeti_n"] = len(coverage)
     m["context_chars"] = round(statistics.mean(r["context_chars"] for r in rows), 1)
     m["latency_ms"] = round(statistics.mean(r["latency_ms"] for r in rows), 1)
     m["latency_ms_median"] = round(statistics.median(r["latency_ms"] for r in rows), 1)
@@ -163,7 +203,7 @@ def answer_rows(bot, items, wait):
     rows = []
     for n, item in enumerate(items):
         try:
-            answer = bot.ask(item["soru"])["answer"]  # geçmişsiz: her soru bağımsız
+            answer = bot.ask(item["soru"], item.get("gecmis"))["answer"]  # takip sorularında sohbet geçmişiyle
         except Exception as e:  # kota dolarsa kalan soruları boşuna deneme
             print(f"  LLM hatası ({item['id']}): {type(e).__name__}: {str(e)[:200]}")
             if "ResourceExhausted" in type(e).__name__ or "429" in str(e):
@@ -238,7 +278,7 @@ def subset_metrics(rows, items, answers=None):
     """
     meta = {q["id"]: q for q in items}
     groups = {}
-    for key in ("stil", "kategori"):
+    for key in ("stil", "kategori", "grup"):
         for r in rows:
             if key in meta[r["id"]]:
                 groups.setdefault(f"{key}:{meta[r['id']][key]}", []).append(r["id"])
@@ -251,6 +291,9 @@ def subset_metrics(rows, items, answers=None):
     for name, ids in sorted(groups.items()):
         out[name] = {"n": len(ids), "mrr@10": round(statistics.mean(by_id[i]["rr"] for i in ids), 4),
                      "hit@5": round(statistics.mean(by_id[i]["hit@5"] for i in ids), 4)}
+        coverage = [by_id[i]["kapsam_isabeti"] for i in ids if "kapsam_isabeti" in by_id[i]]
+        if coverage:
+            out[name]["kapsam_isabeti"] = round(statistics.mean(coverage), 4)
         answered = [ok[i] for i in ids if i in ok]
         if answered:
             out[name]["answer_acc"] = round(statistics.mean(answered), 4)
@@ -278,7 +321,9 @@ def run(exp_id, use_llm, wait, rerun, datasets):
     store, chunks, manifest = ingest.load_index(cfg)
     retriever = Retriever(cfg, store, chunks)
     items = [q for q in dataset["sorular"] if ev.answerable(q)]
-    rows = evaluate_retrieval(cfg, retriever, items)
+    # Takip soruları varsa rewrite için LLM gerekir (retrieval-only koşuda da; sonuçlar önbelleğe alınır).
+    rewrite = make_rewriter(cfg, retriever) if any(q.get("gecmis") for q in items) else None
+    rows = evaluate_retrieval(cfg, retriever, items, rewrite)
 
     env = ev.environment(cfg)
     if env["git_dirty"]:

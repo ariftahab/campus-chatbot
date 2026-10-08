@@ -84,9 +84,14 @@ def answerable(item):
     return "kaynaklar" in item or "kanit" in item
 
 
+def matched_sources(item, chunk_text_norm, chunk_source):
+    """Parçanın karşıladığı kaynakların sıra numaraları (sources(item) listesindeki konumları)."""
+    return {i for i, (belge, alts) in enumerate(sources(item))
+            if chunk_source == belge and any(all(norm(part) in chunk_text_norm for part in alt) for alt in alts)}
+
+
 def is_relevant(item, chunk_text_norm, chunk_source):
-    return any(chunk_source == belge and any(all(norm(part) in chunk_text_norm for part in alt) for alt in alts)
-               for belge, alts in sources(item))
+    return bool(matched_sources(item, chunk_text_norm, chunk_source))
 
 
 def validate_dataset(data):
