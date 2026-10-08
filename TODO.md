@@ -33,12 +33,18 @@
            "belgelerde net cevap yok" sinyali olabilir.
      - [ ] **1. `rerank_candidates` 8 → daha fazla** (v3 setinde). EXP-015 ve EXP-019'da darboğaz olarak not edildi.
            Gerekirse `final_k` ayrı deney.
-     - [ ] **2. Soru seti v4:** gerçek sorulardan "birden fazla kapsam" ve "bilgi yok" soruları, bütün doğru
-           kaynaklarıyla; birden fazla kapsamlı sorularda hangi kapsamların birleştirilmesi / ayrı kalması gerektiği.
-           Referans zinciri v4 ile yeniden koşulur.
+     - [x] **2. Soru seti v4** (`eval/sorular_v4.json`, 139 soru, corpus v4 için): gruplar A=bulma 70, B=kapsam 29,
+           C=çekimser kalma 25, D=takip sorusu 15 (sohbet geçmişiyle). v3'ün 77 sorusu (takvim 2026-2027'ye taşındı,
+           yaz öğretimi soruları cevapsız), 8 gerçek kullanıcı sorusu, 54 yeni soru. Koşucuya sohbet geçmişi (rewrite
+           önbellekli) ve coklu_kapsam için kapsam isabeti eklendi.
+     - [ ] **EXP-023:** EXP-022 + corpus v4 + set v4 (yeni baseline, production adayı). Sonra eski takvim ve yaz
+           öğretimi PDF'leri data/'dan silinir (git geçmişinde kalır).
      - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).
      - [ ] **4. Prompt: birleştirme kuralı.** Aynı öğretim düzeyinde aynı kural tek satırda ("Lisans (Hukuk dahil):
            240 AKTS"); farklı düzeyler (lisans / lisansüstü) aynı olsa da ayrı yazılır. 3 ve 4 ayrı deneyler.
+     - [ ] **5. Prompt: netleştirme sorusu.** Cevap öğrencinin bölümüne/programına bağlıysa ve bölüm belli değilse
+           model önce sorabilir (ör. "Stajımı kaç gün yapmam gerekiyor?" → "Hangi bölümde okuyorsun?"). Mevcut
+           prompt'larda böyle bir kural yok. Ölçümü sohbet geçmişli takip sorularıyla (set 4.0, D grubu).
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir. Gerçek sorulardan seçilenler yeni bir soru seti sürümü olarak eklenebilir (eski setler değiştirilmez).
    - [ ] **Atıfta fıkra:** LLM şu an atıflarda fıkra yazmıyor (2026-10-08: log'daki 64 atıfın hiçbirinde yok), bu
@@ -83,5 +89,5 @@ onaylanacak ve RAG bileşenini etkileyenler deney olarak kaydedilecek.
 
 ## Diğer açık işler
 
-- [ ] Evaluation dataset'i zorlaştır (ceiling effect) ve tez için ayrı bir test seti oluştur.
+- [ ] Tez için kilitli test seti: corpus tamamlandıktan sonra (duyurular, ders programı vb. eklenince) o günkü belgelerden **yeni yazılan** sorularla kurulur; deneylerde kullanılan setlerden seçilmez. Gruplara (A/B/C/D) göre dengeli, yalnız tezin sonunda bir kez koşulur.
 - [ ] Hybrid search ve reranker production'da kalsın mı? (Büyük corpus'ta yeniden ölçülmeli.)
