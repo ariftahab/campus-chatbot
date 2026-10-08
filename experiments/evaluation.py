@@ -190,9 +190,9 @@ def environment(cfg):
     import torch
     return {
         "git_commit": _git("rev-parse", "HEAD"),
-        # Koşucunun kendi çıktıları (sonuçlar, günlük) "commit edilmemiş değişiklik" sayılmaz.
+        # Koşucunun kendi çıktıları (sonuçlar, günlük, rewrite önbelleği) "commit edilmemiş değişiklik" sayılmaz.
         "git_dirty": bool(_git("status", "--porcelain", "--", ".", ":!experiments/results",
-                               ":!experiments/experiment_log.md")),
+                               ":!experiments/experiment_log.md", ":!experiments/rewrite_cache.json")),
         "python": platform.python_version(),
         "platform": platform.platform(),
         "cpu": platform.processor(),
