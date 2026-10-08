@@ -10,11 +10,13 @@
 Sayfalar statik dosyalardır (HTML/CSS/JS); veriyi tarayıcıdan API'ye fetch ile istek atarak alırlar.
 Sunucu sayfa üretmez, yalnız dosyaları ve API'yi servis eder.
 """
+import hashlib
+import re
 from pathlib import Path
 
 import gradio as gr
 from fastapi import Depends
-from fastapi.responses import FileResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api import app, require_admin
@@ -36,9 +38,24 @@ async def no_cache_ui(request, call_next):
     return response
 
 
+# Cache busting: HTML'deki /static/ adreslerine dosya içeriğinin hash'i eklenir (style.css?v=3f2a91c0).
+# Dosya değişince adres değişir; tarayıcı yeni adresi cache'inde bulamaz ve dosyayı mutlaka indirir.
+# Gerekçe: telefon tarayıcısı CSS/JS'i hiç sormadan eski cache'ten kullanıyordu (sunucu log'unda istek yoktu);
+# no-cache tek başına yetmedi. HTML her istekte okunur, böylece sunucu yeniden başlatılmadan da güncel kalır.
+_ASSET = re.compile(r"""(["'])/static/([\w.-]+)(?=["'])""")
+
+
+def _versioned(match):
+    path = STATIC / match[2]
+    if not path.is_file():
+        return match[0]
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()[:8]
+    return f"{match[1]}/static/{match[2]}?v={digest}"
+
+
 def _page(name):
     def handler():
-        return FileResponse(STATIC / name)
+        return HTMLResponse(_ASSET.sub(_versioned, (STATIC / name).read_text(encoding="utf-8")))
     return handler
 
 
