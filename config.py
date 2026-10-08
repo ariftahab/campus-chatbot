@@ -28,6 +28,7 @@ PRODUCTION_EXPERIMENT = "EXP-022"  # EXP-021 (reranker penceresi 30) + fp16 rera
 # tur: "takvim" -> tablo satırları okunur, "mevzuat" -> madde madde bölünür (yapısal parçalamada).
 DOCUMENTS = {
     "akademik-takvim.pdf": {"title": "BAİBÜ 2025-2026 Akademik Takvimi", "tur": "takvim"},
+    "akademik-takvim-2026-2027.pdf": {"title": "BAİBÜ 2026-2027 Akademik Takvimi", "tur": "takvim"},
     "ogrenci-kayıt-yonerge.pdf": {"title": "BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği", "tur": "mevzuat"},
     "yatay-gecis-yonergesi.pdf": {"title": "BAİBÜ Yatay Geçiş Yönergesi", "tur": "mevzuat"},
 }
@@ -43,6 +44,9 @@ CORPORA = {
     # indirilmiş aynı yönergeler; dosya byte'ları farklı olduğu için hash kontrolünde görünmediler,
     # metin benzerliğiyle (%94-100) bulundu. Her çiftte metni temiz okunan / adı açıklayıcı olan kaldı.
     "v3": DATA_DIR / "corpus_v3.txt",
+    # v4: v3'ten 2025-2026 akademik takvimi ile yaz öğretimi yönetmeliği ve uygulama esasları çıkarıldı
+    # (yaz öğretimi kaldırıldı, yönetmelik yürürlükte değil), 2026-2027 akademik takvimi eklendi (129 belge).
+    "v4": DATA_DIR / "corpus_v4.txt",
 }
 
 
