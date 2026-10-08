@@ -29,6 +29,6 @@
     "prompt_version": "v3_kapsam",
     "reranker_dtype": "fp16"
   },
-  "notlar": "",
-  "kisa_not": ""
+  "notlar": "Hipotez doğrulandı, gecikme kazancı beklenenden büyük. Sıralama hiç değişmedi: 71 sorunun 71'inde ilk ilgili chunk'ın sırası aynı ve LLM'e giden 5 chunk'ın listesi sırasıyla birebir aynı (yalnız ilk ilgili sıraya değil, tüm ilk 5'e bakıldı). Bütün metrikler EXP-021 ile aynı: MRR@10 0,871, Hit@1 0,817, Hit@5 0,944, context hit 0,944, rerank input recall 0,986. Retrieval gecikmesi 1372 → 363 ms ortalama (Wilcoxon p<0,001), yani EXP-020'nin 8 adaylık fp32 gecikmesiyle (366 ms) aynı: 30 adayı fp16'da işlemek 8 adayı fp32'de işlemek kadar sürüyor. Ön ölçümdeki ~3 kat hızlanma (1227 → 393 ms) deney koşusunda da görüldü. fp16'nın puan farkları bu sette hiçbir komşu adayın yerini değiştirecek kadar büyük değil. Sonuç: EXP-021'in geniş penceresi gecikme bedeli olmadan kullanılabilir; production EXP-020 → EXP-022.",
+  "kisa_not": "Sıralama birebir aynı (71/71 soruda ilk 5 chunk aynı); gecikme 1372 → 363 ms. Production EXP-020 → EXP-022."
 }
