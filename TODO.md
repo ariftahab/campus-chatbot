@@ -21,6 +21,24 @@
 
 2. [ ] **Deneylere geri dönüş / optimizasyon** — büyüyen corpus, gerçek kullanıcı soruları ve yeni soru setiyle RAG
        bileşenleri (chunking, embedding, retrieval, reranker, prompt, LLM) yeniden deneylerle optimize edilecek.
+   - **Sıra (2026-10-08, ilk 19 gerçek sorunun etiketlerinden):** retrieval hataları hep "cevap birime göre
+     değişen" sorularda (ör. mezuniyet kredisinde tıp ve diş gelmedi). generation hataları: cevap yokken ilgisiz
+     bilgi eklemek; aynı düzeyde aynı kuralı tekrar etmek (lisans 240 AKTS = hukuk 240 AKTS ayrı yazılmış).
+     - [x] **0. Teşhis** (deney değil, kota harcamaz): eksik chunk'lar retrieval'ın neresinde kayboluyor?
+           Sonuç: mezuniyet kredisinde tıp maddesi vector'da 75-90. sırada (havuzda yok), diş 12-14. sırada ama
+           RRF'te 18-24 (reranker'a ulaşmıyor); ulaşsalar da reranker puanları LLM'e giden 5'ten düşük → sorun
+           sıralama değil **kapsam**; `rerank_candidates` düzeltmez. Rapor sorusunda lisans Madde 24 vector'da 28.
+           sırada; reranker puanı ilk 5'teki iki alakasız chunk'tan yüksek → havuz büyüse (`vector_k` ≥ 28) girerdi.
+           Kayıt dondurmada yönetmelik lisans için koşulları saymıyor (corpus sınırı). Fikir: düşük reranker puanı
+           "belgelerde net cevap yok" sinyali olabilir.
+     - [ ] **1. `rerank_candidates` 8 → daha fazla** (v3 setinde). EXP-015 ve EXP-019'da darboğaz olarak not edildi.
+           Gerekirse `final_k` ayrı deney.
+     - [ ] **2. Soru seti v4:** gerçek sorulardan "birden fazla kapsam" ve "bilgi yok" soruları, bütün doğru
+           kaynaklarıyla; birden fazla kapsamlı sorularda hangi kapsamların birleştirilmesi / ayrı kalması gerektiği.
+           Referans zinciri v4 ile yeniden koşulur.
+     - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).
+     - [ ] **4. Prompt: birleştirme kuralı.** Aynı öğretim düzeyinde aynı kural tek satırda ("Lisans (Hukuk dahil):
+           240 AKTS"); farklı düzeyler (lisans / lisansüstü) aynı olsa da ayrı yazılır. 3 ve 4 ayrı deneyler.
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir. Gerçek sorulardan seçilenler yeni bir soru seti sürümü olarak eklenebilir (eski setler değiştirilmez).
    - [ ] **Atıfta fıkra:** LLM şu an atıflarda fıkra yazmıyor (2026-10-08: log'daki 64 atıfın hiçbirinde yok), bu
