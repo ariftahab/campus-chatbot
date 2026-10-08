@@ -13,9 +13,9 @@
          hata aşaması). LLM-as-judge şimdilik yok; elle etiketler ileride judge için referans olur.
    - [x] **Tıklanabilir kaynaklar:** kaynak düğmeleri ve cevaptaki atıflar → panelde chunk metni + PDF'te o sayfa.
    - [ ] Gradio arayüzünü (`/ui`, `app/ui.py`) yeni arayüz oturunca kaldır.
-   - [ ] `/admin` için kimlik doğrulama (sistem başkalarına açılmadan önce).
+   - [x] `/admin` için kimlik doğrulama (HTTP Basic Auth, `.env`'de `ADMIN_PASSWORD`).
    - [ ] Atıftaki fıkrayı ("Madde 8/2") panelde vurgulama.
-   - [ ] **Başka biri tarafından test (deploy):** arayüz bir arkadaşa açılacak (2026-10-06'da konuşuldu, ertelendi).
+   - [x] **Başka biri tarafından test (deploy):** 2026-10-08'de Cloudflare Quick Tunnel ile açıldı (`/ask` sınırı şimdilik yok).
      - Kısa test için: **Cloudflare Quick Tunnel** (`cloudflared tunnel --url http://localhost:8000`). Uygulama
        laptopta GPU ile çalışır, ücretsiz geçici link verir. Laptop açık kalmalı, link her açılışta değişir.
      - Kalıcı demo için: **Hugging Face Spaces** (ücretsiz CPU, 16 GB RAM yeterli; Docker, index + PDF yükleme,
