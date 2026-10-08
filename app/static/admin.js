@@ -37,6 +37,19 @@ function choices(name, options, selected, disabled = false) {
     </label>`).join("");
 }
 
+// Silme iki adımlı: "Sil" → kartın içinde onay. Tarayıcının confirm() penceresi yerine sayfa içi onay
+// kullanılıyor (telefonda da aynı görünür, yanlışlıkla iki kez dokunmak tek başına silmez).
+function deleteControls() {
+  return `<span class="delete-box">
+      <button class="link-btn danger" type="button" data-action="ask-delete">Sil</button>
+      <span class="delete-confirm" hidden>
+        Kalıcı olarak silinsin mi?
+        <button class="btn btn-danger" type="button" data-action="delete">Evet, sil</button>
+        <button class="btn" type="button" data-action="cancel-delete">Vazgeç</button>
+      </span>
+    </span>`;
+}
+
 function recordHtml(r) {
   const e = r.evaluation;
   const fb = r.feedback === 1 ? "👍" : r.feedback === -1 ? "👎" : "";
@@ -48,10 +61,11 @@ function recordHtml(r) {
   ).join("");
 
   if (r.error) {
-    return `<div class="record">
+    return `<div class="record" data-id="${r.id}">
       <div class="q">${escapeHtml(r.question)}</div>
       <div class="msg-error" style="margin-top:8px">${escapeHtml(r.error)}</div>
       <div class="info"><span>${r.time.replace("T", " ")}</span><span>${r.experiment}</span></div>
+      <div class="eval-actions" style="margin-top:10px">${deleteControls()}</div>
     </div>`;
   }
   const stageDisabled = !NEEDS_STAGE.includes(e?.answer_label);
@@ -71,7 +85,7 @@ function recordHtml(r) {
       <div class="eval-row"><span>Doğru kaynak geldi mi?</span>${choices(`s-${r.id}`, LABELS.source, e?.source_ok)}</div>
       <div class="eval-row"><span>Hata nerede?</span>${choices(`h-${r.id}`, LABELS.stage, e?.error_stage, stageDisabled)}</div>
       <textarea name="note" placeholder="Not (isteğe bağlı): ör. doğru madde hangisiydi, cevapta ne eksikti">${escapeHtml(e?.note || "")}</textarea>
-      <div class="eval-actions"><button class="btn btn-primary" type="submit">Kaydet</button><span class="saved"></span></div>
+      <div class="eval-actions"><button class="btn btn-primary" type="submit">Kaydet</button><span class="saved"></span>${deleteControls()}</div>
     </form>
   </div>`;
 }
@@ -131,6 +145,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (err) {
       saved.style.color = "var(--danger)";
       saved.textContent = err.message;
+    }
+  });
+
+  // Silme: soru-cevap ve ona bağlı geri bildirim / değerlendirme log'lardan kalıcı olarak silinir.
+  container.addEventListener("click", async (e) => {
+    const action = e.target.dataset.action;
+    if (!["ask-delete", "cancel-delete", "delete"].includes(action)) return;
+    const card = e.target.closest(".record");
+    const confirmBox = card.querySelector(".delete-confirm");
+    const askButton = card.querySelector('[data-action="ask-delete"]');
+    if (action !== "delete") {
+      confirmBox.hidden = action === "cancel-delete";
+      askButton.hidden = action === "ask-delete";
+      return;
+    }
+    e.target.disabled = true;
+    try {
+      await api(`/admin/records/${encodeURIComponent(card.dataset.id)}`, { method: "DELETE" });
+      records = records.filter((x) => x.id !== card.dataset.id);
+      render();
+      loadSummary();
+    } catch (err) {
+      e.target.disabled = false;
+      confirmBox.textContent = err.message;
     }
   });
 

@@ -9,8 +9,10 @@ Kayıtlar append-only JSONL dosyalarıdır (her satır bir JSON nesnesi, satırl
   logs/geri_bildirim.jsonl  👍/👎 geri bildirimi; "id" alanıyla sohbet kaydına bağlanır
   logs/degerlendirme.jsonl  elle değerlendirme (cevap etiketi, kaynak doğru mu, hata aşaması); "id" ile bağlı
 Aynı cevaba birden fazla geri bildirim / değerlendirme yazılabilir; en son yazılan geçerlidir.
+Tek istisna delete(): yöneticinin istediği bir soru-cevap (ör. uygunsuz soru) üç dosyadan da kalıcı olarak silinir.
 """
 import json
+import os
 import subprocess
 import threading
 import time
@@ -80,6 +82,21 @@ class ChatService:
         if not path.exists():
             return []
         return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+    def _remove_id(self, path, answer_id):
+        """path'ten id'si answer_id olan bütün satırları siler; silinen satır sayısını döner.
+
+        Dosya önce geçici bir dosyaya yazılır, sonra os.replace ile eskisinin yerine konur (atomic write):
+        yazma yarıda kesilse bile log dosyası ya eski ya yeni hâliyle kalır, yarım kalmaz.
+        """
+        if not path.exists():
+            return 0
+        lines = path.read_text(encoding="utf-8").splitlines()
+        kept = [line for line in lines if not (line.strip() and json.loads(line)["id"] == answer_id)]
+        tmp = path.with_suffix(".tmp")
+        tmp.write_text("".join(line + "\n" for line in kept), encoding="utf-8")
+        os.replace(tmp, path)
+        return len(lines) - len(kept)
 
     @staticmethod
     def _source_info(doc):
@@ -180,6 +197,17 @@ class ChatService:
                   "hata_asamasi": error_stage, "not": note, "zaman": _now()}
         self._append(self.evaluation_log, record)
         return record
+
+    def delete(self, answer_id):
+        """Bir soru-cevabı ve ona bağlı geri bildirim / değerlendirmeleri kalıcı olarak siler. Geri alınamaz."""
+        if answer_id not in self._known_ids:
+            raise KeyError(answer_id)
+        # Okuma-yazma arasında başka bir istek dosyaya satır eklemesin diye kilit bütün işlem boyunca tutulur.
+        with self._lock:
+            removed = {path.name: self._remove_id(path, answer_id)
+                       for path in (self.chat_log, self.feedback_log, self.evaluation_log)}
+            self._known_ids.discard(answer_id)
+        return removed
 
     def records(self):
         """Tüm soru-cevaplar (yeniden eskiye), her birinin son geri bildirimi ve son değerlendirmesiyle."""

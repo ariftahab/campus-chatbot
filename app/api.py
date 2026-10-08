@@ -275,6 +275,16 @@ def evaluate(req: EvaluationRequest, service: ChatService = Depends(get_service)
     return {"ok": True}
 
 
+@app.delete("/admin/records/{answer_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["yönetici"],
+            dependencies=[Depends(require_admin)])
+def delete_record(answer_id: str, service: ChatService = Depends(get_service)):
+    """Bir soru-cevabı ve ona bağlı geri bildirim / değerlendirmeleri log'lardan kalıcı olarak siler."""
+    try:
+        service.delete(answer_id)
+    except KeyError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Böyle bir cevap kaydı yok: {answer_id}")
+
+
 @app.get("/admin/summary", tags=["yönetici"], dependencies=[Depends(require_admin)])
 def summary(service: ChatService = Depends(get_service)):
     """Değerlendirme özeti: etiket dağılımı, doğruluk, kaynak doğruluğu, hata aşamaları, 👍/👎 sayıları."""
