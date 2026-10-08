@@ -86,7 +86,9 @@ class Retriever:
             # İlk rerank_candidates aday yeniden sıralanır, geri kalanlar sırasını korur.
             head, tail = ids[:cfg.rerank_candidates], ids[cfg.rerank_candidates:]
             trace["rerank_input"] = list(head)
-            scores = self.reranker.predict([(query, self.chunks[i].page_content) for i in head])
+            # batch_size=8: varsayılan 32 çift tek seferde işlenince 6 GB GPU'da bellek taşıyor (bge-m3 de
+            # GPU'da); 30 aday 1,2 sn yerine ~6 sn sürüyor. Batch boyutu puanları değil, yalnız belleği/hızı etkiler.
+            scores = self.reranker.predict([(query, self.chunks[i].page_content) for i in head], batch_size=8)
             head = [head[j] for j in sorted(range(len(head)), key=lambda j: scores[j], reverse=True)]
             ids = head + tail
         trace["final"] = list(ids)
