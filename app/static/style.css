@@ -69,8 +69,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .brand { font-weight: 600; font-size: 15px; white-space: nowrap; }
 .brand small { font-weight: 400; color: var(--text-muted); margin-left: 6px; }
-.nav { display: flex; gap: 4px; }
+/* Dar ekranda linkler sığmazsa sayfa değil yalnız menü yatay kayar (min-width: 0 olmadan flex öğesi
+   içeriğinden dar olamaz ve taşma bütün sayfayı genişletir). Kaydırma çubuğu gizli; parmakla kaydırılır. */
+.nav { display: flex; gap: 4px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
 .nav a {
+  flex: none; white-space: nowrap;
   padding: 5px 10px; border-radius: 6px;
   color: var(--text-muted); text-decoration: none; font-size: 14px;
 }
@@ -80,10 +84,20 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* --- Sohbet --- */
 
-.chat-page { display: flex; flex-direction: column; height: calc(100% - 49px); }
+/* Sohbet sayfasında sayfa kaymaz; yalnız mesaj listesi kendi içinde kayar (geçmiş sorular yukarıda).
+   body ekran yüksekliğinde bir flex sütunu: üst bar kendi yüksekliğini alır, sohbet kalanı doldurur.
+   100dvh: mobilde adres çubuğu açılıp kapandıkça değişen gerçek görünür yükseklik (100vh bunu hesaba katmaz). */
+body.chat-body {
+  height: 100vh; height: 100dvh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+body.chat-body .topbar { flex: none; }
+.chat-page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
 .messages {
-  flex: 1; overflow-y: auto;
+  flex: 1; min-height: 0; overflow-y: auto;
+  overscroll-behavior: contain;   /* listenin sonuna gelince kaydırma sayfaya geçmesin */
   padding: 24px 16px 8px;
 }
 .messages-inner { max-width: var(--content-width); margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
@@ -258,5 +272,12 @@ a.cite:hover { text-decoration: underline; }
 @media (max-width: 640px) {
   .status { display: none; }
   .brand small { display: none; }
+  .topbar-inner { gap: 12px; padding: 8px 12px; }
+  .messages { padding: 16px 12px 8px; }
+  .composer { padding: 8px 12px 12px; }
+  .composer-hint { justify-content: flex-end; }
+  .composer-hint > span { display: none; }   /* Enter/Shift+Enter ipucu dokunmatik klavyede anlamsız */
+  /* iOS Safari, yazı boyutu 16px'ten küçük bir alana odaklanınca sayfayı otomatik yakınlaştırır. */
+  .composer textarea { font-size: 16px; }
   .eval-row > span { width: 100%; }
 }
