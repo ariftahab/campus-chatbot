@@ -21,7 +21,7 @@ EVAL_FILE = ROOT / "eval" / "sorular.json"
 EXPERIMENTS_DIR = ROOT / "experiments"
 
 # Sohbet uygulamasının kullandığı deney. Yeni bir deney üretime alınacaksa burası değişir.
-PRODUCTION_EXPERIMENT = "EXP-022"  # EXP-021 (reranker penceresi 30) + fp16 reranker
+PRODUCTION_EXPERIMENT = "EXP-023"  # corpus v4 (2026-2027 takvimi, yaz öğretimi yok) + EXP-022 ayarları
 
 # Belge adları kaynak gösteriminde ve parçaların başlığında kullanılır.
 # Listede olmayan bir PDF eklenirse dosya adı başlık olarak kullanılır.
@@ -37,6 +37,9 @@ DOCUMENTS = {
 # eklenen bir PDF eski deneylerin belge kümesini değiştirmez.
 #   v1: ilk 3 belge (EXP-000..EXP-013)
 #   v2: 2026-10-01'de eklenen üniversite mevzuatıyla 139 belge (liste data/corpus_v2.txt'de)
+# 2026-10-08'de (production EXP-023'e geçince) 2025-2026 takvimi ve iki yaz öğretimi PDF'i data/'dan silindi:
+# v1-v3 bu çalışma alanında artık kurulamaz. O deneyleri yeniden üretmek için sonuç dosyasındaki commit'e dönülür
+# (PDF'ler git geçmişinde).
 CORPORA = {
     "v1": ["akademik-takvim.pdf", "ogrenci-kayıt-yonerge.pdf", "yatay-gecis-yonergesi.pdf"],
     "v2": DATA_DIR / "corpus_v2.txt",

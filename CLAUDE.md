@@ -94,7 +94,7 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Windows'ta Türkçe çıktı için `PYTHONIOENCODING=utf-8` gerekebilir.
 
 ## Mimari
-- `config.py` — yollar, `CORPORA` (belge kümeleri: v1 = 3 belge, v2 = `data/corpus_v2.txt`'deki 139 belge, v3 = v2 eksi 8 kopya, 131 belge),
+- `config.py` — yollar, `CORPORA` (belge kümeleri: v1 = 3 belge, v2 = `data/corpus_v2.txt`'deki 139 belge, v3 = v2 eksi 8 kopya, 131 belge, v4 = v3 eksi 2025-2026 takvimi ve yaz öğretimi belgeleri, artı 2026-2027 takvimi, 129 belge; v1-v3'ün bazı PDF'leri data/'dan silindi, yeniden üretmek için sonuçtaki commit'e dönülür),
   `DOCUMENTS` (belge başlık/tür), `RagConfig` (tüm RAG parametreleri), `PRODUCTION_EXPERIMENT`.
 - `ingest.py` — `pdf_parser` (pypdf | pdfplumber) ve `chunking` (recursive | structural | structural_v2: genişletilmiş madde regex'i | structural_v3: + belge bütünü fallback). Structural: mevzuat madde madde
   ("Madde N-"), eşiği aşan maddeler fıkra sınırından bölünür; takvimde her tablo bir parça. İndeks
@@ -112,6 +112,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - `eval/sorular.json` (set 2.0) — 27 cevaplı + 3 kapsam dışı soru, yalnız ilk 3 belgeden; EXP-000..016.
 - `eval/sorular_v3.json` (set 3.0) — 77 soru: eski 30 + yeni 47 (31 belge). `kaynaklar`: birden fazla doğru kaynak
   (her biri kendi `kanit`'iyle), `stil` (belge/ogrenci dili), `kategori`, cevapsızlarda isteğe bağlı `kabul`.
+- `eval/sorular_v4.json` (set 4.0, corpus v4) — 139 soru, `grup`: A bulma, B kapsam (coklu_kapsam'da kapsam isabeti),
+  C çekimser kalma, D takip sorusu (`gecmis` ile; koşucu production'daki rewrite'ı önbellekli kullanır). EXP-023'ten beri.
 
 ## Notlar
 - LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. EXP-013'ten beri `gemini-3.1-flash-lite`:
