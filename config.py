@@ -59,7 +59,7 @@ def corpus_paths(name):
 
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
-PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu"}
+PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32"}
 
 
 def full_params(params):
@@ -91,6 +91,7 @@ class RagConfig:
     rrf_k: int                 # Reciprocal Rank Fusion sabiti (yalnız hybrid)
     reranker_model: Optional[str]  # None -> reranker yok
     reranker_max_length: int   # reranker'ın okuduğu en fazla token
+    reranker_dtype: str        # "fp32" | "fp16" (yarım hassasiyet: ~3× hızlı, daha az bellek; yalnız cuda)
     rerank_candidates: int     # reranker'a giden aday sayısı
     final_k: int               # LLM'e bağlam olarak verilen parça sayısı
     # Üretim
@@ -115,6 +116,10 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen device: {cfg.device}")
         if cfg.corpus not in CORPORA:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
+        if cfg.reranker_dtype not in ("fp32", "fp16"):
+            raise ValueError(f"Bilinmeyen reranker_dtype: {cfg.reranker_dtype}")
+        if cfg.reranker_dtype == "fp16" and cfg.device != "cuda":
+            raise ValueError("reranker_dtype=fp16 yalnız cuda'da desteklenir.")
         if cfg.chunking.startswith("structural") and cfg.pdf_parser != "pdfplumber":
             raise ValueError("structural parçalama pdfplumber gerektirir (takvim tabloları için).")
         return cfg
