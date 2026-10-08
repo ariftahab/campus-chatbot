@@ -63,16 +63,17 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
+/* Dar ekranda bar sığmazsa sayfa değil barın kendisi yatay kayar; kaydırma çubuğu gizli, parmakla kaydırılır. */
 .topbar-inner {
   max-width: 1080px; margin: 0 auto; padding: 10px 16px;
   display: flex; align-items: center; gap: 20px;
+  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
 }
+.topbar-inner::-webkit-scrollbar { display: none; }
+.topbar-inner > * { flex: none; }
 .brand { font-weight: 600; font-size: 15px; white-space: nowrap; }
 .brand small { font-weight: 400; color: var(--text-muted); margin-left: 6px; }
-/* Dar ekranda linkler sığmazsa sayfa değil yalnız menü yatay kayar (min-width: 0 olmadan flex öğesi
-   içeriğinden dar olamaz ve taşma bütün sayfayı genişletir). Kaydırma çubuğu gizli; parmakla kaydırılır. */
-.nav { display: flex; gap: 4px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-.nav::-webkit-scrollbar { display: none; }
+.nav { display: flex; gap: 4px; }
 .nav a {
   flex: none; white-space: nowrap;
   padding: 5px 10px; border-radius: 6px;
@@ -86,9 +87,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* Sohbet sayfasında sayfa kaymaz; yalnız mesaj listesi kendi içinde kayar (geçmiş sorular yukarıda).
    body ekran yüksekliğinde bir flex sütunu: üst bar kendi yüksekliğini alır, sohbet kalanı doldurur.
-   100dvh: mobilde adres çubuğu açılıp kapandıkça değişen gerçek görünür yükseklik (100vh bunu hesaba katmaz). */
+   position: fixed + inset: 0: body ekranın görünür alanına sabitlenir, kayacak bir sayfa kalmaz. Yalnız
+   overflow: hidden mobil Safari'de sayfanın kaymasını tam engellemiyor; height: 100vh ise adres çubuğu
+   görünürken ekrandan taşıyor. */
+html:has(body.chat-body) { overscroll-behavior: none; }
 body.chat-body {
-  height: 100vh; height: 100dvh;
+  position: fixed; inset: 0;
   overflow: hidden;
   display: flex; flex-direction: column;
 }
