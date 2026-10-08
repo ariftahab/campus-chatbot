@@ -25,6 +25,17 @@ STATIC = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
+# Sayfalar ve statik dosyalar için "no-cache": tarayıcı dosyayı saklar ama her kullanımda sunucuya değişip
+# değişmediğini sorar (ETag / Last-Modified; değişmediyse 304 döner, dosya tekrar inmez). Bu header olmadan
+# tarayıcı kendi tahminiyle eski CSS/JS'i bir süre sorgusuz kullanır ve arayüz güncellemesi telefona geç ulaşır.
+@app.middleware("http")
+async def no_cache_ui(request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/static/") or request.url.path in ("/", "/belgeler", "/admin"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
+
+
 def _page(name):
     def handler():
         return FileResponse(STATIC / name)
