@@ -13,10 +13,11 @@ Sunucu sayfa üretmez, yalnız dosyaları ve API'yi servis eder.
 from pathlib import Path
 
 import gradio as gr
+from fastapi import Depends
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api import app
+from app.api import app, require_admin
 from app.ui import build_ui
 
 STATIC = Path(__file__).parent / "static"
@@ -30,7 +31,9 @@ def _page(name):
     return handler
 
 
-for route, page in [("/", "index.html"), ("/belgeler", "belgeler.html"), ("/admin", "admin.html")]:
+for route, page in [("/", "index.html"), ("/belgeler", "belgeler.html")]:
     app.add_api_route(route, _page(page), include_in_schema=False)
+# Panel sayfası da korunur: tarayıcı şifreyi burada bir kez sorar, sonra /admin/* fetch isteklerine kendisi ekler.
+app.add_api_route("/admin", _page("admin.html"), include_in_schema=False, dependencies=[Depends(require_admin)])
 
 app = gr.mount_gradio_app(app, build_ui(), path="/ui")

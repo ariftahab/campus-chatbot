@@ -6,11 +6,14 @@ Dokümantasyon (Swagger UI):  http://localhost:8000/docs
 Bu katman yalnız HTTP ile ilgilenir: isteği doğrular (Pydantic), service'i çağırır, sonucu JSON'a ve
 hataları uygun HTTP durum kodlarına çevirir. İş mantığı (kayıt, geri bildirim) app/service.py'dedir.
 """
+import os
+import secrets
 from contextlib import asynccontextmanager
 from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import FileResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel, Field
 
 from app.service import ChatService
@@ -220,8 +223,27 @@ def pdf_file(source: str, service: ChatService = Depends(get_service)):
 
 
 # --- Yönetici (elle değerlendirme) ---
-# Şimdilik kimlik doğrulama yok (yalnız geliştirici kullanıyor). Sistem başkalarına açılmadan önce /admin
-# altındaki her şey korunmalı: kullanıcıların soruları kişisel veridir.
+# /admin altındaki her şey HTTP Basic Auth ile korunur: kullanıcıların soruları kişisel veridir ve linki bilen
+# herkes değerlendirme verisine etiket yazabilmemeli. Şifre .env'deki ADMIN_PASSWORD'dan okunur (kullanıcı adı
+# ADMIN_USER, varsayılan "admin"). ADMIN_PASSWORD tanımlı değilse panel tamamen kapalıdır (fail closed).
+# Not: Basic Auth şifreyi yalnız base64 ile kodlar, şifrelemez; bu yüzden yalnız HTTPS üzerinden güvenlidir
+# (Cloudflare Tunnel linki HTTPS'tir; localhost'ta trafik makineden çıkmaz).
+
+_basic = HTTPBasic(realm="BAIBU admin")
+
+
+def require_admin(credentials: HTTPBasicCredentials = Depends(_basic)):
+    password = os.getenv("ADMIN_PASSWORD")
+    if not password:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Yönetici paneli kapalı: ADMIN_PASSWORD tanımlı değil.")
+    # compare_digest: karşılaştırma süresi eşleşen karakter sayısına bağlı değildir (timing attack'a karşı).
+    user_ok = secrets.compare_digest(credentials.username.encode(), os.getenv("ADMIN_USER", "admin").encode())
+    pass_ok = secrets.compare_digest(credentials.password.encode(), password.encode())
+    if not (user_ok and pass_ok):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Kullanıcı adı veya şifre yanlış.",
+                            headers={"WWW-Authenticate": 'Basic realm="BAIBU admin"'})
+    return credentials.username
+
 
 def _record(r):
     e = r["degerlendirme"]
@@ -235,13 +257,13 @@ def _record(r):
     )
 
 
-@app.get("/admin/records", response_model=list[RecordOut], tags=["yönetici"])
+@app.get("/admin/records", response_model=list[RecordOut], tags=["yönetici"], dependencies=[Depends(require_admin)])
 def records(service: ChatService = Depends(get_service)):
     """Bütün soru-cevap kayıtları (yeniden eskiye), son geri bildirim ve son değerlendirmeyle."""
     return [_record(r) for r in service.records()]
 
 
-@app.post("/admin/evaluations", status_code=status.HTTP_201_CREATED, tags=["yönetici"])
+@app.post("/admin/evaluations", status_code=status.HTTP_201_CREATED, tags=["yönetici"], dependencies=[Depends(require_admin)])
 def evaluate(req: EvaluationRequest, service: ChatService = Depends(get_service)):
     """Bir cevabı elle değerlendirir (logs/degerlendirme.jsonl). Tekrar gönderilirse en sonuncusu geçerli."""
     try:
@@ -253,7 +275,7 @@ def evaluate(req: EvaluationRequest, service: ChatService = Depends(get_service)
     return {"ok": True}
 
 
-@app.get("/admin/summary", tags=["yönetici"])
+@app.get("/admin/summary", tags=["yönetici"], dependencies=[Depends(require_admin)])
 def summary(service: ChatService = Depends(get_service)):
     """Değerlendirme özeti: etiket dağılımı, doğruluk, kaynak doğruluğu, hata aşamaları, 👍/👎 sayıları."""
     return service.summary()
