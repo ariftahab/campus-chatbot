@@ -12,10 +12,9 @@ langchain-community==0.4.1
 langchain-text-splitters==1.0.0
 langchain-huggingface==1.0.1
 langchain-google-genai==3.0.1
-# UI / API (app/). gradio, transformers'ın istediği huggingface-hub<1.0 ile uyumlu son sürüme sabit:
-# daha yeni gradio hub 2.x getirip embedding modelini bozuyor.
+# UI / API (app/).
 fastapi==0.142.2
 uvicorn[standard]==0.54.0
-gradio==6.17.3
 httpx==0.28.1
+# transformers huggingface-hub<1.0 istiyor; hub 1.x/2.x embedding modelinin yüklenmesini bozuyor.
 huggingface-hub==0.36.0

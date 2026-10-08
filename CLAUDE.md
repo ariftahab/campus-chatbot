@@ -105,7 +105,7 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - `chat.py` — CLI.
 - `app/` — UI / API: `service.py` (iş mantığı; `logs/` altında sohbet, geri bildirim, elle değerlendirme JSONL'leri),
   `api.py` (FastAPI), `static/` (HTML/CSS/vanilla JS frontend: sohbet, belgeler, /admin değerlendirme), `main.py`
-  (hepsi tek sunucuda), `ui.py` (eski Gradio arayüzü, /ui). Her adım RAG-Study-Notes'taki `learning_log/frontend_backend_log.md` dosyasına yazılır.
+  (hepsi tek sunucuda). Her adım RAG-Study-Notes'taki `learning_log/frontend_backend_log.md` dosyasına yazılır.
 - `experiments/evaluation.py` — kanıt tabanlı ilgililik (parçalamadan bağımsız), metrikler (MRR@10, Hit@k, bağlam isabeti,
   bağlam uzunluğu, gecikme, cevap doğruluğu), McNemar/Wilcoxon, ortam kaydı.
 - `experiments/run.py` — deney koşucu, `experiments/report.py` — günlük üretici.
