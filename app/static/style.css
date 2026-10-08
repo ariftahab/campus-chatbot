@@ -90,7 +90,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
    position: fixed + inset: 0: body ekranın görünür alanına sabitlenir, kayacak bir sayfa kalmaz. Yalnız
    overflow: hidden mobil Safari'de sayfanın kaymasını tam engellemiyor; height: 100vh ise adres çubuğu
    görünürken ekrandan taşıyor. */
-html:has(body.chat-body) { overscroll-behavior: none; }
+html:has(body.chat-body) { overflow: hidden; overscroll-behavior: none; }
 body.chat-body {
   position: fixed; inset: 0;
   overflow: hidden;
@@ -197,9 +197,13 @@ a.cite:hover { text-decoration: underline; }
   background: var(--surface); border-left: 1px solid var(--border);
   box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
   display: flex; flex-direction: column;
-  transform: translateX(100%); transition: transform 0.18s ease;
+  /* Kapalı panel ekranın sağına itilir. visibility: hidden olmadan mobil tarayıcılar (özellikle iOS Safari)
+     ekran dışındaki bu öğeyi kaydırılabilir içerik sayar ve sayfa parmakla sağa kaydırılabilir. visibility,
+     kapanma animasyonu bitince (0.18 sn sonra) değişir; açılırken hemen görünür olur. */
+  transform: translateX(100%); visibility: hidden;
+  transition: transform 0.18s ease, visibility 0s linear 0.18s;
 }
-.panel.open { transform: none; }
+.panel.open { transform: none; visibility: visible; transition: transform 0.18s ease; }
 .panel-head {
   padding: 14px 16px; border-bottom: 1px solid var(--border);
   display: flex; gap: 12px; align-items: flex-start;
