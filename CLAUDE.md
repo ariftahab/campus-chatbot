@@ -117,8 +117,6 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - `eval/sorular_v41.json` (set 4.1) — 4.0 + 4 etiket düzeltmesi; fakülte belirtilmeyen kapsam sorularında hedef
   davranış genel kural + fakülteyi sormak (`beklenen_davranis: netlestirme`, koşucuda `netlestirme_isabeti` /
   `gereksiz_netlestirme`).
-- `eval/sorular_v42.json` (set 4.2) — 4.1 eksi 9 yaz okulu sorusu (130 soru); yaz okulu soruları production'da sabit
-  cevapla karşılanıyor (`fixed_answers="summer_v1"`).
 
 ## Notlar
 - LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. EXP-013'ten beri `gemini-3.1-flash-lite`:
