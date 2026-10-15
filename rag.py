@@ -297,8 +297,8 @@ RECITATION_FALLBACK = ("Bu sorunun cevabı aşağıdaki kaynaklarda yer alıyor,
 # belgelerde eski atıflar duruyor ve model bunlardan eskimiş cevaplar kuruyordu (EXP-023..027). "yaz dönemi" kapsanmaz:
 # yazın yapılan staj soruları belgelerden cevaplanmaya devam eder.
 SUMMER_PATTERN = re.compile(r"yaz\s*okul|yaz\s*öğretim")
-SUMMER_ANSWER = ("Yaz öğretimi (yaz okulu) yönetmeliği yürürlükten kaldırıldığı için yaz okulu hakkında güncel bir bilgi "
-                 "veremiyorum. Güncel durum için Öğrenci İşleri Daire Başkanlığına başvurabilirsiniz.")
+SUMMER_ANSWER = (f"{config.NO_ANSWER} Yaz öğretimi (yaz okulu) yönetmeliği yürürlükten kaldırıldığı için yaz okulu "
+                 "hakkında güncel bir bilgi veremiyorum. Güncel durum için Öğrenci İşleri Daire Başkanlığına başvurabilirsiniz.")
 
 REWRITE_SYSTEM = (
     "Sana bir sohbet geçmişi ve kullanıcının son sorusu verilecek. Son soruyu, geçmişi görmeden de "
