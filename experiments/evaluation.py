@@ -7,6 +7,7 @@ Metrik tanımları (hepsi soru başına hesaplanıp ortalaması alınır):
   context_chars: LLM'e giden bağlamın toplam karakter sayısı (maliyet göstergesi)
   latency_ms   : yalnız getirme süresi (LLM hariç), milisaniye
   answer_ok    : LLM cevabı beklenen anahtar kelimeleri içeriyor mu (0/1), yalnız --llm ile
+  netlestirme  : cevap öğrencinin fakültesini/bölümünü soruyor mu (0/1), yalnız --llm ile (run.NETLESTIRME)
 """
 import hashlib
 import importlib.metadata

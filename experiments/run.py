@@ -210,7 +210,8 @@ def answer_rows(bot, items, wait):
                 print("  Kota dolu; cevap değerlendirmesi yarıda kesildi.")
                 return rows, False
             answer = f"<hata: {type(e).__name__}>"
-        rows.append({"id": item["id"], "answer": answer, "answer_ok": int(answer_ok(item, answer))})
+        rows.append({"id": item["id"], "answer": answer, "answer_ok": int(answer_ok(item, answer)),
+                     "netlestirme": int(asks_unit(answer))})
         print(f"  {item['id']} cevap {'OK' if rows[-1]['answer_ok'] else 'YANLIŞ'}")
         if n + 1 < len(items):
             time.sleep(wait)
@@ -219,6 +220,32 @@ def answer_rows(bot, items, wait):
 
 def _normalize_answer(text):
     return re.sub(r"\b0(\d)", r"\1", ev.tr_lower(text))  # "05 Ocak" == "5 Ocak"
+
+
+# Cevap öğrencinin fakültesini/bölümünü soruyor mu? (set 4.1, beklenen_davranis: netlestirme). Yalnız soru ifadeleri:
+# "kayıtlı olduğunuz birime göre değişir" gibi açıklamalar sayılmaz (EXP-023'ün 139 cevabında hiç eşleşme yok).
+NETLESTIRME = re.compile(
+    r"hangi (fakülte|bölüm|program|birim)|(fakülte|bölüm|program|birim)\w* (belirt(ir|ebilir|in|men)|"
+    r"yaz(ar|abilir|ın|man)|paylaş(ır|abilir|ın)|söyle(r|yebilir|yin)|bildir(ir|ebilir|in))")
+
+
+def asks_unit(answer):
+    return bool(NETLESTIRME.search(ev.tr_lower(answer)))
+
+
+def clarification_metrics(items, answers):
+    """netlestirme_isabeti: netleştirme beklenen sorularda sorma oranı; gereksiz_netlestirme: diğer sorularda."""
+    expected = {q["id"] for q in items if q.get("beklenen_davranis") == "netlestirme"}
+    if not expected:
+        return {}
+    hit = [a["netlestirme"] for a in answers if a["id"] in expected]
+    extra = [a["netlestirme"] for a in answers if a["id"] not in expected]
+    out = {}
+    if hit:
+        out.update(netlestirme_isabeti=round(statistics.mean(hit), 4), netlestirme_n=len(hit))
+    if extra:
+        out["gereksiz_netlestirme"] = round(statistics.mean(extra), 4)
+    return out
 
 
 def answer_ok(item, answer):
@@ -287,6 +314,7 @@ def subset_metrics(rows, items, answers=None):
             groups.setdefault("set:eski" if meta[r["id"]].get("eski_set") else "set:yeni", []).append(r["id"])
     by_id = {r["id"]: r for r in rows}
     ok = {a["id"]: a["answer_ok"] for a in (answers or [])}
+    asked = {a["id"]: a["netlestirme"] for a in (answers or []) if "netlestirme" in a}
     out = {}
     for name, ids in sorted(groups.items()):
         out[name] = {"n": len(ids), "mrr@10": round(statistics.mean(by_id[i]["rr"] for i in ids), 4),
@@ -297,6 +325,9 @@ def subset_metrics(rows, items, answers=None):
         answered = [ok[i] for i in ids if i in ok]
         if answered:
             out[name]["answer_acc"] = round(statistics.mean(answered), 4)
+        clarified = [asked[i] for i in ids if i in asked]
+        if clarified:
+            out[name]["netlestirme"] = round(statistics.mean(clarified), 4)  # fakülteyi/bölümü sorma oranı
     return out
 
 
@@ -349,7 +380,7 @@ def run(exp_id, use_llm, wait, rerun, datasets):
         result["llm"] = {
             "tamamlandi": complete,
             "metrics": {"answer_acc": summarize(answers, "answer_ok") if answers else None,
-                        "n": len(answers)},
+                        "n": len(answers), **clarification_metrics(dataset["sorular"], answers)},
             "per_question": answers,
         }
     llm_rows = result["llm"]["per_question"] if result["llm"] else None
