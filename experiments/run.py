@@ -203,15 +203,16 @@ def answer_rows(bot, items, wait):
     rows = []
     for n, item in enumerate(items):
         try:
-            answer = bot.ask(item["soru"], item.get("gecmis"))["answer"]  # takip sorularında sohbet geçmişiyle
+            out = bot.ask(item["soru"], item.get("gecmis"))  # takip sorularında sohbet geçmişiyle
+            answer, llm_ms = out["answer"], round(out["generation_ms"], 1)
         except Exception as e:  # kota dolarsa kalan soruları boşuna deneme
             print(f"  LLM hatası ({item['id']}): {type(e).__name__}: {str(e)[:200]}")
             if "ResourceExhausted" in type(e).__name__ or "429" in str(e):
                 print("  Kota dolu; cevap değerlendirmesi yarıda kesildi.")
                 return rows, False
-            answer = f"<hata: {type(e).__name__}>"
+            answer, llm_ms = f"<hata: {type(e).__name__}>", None
         rows.append({"id": item["id"], "answer": answer, "answer_ok": int(answer_ok(item, answer)),
-                     "netlestirme": int(asks_unit(answer))})
+                     "netlestirme": int(asks_unit(answer)), "llm_ms": llm_ms})
         print(f"  {item['id']} cevap {'OK' if rows[-1]['answer_ok'] else 'YANLIŞ'}")
         if n + 1 < len(items):
             time.sleep(wait)
@@ -374,20 +375,22 @@ def run(exp_id, use_llm, wait, rerun, datasets):
         "retrieval": {"metrics": retrieval_metrics(rows), "asamalar": stage_metrics(rows), "per_question": rows},
         "llm": None,
         # Koşu süresi (tez için). getirme: index yükleme hariç bütün soruların retrieval'ı (rewrite dahil);
-        # llm: cevap üretimi, sorular arası --bekle beklemeleri dahil.
+        # llm: yalnız modelin cevap üretme süresi (retrieval, rewrite ve sorular arası --bekle beklemeleri hariç).
         "sure": {"getirme_sn": round(retrieval_s, 1)},
     }
     if use_llm:
         from langchain_google_genai import ChatGoogleGenerativeAI
         llm = ChatGoogleGenerativeAI(model=cfg.llm_model, temperature=cfg.llm_temperature, max_retries=2)
         bot = RagBot(cfg, retriever, llm)  # getirme için yüklenen retriever yeniden kullanılır
-        llm_started = time.perf_counter()
         answers, complete = answer_rows(bot, dataset["sorular"], wait)
-        result["sure"]["llm_sn"] = round(time.perf_counter() - llm_started, 1)
+        timed = [a["llm_ms"] for a in answers if a.get("llm_ms") is not None]
+        result["sure"]["llm_sn"] = round(sum(timed) / 1000, 1)
         result["llm"] = {
             "tamamlandi": complete,
             "metrics": {"answer_acc": summarize(answers, "answer_ok") if answers else None,
-                        "n": len(answers), **clarification_metrics(dataset["sorular"], answers)},
+                        "n": len(answers), **clarification_metrics(dataset["sorular"], answers),
+                        **({"llm_ms": round(statistics.mean(timed), 1), "llm_ms_median": round(statistics.median(timed), 1)}
+                           if timed else {})},
             "per_question": answers,
         }
     result["sure"]["toplam_sn"] = round(sum(result["sure"].values()), 1)

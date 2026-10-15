@@ -3,6 +3,7 @@
 Tüm davranış bir config.RagConfig ile belirlenir; bkz. experiments/configs/.
 """
 import re
+import time
 import unicodedata
 from datetime import date
 
@@ -283,6 +284,7 @@ class RagBot:
                 "today": date.today().strftime("%d.%m.%Y"),
             })
         chain = self.prompt["template"] | self.llm
+        started = time.perf_counter()  # yalnız cevap üretimi: retrieval ve rewrite hariç
         message = chain.invoke(variables)
         answer = message.text.strip()
         if not answer and message.response_metadata.get("finish_reason") == "RECITATION":
@@ -291,4 +293,5 @@ class RagBot:
             # yazması istenir; yine boşsa kullanıcı boş cevap yerine kaynaklara yönlendirilir.
             message = chain.invoke({**variables, "input": question + RECITATION_HINT})
             answer = message.text.strip() or RECITATION_FALLBACK
-        return {"answer": answer, "query": query, "docs": docs}
+        generation_ms = (time.perf_counter() - started) * 1000
+        return {"answer": answer, "query": query, "docs": docs, "generation_ms": generation_ms}
