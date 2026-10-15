@@ -1,0 +1,549 @@
+{
+ "aciklama": "Belge kapsam etiketleri (corpus v4, 2026-10-08). 'kapsam': belgenin kurallarının bağladığı öğrenci grubu; 'haric': belgenin kendi kapsam maddesinde açıkça dışarıda bıraktığı birimler; 'not': dayanak. Paralel kural grupları (aynı konuda kendi kuralını koyanlar): genel_onlisans_lisans, tip, dis, hukuk, lisansustu. tum_onlisans_lisans ve tum_ogrenciler herkes için tek kuraldır. kurum: öğrenci kuralı içermeyen (personel, kurul, merkez) belgeler. Bu dosya değişmez; etiketler değişirse belge_kapsam_v2.json olarak eklenir (rag.SCOPE_FILES).",
+ "belgeler": {
+  "Ogrenci_disiplin_Isleri.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "SAĞLIK KÜLTÜR VE SPOR DAİRE BAŞKANLIĞI SPOR FAALİYETLERİNİN DÜZENLENMESİ VE YÜRÜTÜLMESİ.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "Sosyal Transkript Yönergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "TEKNİK BİLİMLER MESLEK YÜKSEKOKULU iş yeri eğitimi ve uygulaması dersleri.pdf": {
+   "kapsam": "myo",
+   "haric": []
+  },
+  "agiz ve dis sagligi uyg arastirma merkezi yonetmeligi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "akademik-takvim-2026-2027.pdf": {
+   "kapsam": "genel_onlisans_lisans",
+   "haric": [
+    "tip",
+    "dis",
+    "hukuk",
+    "turizm",
+    "mengen_myo",
+    "lisansustu"
+   ],
+   "not": "Başlık: Tıp, Diş Hekimliği, Hukuk, Turizm Fakülteleri ile Mengen MYO ve Lisansüstü Eğitim Enstitüsü hariç."
+  },
+  "aktivite merkezi yönetim planı ve işletme esasları.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "akşamseddin islami ilimler yönetmeliği birinci bölüm.pdf": {
+   "kapsam": "islami_ilimler",
+   "haric": []
+  },
+  "alan dışı seçmeli ders yönergesi.pdf": {
+   "kapsam": "genel_onlisans_lisans",
+   "haric": [
+    "tip",
+    "dis",
+    "merkez_kampus_disi"
+   ],
+   "not": "Madde 2: Tıp, Diş Hekimliği ve Merkez Kampüs dışında eğitim veren lisans programları hariç."
+  },
+  "atanmak isteyen idari personel.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "bagimlilikla mucadele uygulama arastirma merkezi yonetmeligi .pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "başarı değerlendirmesi ve öğrenim ücretlerinde indirim.pdf": {
+   "kapsam": "tum_onlisans_lisans",
+   "haric": [],
+   "not": "Kapsam maddesi bütün önlisans/lisans (yandal: lisans) programlarını kapsıyor; Tıp, Diş, Hukuk dahil."
+  },
+  "beden eğitimi özel yetenek giriş sınavı.pdf": {
+   "kapsam": "spor_bilimleri",
+   "haric": []
+  },
+  "bilgi işlem daire başkanlığı.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "bilgi yönetim sistemi koordinatörlüğü.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "bilimsel araştırma projeleri.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "bilimsel yayın ve dergiler.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "binaların yangından korunması.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "bolu bağışçıları vakfı kreşi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "dis hekimligi öz değerlenirme kurulu usul ve esas.pdf": {
+   "kapsam": "dis",
+   "haric": []
+  },
+  "diş fak koordinasyon kurulu.pdf": {
+   "kapsam": "dis",
+   "haric": []
+  },
+  "diş hekimliği eğitim.pdf": {
+   "kapsam": "dis",
+   "haric": []
+  },
+  "diş hekimliği uzaktan eğitim uygulama.pdf": {
+   "kapsam": "dis",
+   "haric": []
+  },
+  "diş hekimliği ölçme ve değerlendirme kurulu.pdf": {
+   "kapsam": "dis",
+   "haric": []
+  },
+  "doner sermaye isletmesi yonetmeligi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "dumansız üniversite uygulama.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "ekonomik ve sosyal arastirmalar arastirma ve uygualama yonetmeligi .pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "elektronik belge yönetim ve imza yetkileri.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "emekli yaş haddi dolan öğretim üyesi çalıştırma.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "engelli öğrenciler danışma ve koordinasyon.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "fikri ve sinai mülkiyet hakları.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "fizik tedavi rehabilitasyon staj.pdf": {
+   "kapsam": "fizik_tedavi",
+   "haric": []
+  },
+  "gerede uygulamalı birimler staj.pdf": {
+   "kapsam": "myo",
+   "haric": []
+  },
+  "girişimsel olmayan klinik araştırmalar etik kurul.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "güvenlik hizmetleri.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "güvenlik soruşturması ve arşiv araştırması.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "güzel sanatlar fak sergi salonu kullanımı usul ve esas.pdf": {
+   "kapsam": "guzel_sanatlar",
+   "haric": []
+  },
+  "güzel sanatlar özel yetenek sınavı.pdf": {
+   "kapsam": "guzel_sanatlar",
+   "haric": []
+  },
+  "hayat boyu ogrenme uygulama ve arastırma merkezi yonetmeligi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "hayvan deneyleri yerel etik kurulu.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "hemşirelik beceri uygulamları ve intörn.pdf": {
+   "kapsam": "hemsirelik",
+   "haric": []
+  },
+  "hemşirelik lisans tamamlama.pdf": {
+   "kapsam": "hemsirelik",
+   "haric": []
+  },
+  "hukuk fakultesi egitim ve sinav yonetmeligi.pdf": {
+   "kapsam": "hukuk",
+   "haric": [],
+   "not": "Madde 2: Hukuk Fakültesi; genel önlisans/lisans yönetmeliğine göre özel hüküm."
+  },
+  "iktisadi ve idari bilimler isteğe bağlı staj yönergesi.pdf": {
+   "kapsam": "iibf",
+   "haric": []
+  },
+  "intibak yönergesi.pdf": {
+   "kapsam": "tum_onlisans_lisans",
+   "haric": [],
+   "not": "Kapsam maddesi bütün önlisans/lisans (yandal: lisans) programlarını kapsıyor; Tıp, Diş, Hukuk dahil."
+  },
+  "intörn doktor çalışma esasları.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "iş sağlığı ve güvenliği yönergesi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "kadın aile ve toplum hizmetleri yoonetmeligi .pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "kalite güvencesi ve kalite komisyonu.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "kariyer bilgilendirme koordinatörlüğü.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "kariyer planlama ve mezun izleme yonetmeligi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "kimlik kartı yönergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "konut tahsis yönergesi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "kurumlar arası kredi transferi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "kurumsal akademik arşiv ve açık erişim.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "kurumsal etik ilkeleri ve kurumsal etik kurulu.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "kütüphane ve dökümantasyon daire başkanlığı.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "kısmı zamanlı öğrenci çalıştırma.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "lisansüstü eğitim enst müdürlüğü lisansüstü tez benzerlik.pdf": {
+   "kapsam": "lisansustu",
+   "haric": []
+  },
+  "lisansüstü eğitim yönetmeliği.pdf": {
+   "kapsam": "lisansustu",
+   "haric": []
+  },
+  "lisansüstü eğitim öğretim.pdf": {
+   "kapsam": "lisansustu",
+   "haric": []
+  },
+  "makale destek ofisi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "makine müh bitirme projesi 1ve2 usul ve esaslar.pdf": {
+   "kapsam": "muhendislik",
+   "haric": []
+  },
+  "merkez lab işleyiş.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "meslek yüksekokulu işyerlerindeki eğitim uygulama staj.pdf": {
+   "kapsam": "myo",
+   "haric": []
+  },
+  "mevzuat komisyonu.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "mimarlık bölümü staj.pdf": {
+   "kapsam": "mimarlik",
+   "haric": []
+  },
+  "mühendislik fakültesi staj yönergesi.pdf": {
+   "kapsam": "muhendislik",
+   "haric": []
+  },
+  "ogrenci-kayıt-yonerge.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": [],
+   "not": "Madde 2: önlisans, lisans ve lisansüstü programlara başvuran öğrenciler."
+  },
+  "ogrenci_danismanligi.pdf": {
+   "kapsam": "genel_onlisans_lisans",
+   "haric": [],
+   "not": "Kapsam maddesi bulunamadı; içerikten genel öğrenci danışmanlığı."
+  },
+  "paydaş danışma kurulu.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "pedagojik formasyon eğitimi sertifika.pdf": {
+   "kapsam": "formasyon",
+   "haric": []
+  },
+  "pedagojik formasyon eğitimi.pdf": {
+   "kapsam": "formasyon",
+   "haric": []
+  },
+  "proje destek ofisi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "rektörlük hizmet içi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "rektörlük iletişim koordinatörlüğü.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "sağlık bilimleri fakültesi sınav uygulama yönergesi.pdf": {
+   "kapsam": "saglik_bilimleri",
+   "haric": []
+  },
+  "sosyal bilimlerde insan araştırmaları etik kurulu.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "sosyal tesis.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "suyam yonetmeligi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "sürdürülebilirlik yönergesi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "sürekli eğitim uygulama ve araştırma yönergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "teknofest ve teknoloji yarışmaları koordinatörlüğü yönergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "teknoloji transferi uygulama ve araştırma danışmanlık hizmetleri.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "topluma hizmet uygulamaları dersi.pdf": {
+   "kapsam": "egitim_fakultesi",
+   "haric": [],
+   "not": "Madde 2: Eğitim Fakültesi ve Beden Eğitimi Öğretmenliği."
+  },
+  "turizm işletmeciliği otel staj.pdf": {
+   "kapsam": "turizm",
+   "haric": []
+  },
+  "turizm işletmeciliği ve otelcilik staj.pdf": {
+   "kapsam": "turizm",
+   "haric": []
+  },
+  "turizm rehberliği staj.pdf": {
+   "kapsam": "turizm",
+   "haric": []
+  },
+  "turizm_uygulamali_egitimler_yonergesi.pdf": {
+   "kapsam": "turizm",
+   "haric": []
+  },
+  "türkçe öğretimi merkezi yönetmeliği.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "tık fakültesi seçmeli ders.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fak klinik araştırma etik.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "tıp fak sınav uygulama ve sonuçlandırma usul ve esasları.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fak tıp eğitimi öğrenci kurulu çalışma.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fakultesi egitim ve sinav yonetmeligi.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fakültesi makale çalışma modülü.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fakültesi toplumsal destek projeleri.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fakültesi uzaktan eğitim uygulama.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fakültesi ölçme değerlendirme.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fakültesi özel çalışma modülü.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp fakültesi öğrenci danışmanlığı.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıp mezuniyet öncesi.pdf": {
+   "kapsam": "tip",
+   "haric": []
+  },
+  "tıpta uzmanlık eğitim ve sınav.pdf": {
+   "kapsam": "tip_uzmanlik",
+   "haric": []
+  },
+  "uluslararası ilişkiler ofisi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "uygulamali-egitimler-yonergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": [],
+   "not": "Madde 2: fakülte, yüksekokul ve MYO öğrencileri."
+  },
+  "uzaktan eğitim.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "uzaktan-ogretime-iliskin-usul-esas.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "yaban hayatı çalışmaları yönetmeliği.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf": {
+   "kapsam": "hazirlik",
+   "haric": []
+  },
+  "yabancı dil kurs ve sınav.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "yandal programı.pdf": {
+   "kapsam": "tum_onlisans_lisans",
+   "haric": [],
+   "not": "Kapsam maddesi bütün önlisans/lisans (yandal: lisans) programlarını kapsıyor; Tıp, Diş, Hukuk dahil."
+  },
+  "yatay-gecis-yonergesi.pdf": {
+   "kapsam": "tum_onlisans_lisans",
+   "haric": [],
+   "not": "Kapsam maddesi bütün önlisans/lisans (yandal: lisans) programlarını kapsıyor; Tıp, Diş, Hukuk dahil."
+  },
+  "yaşlı sağlığı bakımı yönetmeliği.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "ziraat fak staj usul ve esas.pdf": {
+   "kapsam": "ziraat",
+   "haric": []
+  },
+  "çift anadal program yönergesi.pdf": {
+   "kapsam": "tum_onlisans_lisans",
+   "haric": [],
+   "not": "Kapsam maddesi bütün önlisans/lisans (yandal: lisans) programlarını kapsıyor; Tıp, Diş, Hukuk dahil."
+  },
+  "ödül yönergesi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "önlisans lisans eğitim öğretim.pdf": {
+   "kapsam": "genel_onlisans_lisans",
+   "haric": [
+    "tip",
+    "dis"
+   ],
+   "not": "Madde 1-2: yıllık eğitim veren Tıp ve Diş Hekimliği hariç. Hukuk hariç tutulmuyor ama kendi eğitim ve sınav yönetmeliği var (özel hüküm önce gelir)."
+  },
+  "önlisans mezunu lisans öğrenimine devam.pdf": {
+   "kapsam": "dikey_gecis",
+   "haric": [],
+   "not": "Madde 2: önlisans mezunlarının lisansa dikey geçişi."
+  },
+  "öğrenci konseyi.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "öğrenci sağlık işleri ve sağlık raporları.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "öğrenci senatosu.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "öğrenci toplulukları kuruluş ve işleyiş.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "öğrenci yemek bursu.pdf": {
+   "kapsam": "tum_ogrenciler",
+   "haric": []
+  },
+  "öğretim üyeliğine yükseltilme ve atanma ölçütleri yönergesi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "öğretim üyesi yetiştirme,pdf.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  },
+  "üniversite birimlerinin isimlendirilmesi.pdf": {
+   "kapsam": "kurum",
+   "haric": []
+  }
+ }
+}

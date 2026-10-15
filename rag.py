@@ -2,6 +2,7 @@
 
 Tüm davranış bir config.RagConfig ile belirlenir; bkz. experiments/configs/.
 """
+import json
 import re
 import time
 import unicodedata
@@ -37,6 +38,26 @@ def source_label(doc):
     return f"{m['title']}, s. {m['page']}"
 
 
+# --- Kapsam tamamlama (scope_search) ---
+# Aynı konuda kendi kuralını koyan öğrenci grupları ("paralel kapsamlar") ve sorguya eklenen adları. Genel bir soruda
+# (ör. "Mezun olmak için kaç kredi?") reranker genel kuralı öne alır; fakülteye özel maddeler context'e ulaşmaz
+# (EXP-023: kapsam isabeti 0,51). Kapsam adı sorguya eklenince reranker o kapsamın maddesini doğru puanlar.
+SCOPE_FILES = {"parallel_v1": config.DATA_DIR / "belge_kapsam_v1.json"}
+PARALLEL_SCOPES = {
+    "genel_onlisans_lisans": "önlisans ve lisans",
+    "tip": "Tıp Fakültesi",
+    "dis": "Diş Hekimliği Fakültesi",
+    "hukuk": "Hukuk Fakültesi",
+    "lisansustu": "lisansüstü, yüksek lisans ve doktora",
+}
+# Soru bir kapsamı adıyla anıyorsa kullanıcı o kapsamı soruyordur; tamamlama yapılmaz.
+SCOPE_MENTION = re.compile(r"\btıp|\bdiş|\bhukuk|lisansüstü|yüksek lisans|doktora|önlisans|ön lisans", re.IGNORECASE)
+SCOPE_CANDIDATES = 10   # her kapsamda vector ve BM25'ten alınan aday sayısı
+SCOPE_RERANK = 5        # kapsam içinde reranker'a giden aday sayısı
+SCOPE_MIN_SCORE = 0.0   # eklenmek için en düşük reranker puanı (kalibrasyonla belirlenecek)
+SCOPE_EXTRA_MAX = 4     # context'e eklenebilecek en fazla chunk
+
+
 class Retriever:
     """cfg.retrieval'a göre vektör, BM25 ya da ikisinin RRF birleşimi; varsa reranker ile yeniden sıralar."""
 
@@ -52,6 +73,13 @@ class Retriever:
             if cfg.reranker_dtype == "fp16":
                 # Ağırlıklar 16 bit: GPU'da ~3× hızlı, ~1 GB daha az bellek; puanlar fp32'den çok az farklıdır.
                 self.reranker.model.half()
+        self.scope_of = {}  # chunk_id -> paralel kapsam (yalnız paralel kapsamlardaki belgelerin chunk'ları)
+        if cfg.scope_search:
+            labels = json.loads(SCOPE_FILES[cfg.scope_search].read_text(encoding="utf-8"))["belgeler"]
+            for c in chunks:
+                scope = labels.get(c.metadata["source"], {}).get("kapsam")
+                if scope in PARALLEL_SCOPES:
+                    self.scope_of[c.metadata["chunk_id"]] = scope
 
     def _vector_ids(self, query, k):
         return [d.metadata["chunk_id"] for d in self.store.similarity_search(query, k=k)]
@@ -95,11 +123,55 @@ class Retriever:
             scores = self.reranker.predict([(query, self.chunks[i].page_content) for i in head], batch_size=8)
             head = [head[j] for j in sorted(range(len(head)), key=lambda j: scores[j], reverse=True)]
             ids = head + tail
+        trace["context_n"] = cfg.final_k  # LLM'e giden parça sayısı (kapsam tamamlama artırabilir)
+        if cfg.scope_search:
+            ids = self._complete_scopes(query, ids, trace)
         trace["final"] = list(ids)
         return [self.chunks[i] for i in ids]
 
+    def _complete_scopes(self, query, ids, trace):
+        """Context'te temsil edilmeyen paralel kapsamların en iyi chunk'ını o kapsamın belgelerinde arayıp ekler.
+
+        Yalnız context'te en az bir paralel kapsam belgesi varsa (soru bu yönetmeliklerin konusu) ve soru bir kapsamı
+        adıyla anmıyorsa devreye girer. Eklenen chunk'lar context'in sonuna (final_k'dan sonra) konur.
+        """
+        k = self.cfg.final_k
+        present = {self.scope_of[i] for i in ids[:k] if i in self.scope_of}
+        trace["scope_added"] = []
+        if not present or SCOPE_MENTION.search(query):
+            return ids
+        found = []
+        for scope, label in PARALLEL_SCOPES.items():
+            if scope in present:
+                continue
+            allowed = {i for i, s in self.scope_of.items() if s == scope}
+            scoped_query = f"{query} ({label})"
+            vec = [d.metadata["chunk_id"] for d in self.store.similarity_search(
+                scoped_query, k=SCOPE_CANDIDATES, filter=lambda md: md["chunk_id"] in allowed,
+                fetch_k=len(self.chunks))]
+            bm_scores = self.bm25.get_scores(tokenize(scoped_query))
+            bm = sorted((i for i in allowed if bm_scores[i] > 0), key=lambda i: bm_scores[i], reverse=True)
+            fused = {}
+            for ranked in (vec, bm[:SCOPE_CANDIDATES]):
+                for rank, chunk_id in enumerate(ranked):
+                    fused[chunk_id] = fused.get(chunk_id, 0) + 1 / (self.cfg.rrf_k + rank)
+            cands = sorted(fused, key=fused.get, reverse=True)[:SCOPE_RERANK]
+            if not cands:
+                continue
+            scores = self.reranker.predict([(scoped_query, self.chunks[i].page_content) for i in cands], batch_size=8)
+            best = max(range(len(cands)), key=lambda j: scores[j])
+            trace["scope_added"].append({"kapsam": scope, "chunk_id": cands[best], "puan": round(float(scores[best]), 4),
+                                         "eklendi": bool(scores[best] >= SCOPE_MIN_SCORE)})
+            if scores[best] >= SCOPE_MIN_SCORE:
+                found.append((float(scores[best]), cands[best]))
+        extra = [i for _, i in sorted(found, reverse=True)[:SCOPE_EXTRA_MAX] if i not in ids[:k]]
+        trace["context_n"] = k + len(extra)
+        return ids[:k] + extra + [i for i in ids[k:] if i not in extra]
+
     def search(self, query):
-        return self.rank(query)[:self.cfg.final_k]
+        trace = {}
+        ranking = self.rank(query, trace=trace)
+        return ranking[:trace["context_n"]]
 
 
 # --- Prompt'lar ---

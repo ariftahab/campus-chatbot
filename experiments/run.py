@@ -85,6 +85,7 @@ def ensure_index(exp_id, cfg):
 
 
 REWRITE_CACHE = config.EXPERIMENTS_DIR / "rewrite_cache.json"
+STAGES = ("vector", "bm25", "rrf", "rerank_input", "final")  # trace'teki chunk listeleri (diğer anahtarlar bilgi)
 
 
 def make_rewriter(cfg, retriever):
@@ -124,7 +125,7 @@ def evaluate_retrieval(cfg, retriever, items, rewrite=None):
         top = ranking[:ev.EVAL_DEPTH]
         relevant = [ev.is_relevant(item, ev.norm(c.page_content), c.metadata["source"]) for c in top]
         first = next((i + 1 for i, r in enumerate(relevant) if r), None)
-        context = ranking[:cfg.final_k]
+        context = ranking[:trace.get("context_n", cfg.final_k)]  # kapsam tamamlama context'i büyütebilir
         row = {
             "id": item["id"],
             "rank": first,
@@ -144,6 +145,8 @@ def evaluate_retrieval(cfg, retriever, items, rewrite=None):
             covered = set().union(*(ev.matched_sources(item, ev.norm(c.page_content), c.metadata["source"])
                                     for c in context))
             row["kapsam_isabeti"] = round(len(covered) / len(ev.sources(item)), 4)
+        if trace.get("scope_added"):
+            row["scope_added"] = trace["scope_added"]
         row["asamalar"] = stage_ranks(item, retriever.chunks, trace)
         rows.append(row)
     return rows
@@ -164,7 +167,7 @@ def stage_ranks(item, chunks, trace):
         return cache[cid]
 
     return {stage: next((i + 1 for i, cid in enumerate(ids) if relevant(cid)), None)
-            for stage, ids in trace.items()}
+            for stage, ids in trace.items() if stage in STAGES}
 
 
 def stage_metrics(rows):

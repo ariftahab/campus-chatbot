@@ -66,7 +66,7 @@ def corpus_paths(name):
 
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
-PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32"}
+PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32", "scope_search": None}
 
 
 def full_params(params):
@@ -101,6 +101,8 @@ class RagConfig:
     reranker_dtype: str        # "fp32" | "fp16" (yarım hassasiyet: ~3× hızlı, daha az bellek; yalnız cuda)
     rerank_candidates: int     # reranker'a giden aday sayısı
     final_k: int               # LLM'e bağlam olarak verilen parça sayısı
+    scope_search: Optional[str]  # None | "parallel_v1": context'te temsil edilmeyen paralel kapsamları (genel, tıp,
+                                 # diş, hukuk, lisansüstü) kendi belgelerinde ayrıca arayıp ekler (rag.Retriever)
     # Üretim
     llm_model: str
     llm_temperature: float
@@ -123,6 +125,10 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen device: {cfg.device}")
         if cfg.corpus not in CORPORA:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
+        if cfg.scope_search not in (None, "parallel_v1"):
+            raise ValueError(f"Bilinmeyen scope_search: {cfg.scope_search}")
+        if cfg.scope_search and not (cfg.reranker_model and cfg.retrieval == "hybrid"):
+            raise ValueError("scope_search hybrid retrieval ve reranker gerektirir.")
         if cfg.reranker_dtype not in ("fp32", "fp16"):
             raise ValueError(f"Bilinmeyen reranker_dtype: {cfg.reranker_dtype}")
         if cfg.reranker_dtype == "fp16" and cfg.device != "cuda":
