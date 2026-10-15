@@ -41,8 +41,8 @@
      - [x] **Kapsam sorunu (2026-10-15):** hedef davranış "bütün fakülteleri say" yerine "genel kural + fakülteyi
            sor" (set 4.1). EXP-024 baseline, EXP-025 netleştirme prompt'u (%45 gereksiz sorma, alınmadı), EXP-026 kapsam
            tamamlama (reddedildi), EXP-027 netleştirmeyi belge kapsam etiketleri tetikler (production adayı).
-     - [ ] **EXP-028** (onaylandı): EXP-027 + `fixed_answers="summer_v1"` + set 4.2, `--llm`, arayüz sunucusu kapalı
-           (gecikme). Sonuç doğruysa `config.PRODUCTION_EXPERIMENT` = EXP-028.
+     - [ ] **EXP-028** (onaylandı): EXP-027 + `fixed_answers="summer_v1"`, set 4.1 (tek parametre farkı), `--llm`,
+           arayüz sunucusu kapalı (gecikme). Sonuç doğruysa `config.PRODUCTION_EXPERIMENT` = EXP-028.
      - [ ] **Cevap uzunluğu:** netleştirmede model diğer kapsamları sayıp sonra soruyor (ör. kayıt dondurmada 2635
            karakter). Olumlu biçim tarif eden prompt deneyi: kısa genel kural + tek soru.
      - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).
