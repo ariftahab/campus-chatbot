@@ -66,7 +66,7 @@ def corpus_paths(name):
 
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
-PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None}
+PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None}
 
 
 def full_params(params):
@@ -101,6 +101,8 @@ class RagConfig:
     reranker_dtype: str        # "fp32" | "fp16" (yarım hassasiyet: ~3× hızlı, daha az bellek; yalnız cuda)
     rerank_candidates: int     # reranker'a giden aday sayısı
     final_k: int               # LLM'e bağlam olarak verilen parça sayısı
+    fixed_answers: Optional[str]  # None | "summer_v1": yaz okulu/yaz öğretimi sorularına retrieval yapmadan sabit cevap
+                                  # (yönetmelik yürürlükten kalktı; başka belgelerdeki eski atıflar yanlış cevap üretiyordu)
     clarify_trigger: Optional[str]  # None | "scope_labels_v1": context'te en az iki farklı paralel kapsamın belgesi
                                     # varsa ve soru kapsam anmıyorsa v4_netlestirme prompt'u kullanılır (rag.RagBot)
     scope_search: Optional[str]  # None | "parallel_v1": context'te temsil edilmeyen paralel kapsamları (genel, tıp,
@@ -129,6 +131,8 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
         if cfg.scope_search not in (None, "parallel_v1"):
             raise ValueError(f"Bilinmeyen scope_search: {cfg.scope_search}")
+        if cfg.fixed_answers not in (None, "summer_v1"):
+            raise ValueError(f"Bilinmeyen fixed_answers: {cfg.fixed_answers}")
         if cfg.clarify_trigger not in (None, "scope_labels_v1"):
             raise ValueError(f"Bilinmeyen clarify_trigger: {cfg.clarify_trigger}")
         if cfg.scope_search and not (cfg.reranker_model and cfg.retrieval == "hybrid"):

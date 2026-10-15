@@ -293,6 +293,13 @@ RECITATION_HINT = ("\n\n(Cevabı belge metnini kelimesi kelimesine kopyalamadan,
 RECITATION_FALLBACK = ("Bu sorunun cevabı aşağıdaki kaynaklarda yer alıyor, ancak metin otomatik olarak aktarılamadı. "
                        "Lütfen kaynaklara bakın.")
 
+# Yaz öğretimi yönetmeliği yürürlükten kalktı (corpus v4'ten çıkarıldı) ama staj yönergeleri, kimlik kartı yönergesi gibi
+# belgelerde eski atıflar duruyor ve model bunlardan eskimiş cevaplar kuruyordu (EXP-023..027). "yaz dönemi" kapsanmaz:
+# yazın yapılan staj soruları belgelerden cevaplanmaya devam eder.
+SUMMER_PATTERN = re.compile(r"yaz\s*okul|yaz\s*öğretim")
+SUMMER_ANSWER = ("Yaz öğretimi (yaz okulu) yönetmeliği yürürlükten kaldırıldığı için yaz okulu hakkında güncel bir bilgi "
+                 "veremiyorum. Güncel durum için Öğrenci İşleri Daire Başkanlığına başvurabilirsiniz.")
+
 REWRITE_SYSTEM = (
     "Sana bir sohbet geçmişi ve kullanıcının son sorusu verilecek. Son soruyu, geçmişi görmeden de "
     "anlaşılabilecek bağımsız bir soru olarak yeniden yaz (ör. 'peki bunun son günü ne?' -> "
@@ -355,6 +362,12 @@ class RagBot:
             return self.rewrite_chain.invoke({"history": messages, "question": question}).text.strip()
         return question
 
+    def fixed_answer(self, query):
+        """Belgelerden cevaplanmaması gereken konular için sabit cevap; yoksa None."""
+        if self.cfg.fixed_answers and SUMMER_PATTERN.search(tr_lower(query)):
+            return SUMMER_ANSWER
+        return None
+
     def retrieve(self, question, history=None):
         """Geçmiş varsa soruyu bağımsız hale getirip ilgili parçaları döndürür."""
         query = self.rewrite(question, history)
@@ -362,7 +375,11 @@ class RagBot:
 
     def ask(self, question, history=None):
         """Cevap üretir; geçmişi güncellemez (yeni soru-cevabı geçmişe eklemek çağıranın işi)."""
-        query, docs = self.retrieve(question, history)
+        query = self.rewrite(question, history)
+        fixed = self.fixed_answer(query)
+        if fixed:
+            return {"answer": fixed, "query": query, "docs": [], "generation_ms": 0.0, "clarify": False}
+        docs = self.retriever.search(query)
         variables = {"input": question, "context": self.prompt["format"](docs)}
         if self.prompt["history"]:
             variables.update({
