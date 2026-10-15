@@ -320,6 +320,10 @@ class RagBot:
         self.retriever = retriever
         self.llm = llm
         self.prompt = PROMPTS[cfg.prompt_version]
+        self.scope_labels = {}  # belge -> kapsam etiketi (yalnız clarify_trigger açıksa)
+        if cfg.clarify_trigger:
+            self.scope_labels = {src: v.get("kapsam") for src, v in json.loads(
+                SCOPE_FILES["parallel_v1"].read_text(encoding="utf-8"))["belgeler"].items()}
         self.rewrite_chain = ChatPromptTemplate.from_messages([
             ("system", REWRITE_SYSTEM),
             MessagesPlaceholder("history"),
@@ -332,6 +336,17 @@ class RagBot:
         # max_retries düşük: kota dolduğunda (429) kullanıcı dakikalarca beklemesin.
         llm = ChatGoogleGenerativeAI(model=cfg.llm_model, temperature=cfg.llm_temperature, max_retries=2)
         return cls(cfg, Retriever(cfg, store, chunks), llm)
+
+    def needs_clarification(self, query, docs):
+        """Netleştirme kararını LLM yerine belge etiketleri verir (EXP-025: LLM'e bırakınca soruların %45'inde soruyordu).
+
+        Context'te en az iki farklı paralel kapsamın (genel, tıp, diş, hukuk, lisansüstü) belgesi varsa konu birden fazla
+        yönetmelikte ayrı düzenleniyor demektir; soru bir kapsamı adıyla anıyorsa sormaya gerek yoktur.
+        """
+        if not self.cfg.clarify_trigger or SCOPE_MENTION.search(query):
+            return False
+        scopes = {self.scope_labels.get(d.metadata["source"]) for d in docs}
+        return len(scopes & set(PARALLEL_SCOPES)) >= 2
 
     def rewrite(self, question, history=None):
         """Geçmiş varsa (ve prompt geçmiş kullanıyorsa) soruyu bağımsız hale getirir; yoksa aynen döndürür."""
@@ -355,7 +370,9 @@ class RagBot:
                 "no_answer": config.NO_ANSWER,
                 "today": date.today().strftime("%d.%m.%Y"),
             })
-        chain = self.prompt["template"] | self.llm
+        clarify = self.needs_clarification(query, docs)
+        template = PROMPTS["v4_netlestirme"]["template"] if clarify else self.prompt["template"]
+        chain = template | self.llm
         started = time.perf_counter()  # yalnız cevap üretimi: retrieval ve rewrite hariç
         message = chain.invoke(variables)
         answer = message.text.strip()
@@ -366,4 +383,5 @@ class RagBot:
             message = chain.invoke({**variables, "input": question + RECITATION_HINT})
             answer = message.text.strip() or RECITATION_FALLBACK
         generation_ms = (time.perf_counter() - started) * 1000
-        return {"answer": answer, "query": query, "docs": docs, "generation_ms": generation_ms}
+        return {"answer": answer, "query": query, "docs": docs, "generation_ms": generation_ms,
+                "clarify": clarify}

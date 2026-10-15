@@ -213,9 +213,11 @@ def answer_rows(bot, items, wait):
             if "ResourceExhausted" in type(e).__name__ or "429" in str(e):
                 print("  Kota dolu; cevap değerlendirmesi yarıda kesildi.")
                 return rows, False
-            answer, llm_ms = f"<hata: {type(e).__name__}>", None
+            answer, llm_ms, out = f"<hata: {type(e).__name__}>", None, None
         rows.append({"id": item["id"], "answer": answer, "answer_ok": int(answer_ok(item, answer)),
                      "netlestirme": int(asks_unit(answer)), "llm_ms": llm_ms})
+        if out and out.get("clarify") is not None and bot.cfg.clarify_trigger:
+            rows[-1]["netlestirme_tetik"] = int(out["clarify"])  # etiketler netleştirme prompt'unu açtı mı
         print(f"  {item['id']} cevap {'OK' if rows[-1]['answer_ok'] else 'YANLIŞ'}")
         if n + 1 < len(items):
             time.sleep(wait)
