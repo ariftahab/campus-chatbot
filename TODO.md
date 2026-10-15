@@ -64,9 +64,35 @@
 
 4. [ ] Diğer bilgiler (birim sayfaları, iletişim...).
 
+5. [ ] **Araç kullanan ajan (tool calling): transkripte göre mezuniyet hesabı** — model yalnız cevap üretmez, fonksiyon
+       çağırır. Senaryo: öğrenci transkriptini (PDF) yükler ve "Bilgisayar mühendisliği okuyorum, mezun olmak için
+       kaç kredi daha lazım?" diye sorar. Ajan transkripti okur, AKTS'yi toplar, yönetmelikten mezuniyet kuralını
+       çeker, farkı hesaplar ve hesabı adım adım gösterir (mimari değişiklik, önce onay).
+   - [ ] **Araçlar:** `transkript_oku` (PDF → ders listesi: kod, ad, AKTS, harf notu, dönem), `mevzuat_ara`
+         (mevcut `Retriever`, kaynakla birlikte), `hesapla` (toplam AKTS, başarılı dersler, GANO; aritmetik LLM'e
+         bırakılmaz, Python'da yapılır). Gemini function calling (`langchain-google-genai` `bind_tools`) ile.
+   - [ ] **Transkript formatı:** OBS / e-Devlet transkripti örneği gerekli (kendi transkriptin ile başla). Okuma
+         önce kuralla (pdfplumber tablo), olmazsa LLM ile yapılandırılmış çıktı.
+   - [ ] **Bölüm müfredatı:** "Kaç kredi" yönetmelikten çıkar (lisans 240 AKTS), ama "hangi zorunlu dersler eksik"
+         için bölümün müfredatı (Bologna sayfası, zorunlu/seçmeli listesi) gerekir; şu an corpus'ta yok. İlk sürüm
+         yalnız kredi hesabı + genel kurallar (GANO şartı, FF/DZ dersler); müfredat ikinci adım.
+   - [ ] **Kişisel veri:** Transkript kişisel veri; yalnız oturum boyunca bellekte tutulur, `logs/sohbet.jsonl`'a
+         ve diske yazılmaz. Arayüzde bunu söyleyen not.
+   - [ ] **Değerlendirme:** Cevabı bilinen sentetik transkriptler (ör. 180 AKTS, iki FF'li, GANO 1.90) + yeni soru
+         seti. Ölçülecekler: hesap doğruluğu, doğru kural/kaynak, araç çağrısı sayısı, gecikme, LLM istek sayısı
+         (her araç turu bir istek; günlük 500 kota).
+
 ## Belki (kesin değil)
 
 Yapılıp yapılmayacağı henüz belli değil; karar verilirse numaralı sıraya alınır.
+
+- [ ] **Agentic retrieval** — şu an pipeline sabit: soru → bir kez retrieval → cevap. Agentic retrieval'da model
+      aramayı kendisi yönetir: gerekirse soruyu yeniden yazar, birden fazla arama yapar (ör. kapsam sorularında
+      her fakülte için ayrı arama), bulduğu context yetmiyorsa tekrar arar, yeterli olunca cevaplar.
+   - Kapsam sorunu (bir kuralın fakülteye göre değişmesi) ve takip sorularında işe yarayabilir.
+   - Maliyet: soru başına birden fazla LLM isteği (kota ve latency artar); davranış daha az öngörülebilir.
+   - Yapılırsa deney olarak: production config'e karşı aynı soru setinde (MRR, kapsam isabeti, çekimser kalma,
+     LLM istek sayısı, latency). Madde 5'teki tool calling altyapısını paylaşır, o yüzden ondan sonra mantıklı.
 
 - [ ] **Duyurular (web scraping)** — sitedeki duyurular listesinden her duyurunun sayfasına girip metnini almak.
    - [ ] Sitenin yapısını incele: liste sayfası, sayfalama (pagination), duyuru sayfasının HTML'i; `robots.txt` ve
