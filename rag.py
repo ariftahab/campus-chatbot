@@ -194,6 +194,11 @@ PROMPTS = {
     },
 }
 
+RECITATION_HINT = ("\n\n(Cevabı belge metnini kelimesi kelimesine kopyalamadan, kendi cümlelerinle yaz; kaynak "
+                   "atıflarını koru.)")
+RECITATION_FALLBACK = ("Bu sorunun cevabı aşağıdaki kaynaklarda yer alıyor, ancak metin otomatik olarak aktarılamadı. "
+                       "Lütfen kaynaklara bakın.")
+
 REWRITE_SYSTEM = (
     "Sana bir sohbet geçmişi ve kullanıcının son sorusu verilecek. Son soruyu, geçmişi görmeden de "
     "anlaşılabilecek bağımsız bir soru olarak yeniden yaz (ör. 'peki bunun son günü ne?' -> "
@@ -256,5 +261,13 @@ class RagBot:
                 "no_answer": config.NO_ANSWER,
                 "today": date.today().strftime("%d.%m.%Y"),
             })
-        answer = (self.prompt["template"] | self.llm).invoke(variables).text.strip()
+        chain = self.prompt["template"] | self.llm
+        message = chain.invoke(variables)
+        answer = message.text.strip()
+        if not answer and message.response_metadata.get("finish_reason") == "RECITATION":
+            # Gemini, cevabın bir metni (ör. yönetmelik maddesini) kelimesi kelimesine tekrar edeceğini düşününce
+            # çıktıyı engelleyip boş döndürüyor (EXP-023: kısmi zamanlı ücret soruları). Bir kez kendi cümleleriyle
+            # yazması istenir; yine boşsa kullanıcı boş cevap yerine kaynaklara yönlendirilir.
+            message = chain.invoke({**variables, "input": question + RECITATION_HINT})
+            answer = message.text.strip() or RECITATION_FALLBACK
         return {"answer": answer, "query": query, "docs": docs}
