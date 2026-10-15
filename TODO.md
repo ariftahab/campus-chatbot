@@ -37,14 +37,19 @@
            C=çekimser kalma 25, D=takip sorusu 15 (sohbet geçmişiyle). v3'ün 77 sorusu (takvim 2026-2027'ye taşındı,
            yaz öğretimi soruları cevapsız), 8 gerçek kullanıcı sorusu, 54 yeni soru. Koşucuya sohbet geçmişi (rewrite
            önbellekli) ve coklu_kapsam için kapsam isabeti eklendi.
-     - [ ] **EXP-023:** EXP-022 + corpus v4 + set v4 (yeni baseline, production adayı). Sonra eski takvim ve yaz
-           öğretimi PDF'leri data/'dan silinir (git geçmişinde kalır).
+     - [x] **EXP-023:** corpus v4 + set 4.0 baseline; production oldu (2026-10-08).
+     - [x] **Kapsam sorunu (2026-10-15):** hedef davranış "bütün fakülteleri say" yerine "genel kural + fakülteyi
+           sor" (set 4.1). EXP-024 baseline, EXP-025 netleştirme prompt'u (%45 gereksiz sorma, alınmadı), EXP-026 kapsam
+           tamamlama (reddedildi), EXP-027 netleştirmeyi belge kapsam etiketleri tetikler (production adayı).
+     - [ ] **EXP-028** (onaylandı): EXP-027 + `fixed_answers="summer_v1"` + set 4.2, `--llm`, arayüz sunucusu kapalı
+           (gecikme). Sonuç doğruysa `config.PRODUCTION_EXPERIMENT` = EXP-028.
+     - [ ] **Cevap uzunluğu:** netleştirmede model diğer kapsamları sayıp sonra soruyor (ör. kayıt dondurmada 2635
+           karakter). Olumlu biçim tarif eden prompt deneyi: kısa genel kural + tek soru.
      - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).
      - [ ] **4. Prompt: birleştirme kuralı.** Aynı öğretim düzeyinde aynı kural tek satırda ("Lisans (Hukuk dahil):
-           240 AKTS"); farklı düzeyler (lisans / lisansüstü) aynı olsa da ayrı yazılır. 3 ve 4 ayrı deneyler.
-     - [ ] **5. Prompt: netleştirme sorusu.** Cevap öğrencinin bölümüne/programına bağlıysa ve bölüm belli değilse
-           model önce sorabilir (ör. "Stajımı kaç gün yapmam gerekiyor?" → "Hangi bölümde okuyorsun?"). Mevcut
-           prompt'larda böyle bir kural yok. Ölçümü sohbet geçmişli takip sorularıyla (set 4.0, D grubu).
+           240 AKTS"); farklı düzeyler ayrı yazılır.
+     - [ ] **Set etiketi:** açık öğretimden örgün öğretime yatay geçiş not ortalaması 80 → 90 (kredi transferi
+           yönetmeliği 28/2/2026 değişikliği); bir sonraki set sürümünde.
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir. Gerçek sorulardan seçilenler yeni bir soru seti sürümü olarak eklenebilir (eski setler değiştirilmez).
    - [ ] **Atıfta fıkra:** LLM şu an atıflarda fıkra yazmıyor (2026-10-08: log'daki 64 atıfın hiçbirinde yok), bu
