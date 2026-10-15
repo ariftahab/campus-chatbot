@@ -354,7 +354,9 @@ def run(exp_id, use_llm, wait, rerun, datasets):
     items = [q for q in dataset["sorular"] if ev.answerable(q)]
     # Takip soruları varsa rewrite için LLM gerekir (retrieval-only koşuda da; sonuçlar önbelleğe alınır).
     rewrite = make_rewriter(cfg, retriever) if any(q.get("gecmis") for q in items) else None
+    started = time.perf_counter()
     rows = evaluate_retrieval(cfg, retriever, items, rewrite)
+    retrieval_s = time.perf_counter() - started
 
     env = ev.environment(cfg)
     if env["git_dirty"]:
@@ -371,18 +373,24 @@ def run(exp_id, use_llm, wait, rerun, datasets):
         "environment": env,
         "retrieval": {"metrics": retrieval_metrics(rows), "asamalar": stage_metrics(rows), "per_question": rows},
         "llm": None,
+        # Koşu süresi (tez için). getirme: index yükleme hariç bütün soruların retrieval'ı (rewrite dahil);
+        # llm: cevap üretimi, sorular arası --bekle beklemeleri dahil.
+        "sure": {"getirme_sn": round(retrieval_s, 1)},
     }
     if use_llm:
         from langchain_google_genai import ChatGoogleGenerativeAI
         llm = ChatGoogleGenerativeAI(model=cfg.llm_model, temperature=cfg.llm_temperature, max_retries=2)
         bot = RagBot(cfg, retriever, llm)  # getirme için yüklenen retriever yeniden kullanılır
+        llm_started = time.perf_counter()
         answers, complete = answer_rows(bot, dataset["sorular"], wait)
+        result["sure"]["llm_sn"] = round(time.perf_counter() - llm_started, 1)
         result["llm"] = {
             "tamamlandi": complete,
             "metrics": {"answer_acc": summarize(answers, "answer_ok") if answers else None,
                         "n": len(answers), **clarification_metrics(dataset["sorular"], answers)},
             "per_question": answers,
         }
+    result["sure"]["toplam_sn"] = round(sum(result["sure"].values()), 1)
     llm_rows = result["llm"]["per_question"] if result["llm"] else None
     result["retrieval"]["alt_kirilimlar"] = subset_metrics(rows, items, llm_rows)
     parent = load_result(exp["ust_deney"]) if exp["ust_deney"] else None
