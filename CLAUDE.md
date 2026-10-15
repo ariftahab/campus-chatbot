@@ -114,6 +114,9 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
   (her biri kendi `kanit`'iyle), `stil` (belge/ogrenci dili), `kategori`, cevapsızlarda isteğe bağlı `kabul`.
 - `eval/sorular_v4.json` (set 4.0, corpus v4) — 139 soru, `grup`: A bulma, B kapsam (coklu_kapsam'da kapsam isabeti),
   C çekimser kalma, D takip sorusu (`gecmis` ile; koşucu production'daki rewrite'ı önbellekli kullanır). EXP-023'ten beri.
+- `eval/sorular_v41.json` (set 4.1) — 4.0 + 4 etiket düzeltmesi; fakülte belirtilmeyen kapsam sorularında hedef
+  davranış genel kural + fakülteyi sormak (`beklenen_davranis: netlestirme`, koşucuda `netlestirme_isabeti` /
+  `gereksiz_netlestirme`). Kapsam tamamlama denemesi `exp/scope-search` branch'inde park edildi.
 
 ## Notlar
 - LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. EXP-013'ten beri `gemini-3.1-flash-lite`:
