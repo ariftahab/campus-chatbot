@@ -158,6 +158,18 @@ Kurallar:
 Bağlam:
 {context}"""
 
+# v4: fakülte belirtilmeyen sorularda bütün kapsamları saymak yerine genel kuralı verip fakülteyi sorar (set 4.1'in
+# hedef davranışı). Diğer kapsamların chunk'ları çoğu zaman context'e hiç gelmiyor (EXP-023: kapsam isabeti 0,51);
+# saymaya çalışmak eksik liste demekti. v3'ten tek fark kapsam maddesi.
+_V3_SCOPE_RULE = """- Aynı soruya bağlamdaki belgeler farklı kapsamlar için farklı kurallar veriyorsa yalnızca birini seçme. Her kuralı,
+  hangi kapsam için geçerli olduğunu açıkça söyleyerek ayrı ayrı yaz."""
+_V4_SCOPE_RULE = """- Soru öğrencinin fakültesini, bölümünü veya öğretim düzeyini belirtmiyorsa ve bağlamdaki kural bunlara göre farklılık
+  gösteriyorsa: genel kuralı ver, bazı fakülte veya programlarda farklı olabileceğini belirt ve sonunda öğrencinin hangi
+  fakültede veya programda okuduğunu sor. Diğer kapsamların kurallarını tek tek sayma. Soru bir fakülte veya program
+  belirtiyorsa sorma; o kapsamın kuralını ver."""
+assert _V3_SCOPE_RULE in _V3_SYSTEM
+_V4_SYSTEM = _V3_SYSTEM.replace(_V3_SCOPE_RULE, _V4_SCOPE_RULE)
+
 
 def _format_v1(docs):
     # create_stuff_documents_chain varsayılanı: parça metinleri boş satırla birleştirilir.
@@ -190,6 +202,15 @@ PROMPTS = {
             ("human", "{input}"),
         ]),
         "format": _format_v2,  # parça etiketleri aynı: [Belge, Madde N, s. X]
+        "history": True,
+    },
+    "v4_netlestirme": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V4_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,
         "history": True,
     },
 }
