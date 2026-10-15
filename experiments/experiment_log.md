@@ -38,6 +38,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-023 | EXP-022 | **v4** | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-024 | EXP-023 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-025 | EXP-024 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v4_netlestirme** | 3.1-flash-lite | 3753 |
+| EXP-026 | EXP-024 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 
 ## 2. Results
 
@@ -69,6 +70,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-023 | Yeni baseline: corpus v4 (2026-2027 takvimi, yaz öğretimi yok) + soru seti 4.0 | 4.0 | 0.816 | 0.733 | 0.940 | 0.940 | 5777 | 371 ms | referans (yeni soru seti, karşılaştırma yok) | – |
 | EXP-024 | Soru seti 4.1 baseline'ı (prompt değişmeden, netleştirme ölçümüyle) | 4.1 | 0.818 | 0.735 | 0.940 | 0.940 | 5783 | 3.0 s | referans (yeni soru seti, karşılaştırma yok) | – |
 | EXP-025 | Prompt v4_netlestirme: fakülte belirtilmemişse genel kural + fakülteyi sor | 4.1 | 0.818 | 0.735 | 0.940 | 0.940 | 5783 | 1.8 s | answer acc. ↓ kötüleşti (p=0.69, anlamlı değil) | ✗ |
+| EXP-026 | Kapsam tamamlama (scope_search=parallel_v1): reddedilen alternatifin ölçümü | 4.1 | 0.817 | 0.735 | 0.940 | 0.940 | 6986 | 490 ms | context chars ↑ kötüleşti (p<0.01, anlamlı) | ✓ |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -90,6 +92,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-023 | 0.622 | 0.520 | 0.630 | 0.966 | 0.816 |
 | EXP-024 | 0.625 | 0.517 | 0.628 | 0.966 | 0.818 |
 | EXP-025 | 0.625 | 0.517 | 0.628 | 0.966 | 0.818 |
+| EXP-026 | 0.625 | 0.517 | 0.628 | 0.966 | 0.817 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -106,6 +109,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-023 | 0.933 (26) | 0.782 (90) | 0.911 (46) | 0.753 (70) | 0.814 (17) | 0.737 (12) |
 | EXP-024 | 0.933 (26) | 0.784 (91) | 0.911 (46) | 0.757 (71) | 0.814 (17) | 0.737 (12) |
 | EXP-025 | 0.933 (26) | 0.784 (91) | 0.911 (46) | 0.757 (71) | 0.814 (17) | 0.737 (12) |
+| EXP-026 | 0.933 (26) | 0.783 (91) | 0.911 (46) | 0.755 (71) | 0.814 (17) | 0.737 (12) |
 
 ## 5. Notes
 
@@ -135,3 +139,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-023:** Yeni baseline (set 4.0): MRR@10 0,816, cevap 0,885. Kapsam isabeti 0,507; takip soruları 15/15. 16 yanlışın 10'u gerçek (kapsam 5, retrieval 2, eskimiş yaz bilgisi 3), 2'si boş cevap (RECITATION), 4'ü ölçüm/etiket hatası.
 - **EXP-024:** Set 4.1 baseline: MRR@10 0,818, cevap 0,942 (131/139); netleştirme 0/8, gereksiz 0 (prompt'ta kural yok). 8 yanlışın 2'si Türkçe olumsuz fiil biçiminden ölçüm hatası, 6'sı gerçek (retrieval 2, eskimiş yaz bilgisi 2, kapsam 1, belirsiz 1).
 - **EXP-025:** Netleştirme 8/8 ama gereksiz netleştirme %45 (beklenen <= %5): model fakülteden bağımsız sorularda da soruyor; fakülte belirtilen 17 soruda 1. Cevap 0,928 (anlamca fark yok). Production'a alınmaz; tetikleme LLM'e bırakılınca aşırı.
+- **EXP-026:** Reddedilen alternatif: kapsam isabeti 0,507 -> 0,576 (12 sorunun yalnız 2'si iyileşti), ama 117 sorunun 50'sinde tetiklendi ve context +%21 (tetiklenenlerde +%48) uzadı; MRR@10 değişmedi. Bırakıldı.
