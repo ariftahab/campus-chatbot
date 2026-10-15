@@ -55,9 +55,10 @@
    - [ ] **Atıfta fıkra:** LLM şu an atıflarda fıkra yazmıyor (2026-10-08: log'daki 64 atıfın hiçbirinde yok), bu
          yüzden panelde fıkra vurgulanamıyor. Fıkrayı yazdırmak bir prompt değişikliği, yani deney.
 
-3. [ ] **Ders programları ve akademik takvim (scraping)** — en sona bırakıldı: her bölümün programı farklı
-       biçimde; tek başına bitirme projesi büyüklüğünde bir iş. Yapılırsa önce yalnız bir bölüm (Bilgisayar Müh.).
-   - [ ] Program/takvim HTML tablo mu, PDF mi, Excel mi? Her dönemin verisi `donem` / `gecerlilik` metadata'sıyla.
+3. [ ] **Ders programları** — scraping ve duyurular kapsam dışı (2026-10-15). Akademik takvim mevcut chunking ile
+       sorunsuz okunuyor. Ders programları her dönem elle eklenecek; tablo olduğu için chunk yerine yapılandırılmış
+       saklama (dönem, bölüm, gün, saat, ders, derslik) + tool ile sorgulama düşünülüyor (mimari değişiklik, önce onay).
+   - [ ] Elle eklenecek programın formatı (Excel/CSV mi, PDF mi)? Her dönemin verisi `donem` metadata'sıyla.
    - [ ] Tablo verisi için yeni chunking veya yapılandırılmış saklama (ör. SQL) — deney olarak.
    - [ ] Ders programı soruları için yeni soru seti sürümü (ör. "Salı günü 3. sınıfın hangi dersleri var?").
 
