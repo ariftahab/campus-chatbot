@@ -42,6 +42,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-027 | EXP-024 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-028 | EXP-027 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
 | EXP-029 | EXP-027 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
+| EXP-030 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 
 ## 2. Results
 
@@ -77,6 +78,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-027 | Netleştirmeyi belge kapsam etiketleri tetikler (clarify_trigger=scope_labels_v1) | 4.1 | 0.818 | 0.735 | 0.940 | 0.940 | 5783 | 329 ms | answer acc. ↓ kötüleşti (p=0.25, anlamlı değil) | ✗ |
 | EXP-028 | Production yapılandırması: EXP-027 + yaz okulu sabit cevabı (fixed_answers=summer_v1) | | | | | | | | koşulmadı | |
 | EXP-029 | Havuz derinliği A: vector_k ve bm25_k 15 → 30 (rerank_candidates 30 sabit) | 4.1 | 0.819 | 0.735 | 0.949 | 0.949 | 5785 | 562 ms | rerank_input_recall ↑ iyileşti (p=1.00, anlamlı değil) | ~ |
+| EXP-030 | Havuz derinliği B: rerank_candidates 30 → 60 (reranker havuzun tamamını görür) | 4.1 | 0.818 | 0.735 | 0.949 | 0.949 | 5812 | 892 ms | rerank_input_recall = değişmedi (p=1.00, anlamlı değil) | ✓ |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -101,6 +103,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-026 | 0.625 | 0.517 | 0.628 | 0.966 | 0.817 |
 | EXP-027 | 0.625 | 0.517 | 0.628 | 0.966 | 0.818 |
 | EXP-029 | 0.625 | 0.517 | 0.625 | 0.974 | 0.819 |
+| EXP-030 | 0.625 | 0.517 | 0.625 | 0.974 | 0.818 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -120,6 +123,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-026 | 0.933 (26) | 0.783 (91) | 0.911 (46) | 0.755 (71) | 0.814 (17) | 0.737 (12) |
 | EXP-027 | 0.933 (26) | 0.784 (91) | 0.911 (46) | 0.757 (71) | 0.814 (17) | 0.737 (12) |
 | EXP-029 | 0.933 (26) | 0.787 (91) | 0.911 (46) | 0.759 (71) | 0.814 (17) | 0.737 (12) |
+| EXP-030 | 0.931 (26) | 0.786 (91) | 0.910 (46) | 0.758 (71) | 0.814 (17) | 0.737 (12) |
 
 ## 5. Notes
 
@@ -153,3 +157,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-027:** Etiketle tetikleme: netleştirme 6/8, gereksiz 0,45 -> 0,26, fakülte belirtilende 0/17; sorma yalnız tetik açıkken. Cevap anlamca aynı (0,921). Cevaplar hâlâ diğer kapsamları sayıyor.
 - **EXP-028:** Production yapılandırması, koşu yok: 9/9 yaz sorusu sabit cevap, diğer 130 soruda eşleşme yok. Production EXP-023 → EXP-028.
 - **EXP-029:** Havuz 15 -> 30: reranker girdisi isabeti 0,966 -> 0,974 (+1 soru, kayıp yok), MRR aynı; latency 329 -> 562 ms. Kalan 3 kayıp ilk 30'da da yok, B'nin kazancı olamaz.
+- **EXP-030:** Reranker havuzun tamamını görüyor: recall aynı (0,974), MRR 0,819 -> 0,818 (2 soru biraz düştü, iyileşen yok), latency 562 -> 892 ms. Alınmaz.

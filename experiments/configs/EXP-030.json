@@ -29,5 +29,7 @@
   "prompt_version": "v3_kapsam",
   "reranker_dtype": "fp16",
   "clarify_trigger": "scope_labels_v1"
- }
+ },
+ "notlar": "Hipotezin üç maddesi de tuttu. (1) rerank_input_recall 0,974 -> 0,974 (değişim yok, beklendiği gibi: ilgili chunk'ı havuzda olan her soruda chunk zaten RRF'in ilk 30'undaydı). (2) MRR@10 0,819 -> 0,818 (Wilcoxon p=0,18): yalnız iki soruda sıra düştü, ikisi de yeni giren ilgisiz adaylar yüzünden: 'Güz dönemi final sınavları ne zaman bitiyor?' 4. -> 5. sıra, 'Okulu uzattım, azami süre dolunca hemen atılır mıyım?' 10. -> ilk 10'un dışı. İyileşen soru yok; Hit@5 ve bağlam isabeti aynı (0,949). Reranker 48 adayda da büyük ölçüde dayanıklı, ama aday eklemek ona yalnız şaşırma fırsatı veriyor. (3) Retrieval latency 562 -> 892 ms (medyan 522 -> 905, Wilcoxon p<0,001; sunucu kapalı): reranker girdisi 30 -> ortalama 48 aday (+%60), latency +%59, yani reranker maliyeti aday sayısıyla neredeyse doğrusal. Sonuç: B alınmaz; havuzu derinleştirmenin tek kazancı EXP-029'daki bir soru. Süre: getirme 107 sn.",
+ "kisa_not": "Reranker havuzun tamamını görüyor: recall aynı (0,974), MRR 0,819 -> 0,818 (2 soru biraz düştü, iyileşen yok), latency 562 -> 892 ms. Alınmaz."
 }
