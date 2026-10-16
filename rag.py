@@ -243,6 +243,18 @@ _V4_SCOPE_RULE = """- Soru öğrencinin fakültesini, bölümünü veya öğreti
 assert _V3_SCOPE_RULE in _V3_SYSTEM
 _V4_SYSTEM = _V3_SYSTEM.replace(_V3_SCOPE_RULE, _V4_SCOPE_RULE)
 
+# v5: v4'te model "diğer kapsamları tek tek sayma" yasağına rağmen kapsamları sayıp sonra soruyordu (EXP-027: netleştirme
+# açılan cevaplar ortalama 602, en uzun 2635 karakter). Yasak yerine istenen biçim adım adım tarif edilir.
+_V5_SCOPE_RULE = """- Bu soruda öğrencinin fakültesi, bölümü veya öğretim düzeyi belli değil ve bağlamdaki kural bunlara göre
+  değişebiliyor. Cevabı tam olarak şu üç parçayla yaz:
+  1) Genel kuralı bir veya iki cümleyle, kaynağıyla birlikte yaz.
+  2) Tek cümleyle bazı fakülte veya programlarda bu kuralın farklı olabileceğini söyle (farklı kuralların içeriğini
+     yazma).
+  3) Son cümlede öğrencinin hangi fakültede veya programda okuduğunu sor.
+  Örnek biçim: "Genel olarak ... [Belge, Madde N]. Bazı fakülte ve programlarda bu kural farklı olabilir. Hangi
+  fakültede veya programda okuyorsunuz?\""""
+_V5_SYSTEM = _V3_SYSTEM.replace(_V3_SCOPE_RULE, _V5_SCOPE_RULE)
+
 
 def _format_v1(docs):
     # create_stuff_documents_chain varsayılanı: parça metinleri boş satırla birleştirilir.
@@ -280,6 +292,15 @@ PROMPTS = {
     "v4_netlestirme": {
         "template": ChatPromptTemplate.from_messages([
             ("system", _V4_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,
+        "history": True,
+    },
+    "v5_netlestirme_kisa": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V5_SYSTEM),
             MessagesPlaceholder("history"),
             ("human", "{input}"),
         ]),
@@ -388,7 +409,7 @@ class RagBot:
                 "today": date.today().strftime("%d.%m.%Y"),
             })
         clarify = self.needs_clarification(query, docs)
-        template = PROMPTS["v4_netlestirme"]["template"] if clarify else self.prompt["template"]
+        template = PROMPTS[self.cfg.clarify_prompt]["template"] if clarify else self.prompt["template"]
         chain = template | self.llm
         started = time.perf_counter()  # yalnız cevap üretimi: retrieval ve rewrite hariç
         message = chain.invoke(variables)

@@ -66,7 +66,8 @@ def corpus_paths(name):
 
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
-PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None}
+PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None,
+                  "clarify_prompt": "v4_netlestirme"}
 
 
 def full_params(params):
@@ -104,7 +105,9 @@ class RagConfig:
     fixed_answers: Optional[str]  # None | "summer_v1": yaz okulu/yaz öğretimi sorularına retrieval yapmadan sabit cevap
                                   # (yönetmelik yürürlükten kalktı; başka belgelerdeki eski atıflar yanlış cevap üretiyordu)
     clarify_trigger: Optional[str]  # None | "scope_labels_v1": context'te en az iki farklı paralel kapsamın belgesi
-                                    # varsa ve soru kapsam anmıyorsa v4_netlestirme prompt'u kullanılır (rag.RagBot)
+                                    # varsa ve soru kapsam anmıyorsa clarify_prompt kullanılır (rag.RagBot)
+    clarify_prompt: str           # netleştirme açıldığında kullanılan rag.PROMPTS anahtarı: "v4_netlestirme" |
+                                  # "v5_netlestirme_kisa" (genel kural + tek soru biçimi tarif edilir)
     scope_search: Optional[str]  # None | "parallel_v1": context'te temsil edilmeyen paralel kapsamları (genel, tıp,
                                  # diş, hukuk, lisansüstü) kendi belgelerinde ayrıca arayıp ekler (rag.Retriever)
     # Üretim
@@ -137,6 +140,8 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen clarify_trigger: {cfg.clarify_trigger}")
         if cfg.scope_search and not (cfg.reranker_model and cfg.retrieval == "hybrid"):
             raise ValueError("scope_search hybrid retrieval ve reranker gerektirir.")
+        if cfg.clarify_prompt not in ("v4_netlestirme", "v5_netlestirme_kisa"):
+            raise ValueError(f"Bilinmeyen clarify_prompt: {cfg.clarify_prompt}")
         if cfg.reranker_dtype not in ("fp32", "fp16"):
             raise ValueError(f"Bilinmeyen reranker_dtype: {cfg.reranker_dtype}")
         if cfg.reranker_dtype == "fp16" and cfg.device != "cuda":
