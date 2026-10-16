@@ -378,6 +378,22 @@ def _to_messages(history):
     return [kinds[m["role"]](m["content"]) for m in (history or [])][-config.HISTORY_MESSAGES:]
 
 
+def token_usage(metadata):
+    """Cevap üretiminin token sayıları (RECITATION tekrarı varsa iki çağrının toplamı).
+
+    reasoning: modelin cevaptan önce ürettiği "thinking" token'ları; API raporlamazsa 0. Latency'nin neden değiştiğini
+    ayırmak için (daha uzun cevap mı, düşünme mi, yavaş üretim mi).
+    """
+    out = {"input": 0, "output": 0, "reasoning": 0}
+    for m in metadata:
+        if not m:
+            continue
+        out["input"] += m.get("input_tokens", 0)
+        out["output"] += m.get("output_tokens", 0)
+        out["reasoning"] += (m.get("output_token_details") or {}).get("reasoning", 0)
+    return out
+
+
 class RagBot:
     """Stateless: sohbet geçmişini kendisi tutmaz, her çağrıda dışarıdan alır.
 
@@ -459,13 +475,15 @@ class RagBot:
         chain = template | self.llm
         started = time.perf_counter()  # yalnız cevap üretimi: retrieval ve rewrite hariç
         message = chain.invoke(variables)
+        usage = [message.usage_metadata]
         answer = message.text.strip()
         if not answer and message.response_metadata.get("finish_reason") == "RECITATION":
             # Gemini, cevabın bir metni (ör. yönetmelik maddesini) kelimesi kelimesine tekrar edeceğini düşününce
             # çıktıyı engelleyip boş döndürüyor (EXP-023: kısmi zamanlı ücret soruları). Bir kez kendi cümleleriyle
             # yazması istenir; yine boşsa kullanıcı boş cevap yerine kaynaklara yönlendirilir.
             message = chain.invoke({**variables, "input": question + RECITATION_HINT})
+            usage.append(message.usage_metadata)
             answer = message.text.strip() or RECITATION_FALLBACK
         generation_ms = (time.perf_counter() - started) * 1000
         return {"answer": answer, "query": query, "docs": docs, "generation_ms": generation_ms,
-                "clarify": clarify}
+                "clarify": clarify, "usage": token_usage(usage)}

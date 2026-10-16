@@ -225,16 +225,18 @@ def answer_rows(bot, items, wait):
     for n, item in enumerate(items):
         try:
             out = bot.ask(item["soru"], item.get("gecmis"))  # takip sorularında sohbet geçmişiyle
-            answer, llm_ms = out["answer"], round(out["generation_ms"], 1)
+            answer, llm_ms, usage = out["answer"], round(out["generation_ms"], 1), out.get("usage")
         except Exception as e:  # kota dolarsa kalan soruları boşuna deneme
             print(f"  LLM hatası ({item['id']}): {type(e).__name__}: {str(e)[:200]}")
             if "ResourceExhausted" in type(e).__name__ or "429" in str(e):
                 print("  Kota dolu; cevap değerlendirmesi yarıda kesildi.")
                 return rows, False
-            answer, llm_ms, out = f"<hata: {type(e).__name__}>", None, None
+            answer, llm_ms, out, usage = f"<hata: {type(e).__name__}>", None, None, None
         rows.append({"id": item["id"], "answer": answer, "answer_ok": int(answer_ok(item, answer)),
                      "netlestirme": int(asks_unit(answer)), "llm_ms": llm_ms,
                      **answer_extras(item, answer, maddeler)})
+        if usage:  # sabit cevaplarda (yaz okulu) LLM çağrılmaz, token yok
+            rows[-1]["tokens"] = usage
         if out and out.get("clarify") is not None and bot.cfg.clarify_trigger:
             rows[-1]["netlestirme_tetik"] = int(out["clarify"])  # etiketler netleştirme prompt'unu açtı mı
         print(f"  {item['id']} cevap {'OK' if rows[-1]['answer_ok'] else 'YANLIŞ'}")
@@ -344,6 +346,13 @@ def compare(exp, result, parent):
 def format_metrics(answers):
     """Cevap biçimi özetleri (değeri olan sorular üzerinden ortalama)."""
     out = {"cevap_uzunlugu": round(statistics.mean(len(a["answer"]) for a in answers), 1)}
+    used = [a for a in answers if a.get("tokens") and a["tokens"]["output"] and a.get("llm_ms")]
+    if used:
+        # Üretim hızı: (çıktı + reasoning) token / saniye; latency farkının modelden mi sunucudan mı geldiğine ipucu.
+        out.update({f"token_{k}": round(statistics.mean(a["tokens"][k] for a in used), 1)
+                    for k in ("input", "output", "reasoning")})
+        out["token_per_sn"] = round(statistics.median(
+            (a["tokens"]["output"] + a["tokens"]["reasoning"]) / (a["llm_ms"] / 1000) for a in used), 1)
     clarified = [len(a["answer"]) for a in answers if a.get("netlestirme_tetik")]
     if clarified:
         out.update(netlestirme_uzunlugu=round(statistics.mean(clarified), 1), netlestirme_uzunlugu_n=len(clarified))
