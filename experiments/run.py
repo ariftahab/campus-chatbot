@@ -193,8 +193,35 @@ def retrieval_metrics(rows):
     return m
 
 
+def madde_index(chunks):
+    """Fıkra doğruluğu için: {(belge, madde): maddenin bütün metni} ve {belge: başlık} (chunk'lar sırayla birleştirilir)."""
+    texts, titles = {}, {}
+    for c in chunks:
+        m = c.metadata
+        titles[m["source"]] = m["title"]
+        if "madde" in m:
+            texts[(m["source"], m["madde"])] = texts.get((m["source"], m["madde"]), "") + "\n" + c.page_content
+    return texts, titles
+
+
+def answer_extras(item, answer, maddeler):
+    """Cevap biçimi değerleri: uzunluk, birleştirme (varsa), fıkralı atıf oranı ve fıkra doğruluğu (varsa)."""
+    out = {"uzunluk": len(answer)}
+    if item.get("birlestirme"):
+        out["birlestirme"] = int(ev.merged(item, answer))
+    cited = [c for c in ev.citations(answer) if c["madde"]]
+    if cited:
+        out["fikra_atif"] = round(statistics.mean(c["fikra"] is not None for c in cited), 4)
+    checked = [ev.fikra_correct(item, c, *maddeler) for c in cited]
+    checked = [x for x in checked if x is not None]
+    if checked:
+        out["fikra_dogru"] = round(statistics.mean(checked), 4)
+    return out
+
+
 def answer_rows(bot, items, wait):
     rows = []
+    maddeler = madde_index(bot.retriever.chunks)
     for n, item in enumerate(items):
         try:
             out = bot.ask(item["soru"], item.get("gecmis"))  # takip sorularında sohbet geçmişiyle
@@ -206,7 +233,8 @@ def answer_rows(bot, items, wait):
                 return rows, False
             answer, llm_ms, out = f"<hata: {type(e).__name__}>", None, None
         rows.append({"id": item["id"], "answer": answer, "answer_ok": int(answer_ok(item, answer)),
-                     "netlestirme": int(asks_unit(answer)), "llm_ms": llm_ms})
+                     "netlestirme": int(asks_unit(answer)), "llm_ms": llm_ms,
+                     **answer_extras(item, answer, maddeler)})
         if out and out.get("clarify") is not None and bot.cfg.clarify_trigger:
             rows[-1]["netlestirme_tetik"] = int(out["clarify"])  # etiketler netleştirme prompt'unu açtı mı
         print(f"  {item['id']} cevap {'OK' if rows[-1]['answer_ok'] else 'YANLIŞ'}")
@@ -255,11 +283,19 @@ def answer_ok(item, answer):
 
 
 def per_question_value(row, metric, key):
-    """Soru başına metrik değeri; rerank_input_recall: ilgili parça reranker'a giden adaylar içinde mi (0/1)."""
+    """Soru başına metrik değeri; rerank_input_recall: ilgili parça reranker'a giden adaylar içinde mi (0/1).
+
+    Uzunluklar cevap metninden hesaplanır (bu alanlardan önceki sonuçlarla da karşılaştırılabilsin).
+    Değeri olmayan soru (ör. netleştirme açılmamış, birleştirme sorusu değil) karşılaştırmaya girmez.
+    """
     if metric == "rerank_input_recall":
         stages = row.get("asamalar", {})
         return int(stages["rerank_input"] is not None) if "rerank_input" in stages else None
-    return row[key]
+    if metric == "cevap_uzunlugu":
+        return len(row["answer"])
+    if metric == "netlestirme_uzunlugu":
+        return len(row["answer"]) if row.get("netlestirme_tetik") else None
+    return row.get(key)
 
 
 def compare(exp, result, parent):
@@ -270,7 +306,7 @@ def compare(exp, result, parent):
         out["uyari"] = "Üst deney farklı bir veri seti sürümüyle koşulmuş; karşılaştırma geçersiz."
         return out
     for metric, key in ev.PER_QUESTION_KEY.items():
-        source = "llm" if metric == "answer_acc" else "retrieval"
+        source = "llm" if metric in ev.LLM_METRICS else "retrieval"
         a, b = parent.get(source), result.get(source)
         if not a or not b or not a.get("tamamlandi", True) or not b.get("tamamlandi", True):
             continue
@@ -302,6 +338,20 @@ def compare(exp, result, parent):
         {"id": r["id"], "once": before_rank.get(r["id"]), "sonra": r["rank"]}
         for r in result["retrieval"]["per_question"] if before_rank.get(r["id"]) != r["rank"]
     ]
+    return out
+
+
+def format_metrics(answers):
+    """Cevap biçimi özetleri (değeri olan sorular üzerinden ortalama)."""
+    out = {"cevap_uzunlugu": round(statistics.mean(len(a["answer"]) for a in answers), 1)}
+    clarified = [len(a["answer"]) for a in answers if a.get("netlestirme_tetik")]
+    if clarified:
+        out.update(netlestirme_uzunlugu=round(statistics.mean(clarified), 1), netlestirme_uzunlugu_n=len(clarified))
+    for metric, key in (("birlestirme_isabeti", "birlestirme"), ("fikra_atif_orani", "fikra_atif"),
+                        ("fikra_dogrulugu", "fikra_dogru")):
+        values = [a[key] for a in answers if key in a]
+        if values:
+            out.update({metric: round(statistics.mean(values), 4), f"{metric}_n": len(values)})
     return out
 
 
@@ -392,6 +442,7 @@ def run(exp_id, use_llm, wait, rerun, datasets):
             "tamamlandi": complete,
             "metrics": {"answer_acc": summarize(answers, "answer_ok") if answers else None,
                         "n": len(answers), **clarification_metrics(dataset["sorular"], answers),
+                        **(format_metrics(answers) if answers else {}),
                         **({"llm_ms": round(statistics.mean(timed), 1), "llm_ms_median": round(statistics.median(timed), 1)}
                            if timed else {})},
             "per_question": answers,

@@ -8,6 +8,10 @@ Metrik tanımları (hepsi soru başına hesaplanıp ortalaması alınır):
   latency_ms   : yalnız getirme süresi (LLM hariç), milisaniye
   answer_ok    : LLM cevabı beklenen anahtar kelimeleri içeriyor mu (0/1), yalnız --llm ile
   netlestirme  : cevap öğrencinin fakültesini/bölümünü soruyor mu (0/1), yalnız --llm ile (run.NETLESTIRME)
+  netlestirme_uzunlugu: netleştirme prompt'unun açıldığı sorularda cevabın karakter sayısı
+  birlestirme  : birden fazla belgede aynı olan değer cevapta tam bir kez geçiyor mu (0/1; set 4.2 'birlestirme')
+  fikra_atif   : cevaptaki madde atıflarından fıkra numarası taşıyanların oranı
+  fikra_dogru  : fıkralı atıflardan kanıt cümlesini gerçekten o fıkrada bulunanların oranı (değerlendirilebilenler)
 """
 import hashlib
 import importlib.metadata
@@ -31,14 +35,22 @@ METRIC_DIRECTION = {
     "mrr@10": +1, "hit@1": +1, "hit@3": +1, "hit@5": +1, "hit@10": +1,
     "context_hit": +1, "context_chars": -1, "latency_ms": -1, "answer_acc": +1,
     "rerank_input_recall": +1,
+    "cevap_uzunlugu": -1, "netlestirme_uzunlugu": -1, "birlestirme_isabeti": +1,
+    "fikra_atif_orani": +1, "fikra_dogrulugu": +1,
 }
 PER_QUESTION_KEY = {  # özet metrik -> soru başına değer anahtarı
     "mrr@10": "rr", "hit@1": "hit@1", "hit@3": "hit@3", "hit@5": "hit@5", "hit@10": "hit@10",
     "context_hit": "context_hit", "context_chars": "context_chars", "latency_ms": "latency_ms",
     "answer_acc": "answer_ok",
     "rerank_input_recall": None,  # soru başına değer aşama sırasından türetilir (run.per_question_value)
+    # Cevaptan türetilen metrikler (yalnız --llm); uzunluklar eski sonuçlarda da cevap metninden hesaplanır.
+    "cevap_uzunlugu": None, "netlestirme_uzunlugu": None, "birlestirme_isabeti": "birlestirme",
+    "fikra_atif_orani": "fikra_atif", "fikra_dogrulugu": "fikra_dogru",
 }
-BINARY_METRICS = {"hit@1", "hit@3", "hit@5", "hit@10", "context_hit", "answer_acc", "rerank_input_recall"}
+LLM_METRICS = {"answer_acc", "cevap_uzunlugu", "netlestirme_uzunlugu", "birlestirme_isabeti", "fikra_atif_orani",
+               "fikra_dogrulugu"}
+BINARY_METRICS = {"hit@1", "hit@3", "hit@5", "hit@10", "context_hit", "answer_acc", "rerank_input_recall",
+                  "birlestirme_isabeti"}
 NO_CHANGE_EPS = 1e-9
 
 
@@ -121,6 +133,72 @@ def validate_dataset(data):
                         if norm(part) not in texts.get((belge, parser), ""):
                             problems.append(f"{item['id']}: '{part}' {belge} ({parser}) metninde bulunamadı")
     return problems
+
+
+# --- Cevap biçimi: birleştirme ve fıkralı atıf ---
+
+CITATION = re.compile(r"\[([^\[\]]+)\]")
+MADDE_REF = re.compile(r"madde\s*(\d+)(?:\s*/\s*(\d+)|\s*,?\s*(?:fıkra\s*\(?(\d+)\)?|\(?(\d+)\)?\s*\.?\s*fıkra))?")
+# Fıkra başı: "MADDE 6- (1)" ya da cümle sonundan sonra "(2)". "(Değişik ...)(1)" gibi dipnot işaretleri sıra
+# numarası tutmadığı için ayıklanır (fikra_spans yalnız 1, 2, 3... sırasıyla gelenleri alır).
+FIKRA_START = re.compile(r"(?:MADDE\s*\d+\s*[–—-]\s*|[.:;]\s+|^\s*)\((\d+)\)", re.MULTILINE)
+
+
+def citations(answer):
+    """Cevaptaki köşeli parantezli atıflar: [{"metin", "madde", "fikra"}]; bir parantezde ';' ile birden çok atıf."""
+    out = []
+    for group in CITATION.findall(answer):
+        for part in group.split(";"):
+            m = MADDE_REF.search(tr_lower(part))
+            fikra = next((int(g) for g in m.groups()[1:] if g), None) if m else None
+            out.append({"metin": part.strip(), "madde": int(m.group(1)) if m else None, "fikra": fikra})
+    return out
+
+
+def fikra_spans(text):
+    """Madde metnini fıkralara böler: {fıkra no: metin}. Fıkra işareti yoksa boş döner."""
+    starts, expected = [], 1
+    for m in FIKRA_START.finditer(text):
+        if int(m.group(1)) == expected:
+            starts.append((expected, m.start(1) - 1))
+            expected += 1
+    return {n: text[s:(starts[i + 1][1] if i + 1 < len(starts) else len(text))] for i, (n, s) in enumerate(starts)}
+
+
+def fikra_correct(item, citation, madde_texts, titles):
+    """Fıkralı atıf, sorunun kanıtını içeren fıkrayı mı gösteriyor? Değerlendirilemezse None.
+
+    Değerlendirilebilir atıf: belgesi sorunun kaynaklarından biri, maddesi o kaynağın kanıtını içeren madde.
+    madde_texts: {(belge, madde): madde metni}, titles: {belge: başlık} (atıfta belge başlığıyla anılır).
+    """
+    if not citation["fikra"] or not answerable(item):
+        return None
+    for belge, alts in sources(item):
+        if norm(titles.get(belge, belge)) not in norm(citation["metin"]):
+            continue
+        text = madde_texts.get((belge, citation["madde"]))
+        if not text:
+            continue
+        evidence = [norm(part) for alt in alts for part in alt]
+        if not any(e in norm(text) for e in evidence):
+            continue
+        span = fikra_spans(text).get(citation["fikra"])
+        return int(bool(span) and any(e in norm(span) for e in evidence))
+    return None
+
+
+def strip_citations(answer):
+    return CITATION.sub(" ", answer)
+
+
+def merged(item, answer):
+    """Birleştirme: her ortak değer (alternatifleri '|' ile) atıflar dışındaki metinde tam bir kez geçiyor mu."""
+    text = tr_lower(strip_citations(answer))
+    for value in item["birlestirme"]:
+        alts = sorted((re.escape(tr_lower(a)) for a in value.split("|")), key=len, reverse=True)
+        if len(re.findall(r"(?<![\w,.])(?:" + "|".join(alts) + r")(?![\w])", text)) != 1:
+            return False
+    return True
 
 
 # --- İstatistik ---
