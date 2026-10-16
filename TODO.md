@@ -45,10 +45,12 @@
            değişmedi); 9/9 yaz sorusu sabit cevabı aldı, diğer 130 soruda eşleşme yok.
      - Kapsam kararı kesin (2026-10-16): kuralı fakülteye göre değişen sorularda genel kural verilir ve fakülte
        sorulur; retrieval tarafında kapsam tamamlama yapılmaz.
-     - [ ] **Havuz derinliği A** (retrieval-only, kota harcamaz): `vector_k` 15 → 30, `bm25_k` 15 → 30,
+     - [x] **Havuz derinliği A** (EXP-029, retrieval-only, kota harcamaz): `vector_k` 15 → 30, `bm25_k` 15 → 30,
            `rerank_candidates` 30. İki parametre birlikte (`coklu_degisiklik_gerekcesi`: havuz derinliği tek kavram,
            iki liste simetrik). Birincil metrik `rerank_input_recall` (EXP-027: 0,966), ikincil final MRR@10.
            Not: birleşim 60 adaya çıkabilir; reranker yalnız RRF'in ilk 30'unu görür.
+          Sonuç: 0,966 -> 0,974 (+1 soru, kayıp yok), MRR aynı, latency 329 -> 562 ms. Production'a alınmadı
+          (karar bekliyor). Havuzdaki her ilgili chunk zaten RRF'in ilk 30'unda → B'nin recall kazancı olamaz.
      - [ ] **Havuz derinliği B:** A + `rerank_candidates` 30 → 60 (havuzun tamamı). Gecikme ölçülür (sunucu kapalı).
      - [ ] **Hybrid + reranker ablasyonu:** `retrieval` hybrid → vector, aday sayısı eşit. Soru: BM25 havuza
            reranker'ın kullandığı aday katıyor mu? (Reranker'ın gerekliliği aşama metriklerinden belli: EXP-027'de
