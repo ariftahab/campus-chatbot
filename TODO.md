@@ -83,8 +83,29 @@
       - [ ] **EXP-037 atıfta fıkra:** `citation_style` madde → fikra. Birincil: `fikra_atif_orani` (EXP-027: 0,023),
             ikincil `fikra_dogrulugu` (kanıt cümlesi atıf yapılan fıkrada mı). Üst deney kabul edilen son deney.
             Panelde fıkra vurgusu ayrı UI işi (atıf linki "Madde 24/2" ile bozulmuyor).
+      - [ ] **Netleştirmeden sonra yönetmeliği olmayan fakülte (2026-10-16 teşhisi):** kullanıcı fakültesini söyleyince
+            (ör. "Mühendislik fakültesi") ne oluyor? Teşhis script'i: `experiments/teshis_takip_netlestirme.py`.
+            - **(Öncelikli) Geçmişe bakma:** tetik yalnız tıp/diş/hukuk/lisansüstü/önlisans adlarını tanıdığı için
+              ikinci turda netleştirme yine açılıyor (6 senaryonun 4'ünde). 3.5 bunu fark edip 6/6 tekrar sormadı; 3.1
+              talimata daha harfiyen uyduğu için tekrar sorabilir (döngü). **Yarın 3.1 ile script koşulacak (~18 istek);
+              tekrar sorarsa:** önceki asistan mesajı fakülteyi sorduysa netleştirme açılmaz (`clarify_trigger`'a yeni
+              değer, deney).
+            - Tetik herhangi bir birim adını tanısın ("… fakültesi", "… yüksekokulu", "MYO", "… bölümü"): birim adı
+              geçiyorsa netleştirme açılmaz; ana prompt'taki "özel düzenleme yoksa genel kuralı ver" kuralı çalışır.
+            - **Yeni bulgu (retrieval):** rewrite fakülte adını sorguya ekleyince o fakültenin ilgisiz belgeleri
+              geliyor. "Ziraat Fakültesi öğrencilerinin okulu en fazla kaç yılda bitirmesi gerekmektedir?": ilk 4 chunk
+              ziraat staj yönergesi, genel azami süre maddesi ilk 10'da yok → "bilgim yok". Fakülte adı olmadan aynı
+              madde 1. sırada. Fikir: kendi yönetmeliği olmayan birim adı retrieval sorgusundan çıkarılır (ya da iki
+              sorguyla aranıp birleştirilir); LLM'e giden soruda kalır. Deney; ölçmek için önce bu senaryoları içeren
+              küçük bir takip seti gerekir.
+            - 1. tur gözlemi (mazeret sınavı sorusu): genel yönetmeliğin kanıt chunk'ı 11. sırada; Madde 29 6 parçaya
+              bölünmüş, kural 9. fıkrayla (ilgisiz konu) başlayan parçada, reranker puanı düşük (0,453). Aynı maddenin
+              rapor fıkrası 2. sırada. Takip sorusunda ("Mühendislik fakültesi") sorgu "final sınavına mazeret"
+              içerdiği için 2. sıraya çıktı.
       - [-] **Cevap yoksa yalnız "bilgim yok":** kullanıcı kararıyla atlandı (2026-10-16).
       - [x] **Set etiketi 80 → 90:** set 4.2'de (kredi transferi yönetmeliği kaynak olarak eklendi).
+      - [ ] **Set etiketi (sonraki sürüm):** "Kaç gün rapor hakkım var?" sorusu "dahil" (rapor günleri devamsızlığa
+            dahil) bekliyor; corpus'ta gün sayısı yok, kullanıcı kararı: "bilgim yok" doğru (2026-10-16).
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir. Gerçek sorulardan seçilenler yeni bir soru seti sürümü olarak eklenebilir (eski setler değiştirilmez).
    - [ ] **Soru setleri: dev / validation / test** (overfitting): set 4.1 dev seti (ayar, eşik seçimi) olarak
