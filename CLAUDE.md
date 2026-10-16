@@ -112,7 +112,7 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - `eval/sorular.json` (set 2.0) — 27 cevaplı + 3 kapsam dışı soru, yalnız ilk 3 belgeden; EXP-000..016.
 - `eval/sorular_v3.json` (set 3.0) — 77 soru: eski 30 + yeni 47 (31 belge). `kaynaklar`: birden fazla doğru kaynak
   (her biri kendi `kanit`'iyle), `stil` (belge/ogrenci dili), `kategori`, cevapsızlarda isteğe bağlı `kabul`.
-- `eval/sorular_v4.json` (set 4.0, corpus v4) — 139 soru, `grup`: A bulma, B kapsam (coklu_kapsam'da kapsam isabeti),
+- `eval/sorular_v4.json` (set 4.0, corpus v4) — 139 soru, `grup`: A bulma, B kapsam (kapsam isabeti metriği 2026-10-16'da kaldırıldı: kapsam sorunu netleştirmeyle çözülüyor),
   C çekimser kalma, D takip sorusu (`gecmis` ile; koşucu production'daki rewrite'ı önbellekli kullanır). EXP-023'ten beri.
 - `eval/sorular_v41.json` (set 4.1) — 4.0 + 4 etiket düzeltmesi; fakülte belirtilmeyen kapsam sorularında hedef
   davranış genel kural + fakülteyi sormak (`beklenen_davranis: netlestirme`, koşucuda `netlestirme_isabeti` /
