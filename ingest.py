@@ -11,6 +11,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import pdfplumber
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
@@ -220,49 +221,51 @@ def read_pages(path, parser):
     raise ValueError(f"Bilinmeyen pdf_parser: {parser}")
 
 
-def load_recursive(cfg):
+def load_recursive(path, cfg):
     """Sabit boyutlu parçalama (ilk prototipin yöntemi): sayfa metinleri karakter sayısına göre bölünür."""
     splitter = RecursiveCharacterTextSplitter(chunk_size=cfg.chunk_size, chunk_overlap=cfg.chunk_overlap)
-    pages = []
-    for path in config.corpus_paths(cfg.corpus):
-        title, _ = _doc_info(path)
-        for page_no, text in enumerate(read_pages(path, cfg.pdf_parser), start=1):
-            pages.append(Document(page_content=text, metadata={
-                "source": path.name, "title": title, "kind": "sayfa", "page": page_no}))
+    title, _ = _doc_info(path)
+    pages = [Document(page_content=text, metadata={"source": path.name, "title": title, "kind": "sayfa", "page": page_no})
+             for page_no, text in enumerate(read_pages(path, cfg.pdf_parser), start=1)]
     return splitter.split_documents(pages)
 
 
-def load_structural(cfg):
+def load_structural(path, cfg):
     article_re = ARTICLE_PATTERNS[cfg.chunking]
-    docs = []
-    for path in config.corpus_paths(cfg.corpus):
-        title, kind = _doc_info(path)
-        if kind is None:
-            with pdfplumber.open(path) as pdf:
-                kind = "mevzuat" if any(article_re.match(l) for _, l in _read_lines(pdf)) else "genel"
-        if kind == "takvim":
-            docs.extend(parse_calendar(path, title))
-        elif kind == "mevzuat":
-            docs.extend(parse_regulation(path, title, article_re))
-        elif cfg.chunking == "structural_v3":
-            docs.extend(parse_general(path, title, cfg))
-        else:
-            for page_no, text in enumerate(read_pages(path, "pdfplumber"), start=1):
-                docs.append(Document(page_content=text, metadata={
-                    "source": path.name, "title": title, "kind": "genel", "page": page_no}))
+    title, kind = _doc_info(path)
+    if kind is None:
+        with pdfplumber.open(path) as pdf:
+            kind = "mevzuat" if any(article_re.match(l) for _, l in _read_lines(pdf)) else "genel"
+    if kind == "takvim":
+        docs = parse_calendar(path, title)
+    elif kind == "mevzuat":
+        docs = parse_regulation(path, title, article_re)
+    elif cfg.chunking == "structural_v3":
+        docs = parse_general(path, title, cfg)
+    else:
+        docs = [Document(page_content=text, metadata={"source": path.name, "title": title, "kind": "genel", "page": page_no})
+                for page_no, text in enumerate(read_pages(path, "pdfplumber"), start=1)]
     return split_structural(docs, cfg)
 
 
-def load_documents(cfg):
+def load_document(path, cfg):
+    """Tek belgenin chunk'ları. Chunking belge bazındadır (bir belgenin chunk'ları diğer belgelere bağlı değildir);
+    belge bazında cache bu sayede mümkün."""
     if cfg.chunking == "recursive":
-        chunks = load_recursive(cfg)
-    elif cfg.chunking in ARTICLE_PATTERNS:
-        chunks = load_structural(cfg)
-    else:
-        raise ValueError(f"Bilinmeyen chunking: {cfg.chunking}")
+        return load_recursive(path, cfg)
+    if cfg.chunking in ARTICLE_PATTERNS:
+        return load_structural(path, cfg)
+    raise ValueError(f"Bilinmeyen chunking: {cfg.chunking}")
+
+
+def number_chunks(chunks):
     for i, chunk in enumerate(chunks):
         chunk.metadata["chunk_id"] = i  # FAISS ve BM25 sonuçlarını eşleştirmek için
     return chunks
+
+
+def load_documents(cfg):
+    return number_chunks([c for path in config.corpus_paths(cfg.corpus) for c in load_document(path, cfg)])
 
 
 # --- İndeks ---
@@ -298,16 +301,87 @@ def index_dir(cfg):
     return config.INDEX_ROOT / fingerprint(cfg)
 
 
-def build_index(cfg, embeddings=None):
+# --- Belge bazında cache (incremental indexing) ---
+# Parmak izi bütün PDF'leri kapsadığı için tek belge değişince indeks baştan kurulur (corpus v4: 3753 chunk, ~6 dk).
+# Sürenin çoğu değişmeyen belgelerin yeniden okunması, bölünmesi ve embed edilmesi. Her belgenin chunk'ları ve
+# embedding'leri ayrıca saklanır; indeks kurulurken yalnız cache'te olmayan belgeler işlenir. İndeksin kimliği
+# (parmak izi) değişmez: cache yalnız kurulumu hızlandırır (aynı belge ve kod -> aynı chunk'lar ve vektörler).
+
+CACHE_DIR = config.INDEX_ROOT / "_cache"
+
+
+def document_key(path, cfg):
+    """Belgenin cache anahtarı: chunk'larını ve vektörlerini belirleyen her şey.
+
+    PDF byte'ları, belge ayarı (başlık/tür), indeks parametreleri (chunking, embedding modeli, device...) ve bu dosyanın
+    kaynağı. Kod değişirse chunking de değişmiş olabilir; bu yüzden ingest.py değişince bütün cache geçersizleşir.
+    """
+    h = hashlib.sha256()
+    h.update(path.name.encode())
+    h.update(path.read_bytes())
+    h.update(json.dumps([cfg.index_params(), config.DOCUMENTS.get(path.name)], sort_keys=True,
+                        ensure_ascii=False).encode())
+    h.update(Path(__file__).read_bytes().replace(b"\r\n", b"\n"))
+    return h.hexdigest()[:24]
+
+
+def _cache_read(key):
+    meta, vec = CACHE_DIR / f"{key}.json", CACHE_DIR / f"{key}.npy"
+    if not (meta.exists() and vec.exists()):
+        return None
+    raw = json.loads(meta.read_text(encoding="utf-8"))
+    return [Document(page_content=c["page_content"], metadata=c["metadata"]) for c in raw], np.load(vec)
+
+
+def _cache_write(key, chunks, vectors):
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    (CACHE_DIR / f"{key}.json").write_text(
+        json.dumps([{"page_content": c.page_content, "metadata": c.metadata} for c in chunks], ensure_ascii=False),
+        encoding="utf-8")
+    np.save(CACHE_DIR / f"{key}.npy", vectors)
+
+
+def embed_corpus(cfg, embeddings, use_cache=True):
+    """Bütün belgelerin chunk'ları (chunk_id'li) ve vektörleri; cache'teki belgeler okunmaz, bölünmez, embed edilmez.
+
+    Cache'te olmayan belgelerin chunk'ları tek çağrıda embed edilir (cache boşsa eski FAISS.from_documents ile aynı
+    çağrı: aynı metinler, aynı sıra). Döndürür: chunks, vectors (float32, satır = chunk), cache istatistiği.
+    """
+    parts, todo = [], []  # parts: belge sırasıyla [chunks, vectors]; todo: cache'te olmayanlar (parts içindeki yer, anahtar)
+    for path in config.corpus_paths(cfg.corpus):
+        key = document_key(path, cfg)
+        cached = _cache_read(key) if use_cache else None
+        if cached:
+            parts.append(list(cached))
+        else:
+            parts.append([load_document(path, cfg), None])
+            todo.append((len(parts) - 1, key))
+    if todo:
+        texts = [c.page_content for i, _ in todo for c in parts[i][0]]
+        print(f"{len(todo)} belge cache'te yok; {len(texts)} chunk embed ediliyor ({cfg.embedding_model})...")
+        vectors = np.asarray(embeddings.embed_documents(texts), dtype=np.float32)
+        start = 0
+        for i, key in todo:
+            n = len(parts[i][0])
+            parts[i][1] = vectors[start:start + n]
+            start += n
+            if use_cache:
+                _cache_write(key, parts[i][0], parts[i][1])
+    chunks = number_chunks([c for doc_chunks, _ in parts for c in doc_chunks])
+    vectors = np.concatenate([v.reshape(len(c), -1) for c, v in parts if len(c)]) if chunks else None
+    return chunks, vectors, {"cache_hit": len(parts) - len(todo), "cache_miss": len(todo)}
+
+
+def build_index(cfg, embeddings=None, use_cache=True):
     out = index_dir(cfg)
-    print(f"PDF'ler okunuyor ve parçalanıyor ({cfg.pdf_parser}, {cfg.chunking})...")
+    print(f"İndeks kuruluyor ({cfg.pdf_parser}, {cfg.chunking}); değişmeyen belgeler cache'ten okunur...")
     started = time.perf_counter()
-    chunks = load_documents(cfg)
+    embeddings = embeddings or get_embeddings(cfg)
+    chunks, vectors, cache_stats = embed_corpus(cfg, embeddings, use_cache)
     if not chunks:
         raise SystemExit(f"Hata: '{cfg.corpus}' belge kümesinde PDF bulunamadı.")
-    print(f"{len(chunks)} parça oluşturuldu. Embedding'ler hesaplanıyor ({cfg.embedding_model})...")
-    embeddings = embeddings or get_embeddings(cfg)
-    store = FAISS.from_documents(chunks, embeddings)
+    store = FAISS.from_embeddings(list(zip((c.page_content for c in chunks), vectors.tolist())), embeddings,
+                                  metadatas=[c.metadata for c in chunks])
     build_seconds = time.perf_counter() - started
 
     out.mkdir(parents=True, exist_ok=True)
@@ -323,6 +397,7 @@ def build_index(cfg, embeddings=None):
         "chunks": len(chunks),
         "avg_chunk_chars": round(sum(len(c.page_content) for c in chunks) / len(chunks), 1),
         "build_seconds": round(build_seconds, 1),
+        **cache_stats,
         "created": datetime.now().isoformat(timespec="seconds"),
     }
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -346,6 +421,9 @@ def load_index(cfg):
 
 if __name__ == "__main__":
     import sys
-    exp_id = sys.argv[1] if len(sys.argv) > 1 else config.PRODUCTION_EXPERIMENT
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    exp_id = args[0] if args else config.PRODUCTION_EXPERIMENT
     print(f"Yapılandırma: {exp_id}")
-    build_index(config.RagConfig.from_dict(config.load_experiment(exp_id)["params"]))
+    # --cache-yok: cache'i okumadan ve yazmadan baştan kurar (cache'li kurulumla karşılaştırmak için)
+    build_index(config.RagConfig.from_dict(config.load_experiment(exp_id)["params"]),
+                use_cache="--cache-yok" not in sys.argv)

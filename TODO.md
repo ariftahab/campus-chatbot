@@ -85,11 +85,11 @@
          sonunda bir kez (aşağıda "Diğer açık işler").
      - [x] Validation taslağı: `eval/taslak/sorular_val_v1_taslak.json` (44 soru, set 4.x'te sorulmamış belgelerden;
            kanıtlar doğrulandı). **Kullanıcı düzeltecek**, sonra `eval/sorular_val_v1.json` olarak eklenir.
-   - [ ] **Incremental indexing:** şu an parmak izi bütün PDF'leri kapsıyor; tek belge değişince index baştan
-         kuruluyor (corpus v4: 3753 chunk, 341 sn). Öneri: belge bazında cache (PDF byte'ları + chunking
-         parametreleri + `ingest.py` hash'i → o belgenin chunk'ları ve embedding'leri `vectorstore/_cache/`),
-         index `FAISS.from_embeddings` ile birleştirilir; parmak izi sistemi aynen kalır. Doğrulama: cache'li ve
-         baştan kurulan index aynı chunk'lar ve set 4.1'de aynı sıralama. Mimari değişiklik, önce onay.
+   - [x] **Incremental indexing** (2026-10-16): belge bazında cache (`vectorstore/_cache/`, anahtar: PDF byte'ları + belge
+         ayarı + indeks parametreleri + `ingest.py`). Doğrulama: soğuk kurulum eski indeksle bit-aynı (chunk'lar ve
+         vektörler, fark 0); sıcak kurulum 316 sn → 0,2 sn; 3 belge yeniden embed edilince 8,5 sn, vektör farkı en çok
+         3,4e-7, set 4.2'nin 149 sorusunda ilk 10 sıralama aynı. `ingest.py` değişince bütün cache geçersizleşir
+         (kod chunking'i değiştirmiş olabilir).
 
 3. [ ] **Ders programları** — duyurular kapsam dışı (2026-10-15). Akademik takvim mevcut chunking ile sorunsuz
        okunuyor. Ders programları ayrı bir scraping ile alınacak, büyük ihtimalle CSV (2026-10-16); tablo olduğu
