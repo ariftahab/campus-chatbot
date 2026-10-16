@@ -1,0 +1,884 @@
+{
+ "surum": "val-1.0-taslak",
+ "aciklama": "Validation seti TASLAĞI (2026-10-16, Claude tarafından yazıldı; kullanıcı düzeltecek). Corpus v4. Set 4.x (dev) ile aynı alanlar ve gruplar (A bulma, B kapsam/netleştirme, C çekimser kalma, D takip sorusu). Dev setindeki sorularla çakışmaz: çoğu set 4.x'te hiç sorulmamış belgelerden (ziraat ve mimarlık stajı, hazırlık yönetmeliği, sosyal transkript, kısmi zamanlı çalışma, mezun belgeleri, kreş, uluslararası öğrenci, pedagojik formasyon...). Amaç: dev setinde seçilen eşik ve prompt kararlarını bağımsız sorularla doğrulamak; ayar için kullanılmaz.",
+ "sorular": [
+  {
+   "id": "V01",
+   "soru": "Bahar döneminde dersler hangi gün başlıyor?",
+   "stil": "belge",
+   "kategori": "tarih",
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim-2026-2027.pdf",
+     "kanit": [
+      [
+       "08 Şubat 2027",
+       "DERSLERİN BAŞLAMASI"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "8 Şubat"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V02",
+   "soru": "Güz dönemi için çift anadal ve yandal başvuruları ne zaman?",
+   "stil": "ogrenci",
+   "kategori": "tarih",
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim-2026-2027.pdf",
+     "kanit": [
+      [
+       "01 – 04 Eylül 2026",
+       "Çift Anadal ve Yandal Programlarına Başvurular"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "4 Eylül"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V03",
+   "soru": "Hazırlık sınıfında güz dönemi dersleri ne zaman bitiyor?",
+   "stil": "ogrenci",
+   "kategori": "tarih",
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim-2026-2027.pdf",
+     "kanit": [
+      [
+       "31 Aralık 2026",
+       "hazırlık sınıfı derslerinin sona ermesi"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "31 Aralık"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V04",
+   "soru": "Bahar dönemindeki tek-çift sınavları hangi tarihlerde?",
+   "stil": "ogrenci",
+   "kategori": "tarih",
+   "kaynaklar": [
+    {
+     "belge": "akademik-takvim-2026-2027.pdf",
+     "kanit": [
+      [
+       "01 – 03 Temmuz 2027",
+       "Tek-çift sınavları"
+      ]
+     ]
+    }
+   ],
+   "beklenen": [
+    "3 Temmuz"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V05",
+   "soru": "Ziraat fakültesinde zorunlu staj kaç gün?",
+   "stil": "ogrenci",
+   "kategori": "fakulteye_ozel",
+   "kaynaklar": [
+    {
+     "belge": "ziraat fak staj usul ve esas.pdf",
+     "kanit": [
+      "zorunlu staj süresi toplam 40 (320 saat)"
+     ]
+    }
+   ],
+   "beklenen": [
+    "40"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V06",
+   "soru": "Ziraat fakültesinde staja en erken ne zaman başlayabilirim?",
+   "stil": "ogrenci",
+   "kategori": "fakulteye_ozel",
+   "kaynaklar": [
+    {
+     "belge": "ziraat fak staj usul ve esas.pdf",
+     "kanit": [
+      "dördüncü yarıyıl sonundan itibaren stajlarına başlayabilirler"
+     ]
+    }
+   ],
+   "beklenen": [
+    "dördüncü|4"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V07",
+   "soru": "Mimarlık bölümünde büro ve şantiye stajı toplam kaç iş günü?",
+   "stil": "ogrenci",
+   "kategori": "fakulteye_ozel",
+   "kaynaklar": [
+    {
+     "belge": "mimarlık bölümü staj.pdf",
+     "kanit": [
+      "toplam 60 iş günüdür"
+     ]
+    }
+   ],
+   "beklenen": [
+    "60"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V08",
+   "soru": "Hazırlık sınıfında derslerin en az yüzde kaçına devam etmem gerekiyor?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf",
+     "kanit": [
+      "en az %80 oranında devam şartı aranır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "80"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V09",
+   "soru": "Hazırlıkta kur atlama sınavının sonucuna kaç gün içinde itiraz edebilirim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf",
+     "kanit": [
+      "sınav sonuçlarının ilanını takip eden üç iş günü içinde"
+     ]
+    }
+   ],
+   "beklenen": [
+    "üç|3"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V10",
+   "soru": "Yabancı dil puanıyla öğrenci alan bir bölümdeyim, hazırlık yeterlik sınavından en az kaç almalıyım?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf",
+     "kanit": [
+      "80 ve üzeri puan aldıkları takdirde başarılı sayılırlar"
+     ]
+    }
+   ],
+   "beklenen": [
+    "80"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V11",
+   "soru": "Sosyal transkript değerlendirme sonucuna kaç gün içinde itiraz edebilirim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "Sosyal Transkript Yönergesi.pdf",
+     "kanit": [
+      "5 iş günü içerisinde itiraz edebilir"
+     ]
+    }
+   ],
+   "beklenen": [
+    "5|beş"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V12",
+   "soru": "Sosyal transkript sistemine faaliyetlerimi ne zaman girebilirim?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "Sosyal Transkript Yönergesi.pdf",
+     "kanit": [
+      "Sistem yıl boyunca başvurulara açık tutulur"
+     ]
+    }
+   ],
+   "beklenen": [
+    "yıl boyunca"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V13",
+   "soru": "Kısmi zamanlı öğrenci olarak haftada en fazla kaç saat çalışabilirim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "kısmı zamanlı öğrenci çalıştırma.pdf",
+     "kanit": [
+      "haftada en fazla 15 (on beş) saat"
+     ]
+    }
+   ],
+   "beklenen": [
+    "15|on beş"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V14",
+   "soru": "Kaydımı dondurdum, kısmi zamanlı öğrenci olarak çalışabilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "kısmı zamanlı öğrenci çalıştırma.pdf",
+     "kanit": [
+      "Kayıt donduran öğrenci veya yabancı uyruklu öğrenci olmamak"
+     ]
+    }
+   ],
+   "beklenen": [
+    "çalışamaz|olmamak|olmaması|hayır|mümkün değil"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V15",
+   "soru": "Kısmi zamanlı çalışmak için birden fazla birime başvurabilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "kısmı zamanlı öğrenci çalıştırma.pdf",
+     "kanit": [
+      "sadece tek birime başvuru yapılır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "tek"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V16",
+   "soru": "Diplomam henüz hazır değil, mezun olduğumu nasıl belgelerim?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf",
+     "kanit": [
+      "diploma gerektiren tüm işlemlerde diploma yerine geçer"
+     ]
+    }
+   ],
+   "beklenen": [
+    "geçici mezuniyet"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V17",
+   "soru": "Geçici mezuniyet belgemi geri vermezsem diplomamı alabilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf",
+     "kanit": [
+      "bu belgeyi geri iade etmediği takdirde kendisine diploması"
+     ]
+    }
+   ],
+   "beklenen": [
+    "verilmez|alamaz|hayır"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V18",
+   "soru": "Diplomamın ikinci nüshasını da kaybedersem ne olur?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf",
+     "kanit": [
+      "ikinci nüshasını kaybedenlere başka nüsha verilmez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "kayıp belgesi"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V19",
+   "soru": "Kayıt dondurma sürem bitmeden okula geri dönebilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "ogrenci-kayıt-yonerge.pdf",
+     "kanit": [
+      "kayıt dondurma süresi tamamlanmadan verilen izni yarıda keserek tekrar"
+     ]
+    }
+   ],
+   "beklenen": [
+    "dönebilir"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V20",
+   "soru": "İntörnlükte ne kadar devamsızlık yaparsam stajı tekrar ederim?",
+   "stil": "ogrenci",
+   "kategori": "fakulteye_ozel",
+   "kaynaklar": [
+    {
+     "belge": "intörn doktor çalışma esasları.pdf",
+     "kanit": [
+      "Devamsızlık süresi %10’u aşan öğrenci o stajı tekrar eder"
+     ]
+    },
+    {
+     "belge": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
+     "kanit": [
+      "Devamsızlık süresi %10’u aşan öğrenci o stajı tekrar eder"
+     ]
+    }
+   ],
+   "beklenen": [
+    "10"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V21",
+   "soru": "Beden eğitimi özel yetenek sınavında bir testin sonucuna ne zamana kadar itiraz edebilirim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "beden eğitimi özel yetenek giriş sınavı.pdf",
+     "kanit": [
+      "ilgili test tamamladıktan sonraki 2 saat içerisinde"
+     ]
+    }
+   ],
+   "beklenen": [
+    "2 saat|iki saat"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V22",
+   "soru": "Üniversitenin kreşine çocuğumu kaç aylıkken kaydettirebilirim?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "bolu bağışçıları vakfı kreşi.pdf",
+     "kanit": [
+      "Kreşine başlama yaşı 3 aydır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "3 ay|üç ay"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V23",
+   "soru": "Üniversitenin kreşi hangi saatlerde hizmet veriyor?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "bolu bağışçıları vakfı kreşi.pdf",
+     "kanit": [
+      "sabah 8.00 akşam 17.00 saatleri arasında"
+     ]
+    }
+   ],
+   "beklenen": [
+    "8",
+    "17"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V24",
+   "soru": "Yüzde on başarı sıralaması dönem sonunda ne zaman hesaplanıyor?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "başarı değerlendirmesi ve öğrenim ücretlerinde indirim.pdf",
+     "kanit": [
+      "son günden itibaren 45 gün içerisinde hesaplanır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "45"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V25",
+   "soru": "Yatay geçişle geldim, yüzde on başarı indirimine ne zaman dahil olurum?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "başarı değerlendirmesi ve öğrenim ücretlerinde indirim.pdf",
+     "kanit": [
+      "en az bir yarıyıl/yıl öğrenim gördükten sonra yüzde on hesaplamalarına"
+     ]
+    }
+   ],
+   "beklenen": [
+    "bir yarıyıl|bir yıl|1 yarıyıl"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V26",
+   "soru": "Uygulamalı eğitime başladıktan sonra işletmeyi değiştirebilir miyim?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "uygulamali-egitimler-yonergesi.pdf",
+     "kanit": [
+      "Komisyonunun uygun görüşüne binaen işletme değişikliği yapabilir"
+     ]
+    }
+   ],
+   "beklenen": [
+    "komisyon"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V27",
+   "soru": "İşletmede mesleki eğitim sırasında iş kazasına karşı sigortamı kim yapıyor?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "uygulamali-egitimler-yonergesi.pdf",
+     "kanit": [
+      "Bolu Abant İzzet Baysal Üniversitesi tarafından yapılacaktır"
+     ]
+    }
+   ],
+   "beklenen": [
+    "üniversite"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V28",
+   "soru": "Türkiye'de lise bitirmiş uluslararası bir öğrenciyim, öğrenim vizesi almam gerekiyor mu?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf",
+     "kanit": [
+      "öğrenim meşruhatlı vize aranmaz"
+     ]
+    }
+   ],
+   "beklenen": [
+    "aranmaz|gerekmez|gerekmiyor|ihtiyacınız yok"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V29",
+   "soru": "Eğitim dili Türkçe olan bir programa kaydolan uluslararası öğrenci Türkçe hazırlıkta hangi seviyeyi geçmeli?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf",
+     "kanit": [
+      "kriterlerine göre C1"
+     ]
+    }
+   ],
+   "beklenen": [
+    "C1"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V30",
+   "soru": "Pedagojik formasyonda bazı derslerden muaf olmak için ne zaman başvurmalıyım?",
+   "stil": "ogrenci",
+   "kategori": "surec",
+   "kaynaklar": [
+    {
+     "belge": "pedagojik formasyon eğitimi sertifika.pdf",
+     "kanit": [
+      "her dönemin ilk haftası içinde"
+     ]
+    }
+   ],
+   "beklenen": [
+    "ilk hafta"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V31",
+   "soru": "Pedagojik formasyon programına kayıtlı olmak askerlik tecili için gerekçe olur mu?",
+   "stil": "ogrenci",
+   "kategori": "kural",
+   "kaynaklar": [
+    {
+     "belge": "pedagojik formasyon eğitimi sertifika.pdf",
+     "kanit": [
+      "askerlik tecil işlemleri için bir gerekçe oluşturmaz"
+     ]
+    }
+   ],
+   "beklenen": [
+    "oluşturmaz|olmaz|hayır"
+   ],
+   "grup": "A",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V32",
+   "soru": "100 üzerinden 82 alırsam harf notum ne olur?",
+   "stil": "ogrenci",
+   "kategori": "coklu_kapsam",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "80-84 BB 3,50"
+     ]
+    },
+    {
+     "belge": "diş hekimliği eğitim.pdf",
+     "kanit": [
+      "80-89 BA 3,5"
+     ]
+    }
+   ],
+   "beklenen": [
+    "BB"
+   ],
+   "grup": "B",
+   "kaynak_turu": "validation_v1",
+   "beklenen_davranis": "netlestirme",
+   "not": "Genel yönetmelikte BB, diş hekimliğinde BA."
+  },
+  {
+   "id": "V33",
+   "soru": "DC harf notu alırsam dersi geçmiş sayılır mıyım?",
+   "stil": "ogrenci",
+   "kategori": "coklu_kapsam",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "60-64 DC 2,50"
+     ]
+    },
+    {
+     "belge": "diş hekimliği eğitim.pdf",
+     "kanit": [
+      "55-59 DC 1,5 Geçmez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "DC"
+   ],
+   "grup": "B",
+   "kaynak_turu": "validation_v1",
+   "beklenen_davranis": "netlestirme",
+   "not": "Genel yönetmelikte DC 2,50 katsayılı; diş hekimliğinde DC geçmez."
+  },
+  {
+   "id": "V34",
+   "soru": "Sınav notuma kaç gün içinde itiraz edebilirim?",
+   "stil": "ogrenci",
+   "kategori": "coklu_kapsam",
+   "kaynaklar": [
+    {
+     "belge": "önlisans lisans eğitim öğretim.pdf",
+     "kanit": [
+      "üç iş günü içerisinde maddi hata yönünden"
+     ]
+    },
+    {
+     "belge": "lisansüstü eğitim yönetmeliği.pdf",
+     "kanit": [
+      "notun ilanını takip eden beş işgünü içinde"
+     ]
+    }
+   ],
+   "beklenen": [
+    "üç|3"
+   ],
+   "grup": "B",
+   "kaynak_turu": "validation_v1",
+   "beklenen_davranis": "netlestirme",
+   "not": "Önlisans/lisansta üç iş günü (maddi hata), lisansüstünde beş iş günü."
+  },
+  {
+   "id": "V35",
+   "soru": "Spor salonunu kullanmanın ücreti ne kadar?",
+   "stil": "ogrenci",
+   "kategori": "bilgi_yok",
+   "cevapsiz": true,
+   "grup": "C",
+   "kaynak_turu": "validation_v1",
+   "kabul": [
+    "Yönetim Kurulu"
+   ],
+   "not": "Spor faaliyetleri yönergesi ücreti Üniversite Yönetim Kurulunun belirlediğini söylüyor, tutar yok."
+  },
+  {
+   "id": "V36",
+   "soru": "Üniversitenin kreşinin aylık ücreti ne kadar?",
+   "stil": "ogrenci",
+   "kategori": "bilgi_yok",
+   "cevapsiz": true,
+   "grup": "C",
+   "kaynak_turu": "validation_v1",
+   "kabul": [
+    "Döner Sermaye"
+   ],
+   "not": "Kreş yönergesi mali işleri Döner Sermaye İşletme Müdürlüğünün yürüttüğünü söylüyor, tutar yok."
+  },
+  {
+   "id": "V37",
+   "soru": "Kampüste otopark ücretli mi?",
+   "stil": "ogrenci",
+   "kategori": "bilgi_yok",
+   "cevapsiz": true,
+   "grup": "C",
+   "kaynak_turu": "validation_v1",
+   "not": "Corpus'ta 'otopark' yalnız yangın yönetmeliğinde geçiyor."
+  },
+  {
+   "id": "V38",
+   "soru": "Erasmus hibesi aylık ne kadar?",
+   "stil": "ogrenci",
+   "kategori": "bilgi_yok",
+   "cevapsiz": true,
+   "grup": "C",
+   "kaynak_turu": "validation_v1",
+   "not": "Takvimde Erasmus dil sınavı var, hibe tutarı yok."
+  },
+  {
+   "id": "V39",
+   "soru": "Kampüs Wi-Fi şifresi nedir?",
+   "stil": "ogrenci",
+   "kategori": "kapsam_disi",
+   "cevapsiz": true,
+   "grup": "C",
+   "kaynak_turu": "validation_v1"
+  },
+  {
+   "id": "V40",
+   "soru": "Mezuniyet töreni ne zaman yapılacak?",
+   "stil": "ogrenci",
+   "kategori": "bilgi_yok",
+   "cevapsiz": true,
+   "grup": "C",
+   "kaynak_turu": "validation_v1",
+   "not": "Takvimde yalnız dereceye giren öğrenciler için ödül töreni var (29 Temmuz 2027); mezuniyet töreni tarihi yok."
+  },
+  {
+   "id": "V41",
+   "kalip": "kapsam_degistirme",
+   "gecmis": [
+    {
+     "role": "user",
+     "content": "Ziraat fakültesinde zorunlu staj kaç gün?"
+    },
+    {
+     "role": "assistant",
+     "content": "Ziraat Fakültesinde zorunlu staj süresi toplam 40 iş günüdür (320 saat)."
+    }
+   ],
+   "soru": "mimarlıkta?",
+   "bagimsiz_soru": "Mimarlık bölümünde zorunlu staj kaç iş günü?",
+   "kaynaklar": [
+    {
+     "belge": "mimarlık bölümü staj.pdf",
+     "kanit": [
+      "toplam 60 iş günüdür"
+     ]
+    }
+   ],
+   "beklenen": [
+    "60"
+   ],
+   "grup": "D",
+   "kaynak_turu": "validation_v1",
+   "stil": "ogrenci",
+   "kategori": "takip_sorusu"
+  },
+  {
+   "id": "V42",
+   "kalip": "ayni_konu_devam",
+   "gecmis": [
+    {
+     "role": "user",
+     "content": "Kısmi zamanlı öğrenci olarak haftada en fazla kaç saat çalışabilirim?"
+    },
+    {
+     "role": "assistant",
+     "content": "Haftada en fazla 15 saat çalışabilirsiniz; günlük sınır 5 saattir."
+    }
+   ],
+   "soru": "peki ayda?",
+   "bagimsiz_soru": "Kısmi zamanlı öğrenci bir ayda en fazla kaç saat çalışabilir?",
+   "kaynaklar": [
+    {
+     "belge": "kısmı zamanlı öğrenci çalıştırma.pdf",
+     "kanit": [
+      "bir ayda toplam 60 (altmış) saati geçemez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "60|altmış"
+   ],
+   "grup": "D",
+   "kaynak_turu": "validation_v1",
+   "stil": "ogrenci",
+   "kategori": "takip_sorusu"
+  },
+  {
+   "id": "V43",
+   "kalip": "ayni_konu_devam",
+   "gecmis": [
+    {
+     "role": "user",
+     "content": "Hazırlık sınıfında derslerin en az yüzde kaçına devam etmem gerekiyor?"
+    },
+    {
+     "role": "assistant",
+     "content": "Her kurda toplam ders saatinin en az %80'ine devam etmeniz gerekir."
+    }
+   ],
+   "soru": "bunu sağlayamazsam ne olur?",
+   "bagimsiz_soru": "Hazırlık sınıfında devam şartını sağlamayan öğrenciye ne olur?",
+   "kaynaklar": [
+    {
+     "belge": "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf",
+     "kanit": [
+      "kur atlama sınavına giremez"
+     ]
+    }
+   ],
+   "beklenen": [
+    "giremez|tekrar"
+   ],
+   "grup": "D",
+   "kaynak_turu": "validation_v1",
+   "stil": "ogrenci",
+   "kategori": "takip_sorusu"
+  },
+  {
+   "id": "V44",
+   "kalip": "ayni_konu_devam",
+   "gecmis": [
+    {
+     "role": "user",
+     "content": "Sosyal transkript değerlendirme sonucuna kaç gün içinde itiraz edebilirim?"
+    },
+    {
+     "role": "assistant",
+     "content": "Sonucun size sistem üzerinden bildirildiği tarihten itibaren 5 iş günü içinde itiraz edebilirsiniz."
+    }
+   ],
+   "soru": "itirazım ne kadar sürede sonuçlanır?",
+   "bagimsiz_soru": "Sosyal transkript itirazları ne kadar sürede sonuçlandırılır?",
+   "kaynaklar": [
+    {
+     "belge": "Sosyal Transkript Yönergesi.pdf",
+     "kanit": [
+      "en geç 15 gün içinde değerlendirilerek"
+     ]
+    }
+   ],
+   "beklenen": [
+    "15|on beş"
+   ],
+   "grup": "D",
+   "kaynak_turu": "validation_v1",
+   "stil": "ogrenci",
+   "kategori": "takip_sorusu"
+  }
+ ]
+}
