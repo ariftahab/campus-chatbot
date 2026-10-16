@@ -31,8 +31,8 @@
            sırada; reranker puanı ilk 5'teki iki alakasız chunk'tan yüksek → havuz büyüse (`vector_k` ≥ 28) girerdi.
            Kayıt dondurmada yönetmelik lisans için koşulları saymıyor (corpus sınırı). Fikir: düşük reranker puanı
            "belgelerde net cevap yok" sinyali olabilir.
-     - [ ] **1. `rerank_candidates` 8 → daha fazla** (v3 setinde). EXP-015 ve EXP-019'da darboğaz olarak not edildi.
-           Gerekirse `final_k` ayrı deney.
+     - [x] **1. `rerank_candidates` 8 → 30** (EXP-021; EXP-022'de fp16 ile gecikme bedeli kalktı). Gerekirse
+           `final_k` ayrı deney.
      - [x] **2. Soru seti v4** (`eval/sorular_v4.json`, 139 soru, corpus v4 için): gruplar A=bulma 70, B=kapsam 29,
            C=çekimser kalma 25, D=takip sorusu 15 (sohbet geçmişiyle). v3'ün 77 sorusu (takvim 2026-2027'ye taşındı,
            yaz öğretimi soruları cevapsız), 8 gerçek kullanıcı sorusu, 54 yeni soru. Koşucuya sohbet geçmişi (rewrite
@@ -43,22 +43,43 @@
            tamamlama (reddedildi), EXP-027 netleştirmeyi belge kapsam etiketleri tetikler (production adayı).
      - [ ] **EXP-028** (onaylandı): EXP-027 + `fixed_answers="summer_v1"`, set 4.1 (tek parametre farkı), `--llm`,
            arayüz sunucusu kapalı (gecikme). Sonuç doğruysa `config.PRODUCTION_EXPERIMENT` = EXP-028.
+     - Kapsam kararı kesin (2026-10-16): kuralı fakülteye göre değişen sorularda genel kural verilir ve fakülte
+       sorulur; retrieval tarafında kapsam tamamlama yapılmaz.
+     - [ ] **Havuz derinliği A** (retrieval-only, kota harcamaz): `vector_k` 15 → 30, `bm25_k` 15 → 30,
+           `rerank_candidates` 30. İki parametre birlikte (`coklu_degisiklik_gerekcesi`: havuz derinliği tek kavram,
+           iki liste simetrik). Birincil metrik `rerank_input_recall` (EXP-027: 0,966), ikincil final MRR@10.
+           Not: birleşim 60 adaya çıkabilir; reranker yalnız RRF'in ilk 30'unu görür.
+     - [ ] **Havuz derinliği B:** A + `rerank_candidates` 30 → 60 (havuzun tamamı). Gecikme ölçülür (sunucu kapalı).
+     - [ ] **Hybrid + reranker ablasyonu:** `retrieval` hybrid → vector, aday sayısı eşit. Soru: BM25 havuza
+           reranker'ın kullandığı aday katıyor mu? (Reranker'ın gerekliliği aşama metriklerinden belli: EXP-027'de
+           RRF 0,629 → final 0,818.)
      - [ ] **Cevap uzunluğu:** netleştirmede model diğer kapsamları sayıp sonra soruyor (ör. kayıt dondurmada 2635
-           karakter). Olumlu biçim tarif eden prompt deneyi: kısa genel kural + tek soru.
+           karakter). Hedef: önce genel kural, sonra fakülte sorusu. Olumlu biçim tarif eden prompt deneyi.
      - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).
-     - [ ] **4. Prompt: birleştirme kuralı.** Aynı öğretim düzeyinde aynı kural tek satırda ("Lisans (Hukuk dahil):
-           240 AKTS"); farklı düzeyler ayrı yazılır.
+     - [ ] **4. Birleştirme:** gelen kurallar karşılaştırılır, aynı kural tek satırda verilir ("Lisans (Hukuk
+           dahil): 240 AKTS"); yalnız farklı olanlar ayrı yazılır. Prompt deneyi.
      - [ ] **Set etiketi:** açık öğretimden örgün öğretime yatay geçiş not ortalaması 80 → 90 (kredi transferi
-           yönetmeliği 28/2/2026 değişikliği); bir sonraki set sürümünde.
+           yönetmeliği 28/2/2026 değişikliği); bir sonraki set sürümünde. Çelişki değil: normal yatay geçiş (80) ile
+           açık öğretimden örgün öğretime geçiş (90) ayrı kurallar; model doğru cevap verdi.
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir. Gerçek sorulardan seçilenler yeni bir soru seti sürümü olarak eklenebilir (eski setler değiştirilmez).
-   - [ ] **Atıfta fıkra:** LLM şu an atıflarda fıkra yazmıyor (2026-10-08: log'daki 64 atıfın hiçbirinde yok), bu
-         yüzden panelde fıkra vurgulanamıyor. Fıkrayı yazdırmak bir prompt değişikliği, yani deney.
+   - [ ] **Atıfta fıkra (yapılacak):** LLM şu an atıflarda fıkra yazmıyor (2026-10-08: log'daki 64 atıfın
+         hiçbirinde yok), bu yüzden panelde fıkra vurgulanamıyor. Fıkrayı yazdırmak bir prompt değişikliği, yani deney.
+   - [ ] **Soru setleri: dev / validation / test** (overfitting): set 4.1 dev seti (ayar, eşik seçimi) olarak
+         kalır. Aynı corpus'tan sıfırdan yazılmış ayrı bir validation seti, dev'de seçilen eşik ve kararları
+         doğrular (ör. EXP-027'nin netleştirme tetiği set 4.1'de hem seçildi hem ölçüldü). Kilitli test seti tezin
+         sonunda bir kez (aşağıda "Diğer açık işler").
+   - [ ] **Incremental indexing:** şu an parmak izi bütün PDF'leri kapsıyor; tek belge değişince index baştan
+         kuruluyor (corpus v4: 3753 chunk, 341 sn). Öneri: belge bazında cache (PDF byte'ları + chunking
+         parametreleri + `ingest.py` hash'i → o belgenin chunk'ları ve embedding'leri `vectorstore/_cache/`),
+         index `FAISS.from_embeddings` ile birleştirilir; parmak izi sistemi aynen kalır. Doğrulama: cache'li ve
+         baştan kurulan index aynı chunk'lar ve set 4.1'de aynı sıralama. Mimari değişiklik, önce onay.
 
-3. [ ] **Ders programları** — scraping ve duyurular kapsam dışı (2026-10-15). Akademik takvim mevcut chunking ile
-       sorunsuz okunuyor. Ders programları her dönem elle eklenecek; tablo olduğu için chunk yerine yapılandırılmış
-       saklama (dönem, bölüm, gün, saat, ders, derslik) + tool ile sorgulama düşünülüyor (mimari değişiklik, önce onay).
-   - [ ] Elle eklenecek programın formatı (Excel/CSV mi, PDF mi)? Her dönemin verisi `donem` metadata'sıyla.
+3. [ ] **Ders programları** — duyurular kapsam dışı (2026-10-15). Akademik takvim mevcut chunking ile sorunsuz
+       okunuyor. Ders programları ayrı bir scraping ile alınacak, büyük ihtimalle CSV (2026-10-16); tablo olduğu
+       için chunk yerine yapılandırılmış saklama (dönem, bölüm, gün, saat, ders, derslik) + tool ile sorgulama
+       düşünülüyor (mimari değişiklik, önce onay).
+   - [ ] Scraping kaynağı ve CSV şeması. Her dönemin verisi `donem` metadata'sıyla.
    - [ ] Tablo verisi için yeni chunking veya yapılandırılmış saklama (ör. SQL) — deney olarak.
    - [ ] Ders programı soruları için yeni soru seti sürümü (ör. "Salı günü 3. sınıfın hangi dersleri var?").
 
@@ -89,7 +110,10 @@ Yapılıp yapılmayacağı henüz belli değil; karar verilirse numaralı sıray
 - [ ] **Agentic retrieval** — şu an pipeline sabit: soru → bir kez retrieval → cevap. Agentic retrieval'da model
       aramayı kendisi yönetir: gerekirse soruyu yeniden yazar, birden fazla arama yapar (ör. kapsam sorularında
       her fakülte için ayrı arama), bulduğu context yetmiyorsa tekrar arar, yeterli olunca cevaplar.
-   - Kapsam sorunu (bir kuralın fakülteye göre değişmesi) ve takip sorularında işe yarayabilir.
+   - Araştırma (2026-10-16): RAG-Study-Notes `learning_log/agentic_retrieval_arastirma.md` (sorgu genişletme,
+     router, CRAG, Self-RAG, multi-hop, tool calling agent, multi-agent; artı/eksi, kota ve latency). Karar bekliyor.
+   - Kapsam sorununda katkısı az (çözüm netleştirme); öğrenci dili, karşılaştırma soruları ve havuz dışı
+     sorularda işe yarayabilir.
    - Maliyet: soru başına birden fazla LLM isteği (kota ve latency artar); davranış daha az öngörülebilir.
    - Yapılırsa deney olarak: production config'e karşı aynı soru setinde (MRR, kapsam isabeti, çekimser kalma,
      LLM istek sayısı, latency). Madde 5'teki tool calling altyapısını paylaşır, o yüzden ondan sonra mantıklı.
