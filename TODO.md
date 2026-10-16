@@ -55,10 +55,13 @@
           (2 soru biraz düştü), latency 562 → 892 ms. Alınmadı.
      - [x] **Hybrid + reranker ablasyonu** (EXP-031, üst deney EXP-029): vector-only'de BM25'in getirdiği tek soru
           kayboldu (recall 0,974 → 0,966), 3 soru biraz iyileşti, MRR aynı (0,820).
-    - [ ] **Latency yeniden ölçümü:** EXP-029, EXP-030, EXP-031 koşulurken GPU'yu emülatör ve başka bir uygulama
-          paylaşıyordu. GPU boşken üç yapılandırma tek süreçte, tek Retriever ile (`cfg.retrieval` değiştirilerek;
-          iki Retriever modelleri iki kez yükleyip VRAM'i taşırıyor) ve soru başına sırası değiştirilerek ölçülecek.
-          Production kararı (A alınsın mı, hybrid kalsın mı) bundan sonra.
+    - [x] **Latency yeniden ölçümü** (2026-10-16, GPU boş): EXP-027, -029, -030, -031 tek süreçte, tek Retriever
+          ile, soru başına sıra karıştırılarak, 3 tur (soru başına medyan). Ortalama latency: EXP-027 347 ms,
+          EXP-029 437, EXP-030 687, EXP-031 430 ms. Latency'yi belirleyen reranker'a giren aday sayısı: ~14 ms/aday
+          (EXP-027'de 15+15 listenin birleşimi ortalama 23,5 aday; EXP-029 ve -031'de hep 30; EXP-030'da 47,7).
+          Eski ölçümlerdeki 562 / 892 ms GPU paylaşımından şişmişti. Hybrid ile vector arasında latency farkı yok
+          (BM25 ucuz).
+    - [ ] **Production kararı:** A (+1 soru recall, +90 ms) alınsın mı, hybrid kalsın mı.
     - [ ] **Cevap uzunluğu:** netleştirmede model diğer kapsamları sayıp sonra soruyor (ör. kayıt dondurmada 2635
            karakter). Hedef: önce genel kural, sonra fakülte sorusu. Olumlu biçim tarif eden prompt deneyi.
      - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).
