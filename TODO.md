@@ -102,6 +102,30 @@
               bölünmüş, kural 9. fıkrayla (ilgisiz konu) başlayan parçada, reranker puanı düşük (0,453). Aynı maddenin
               rapor fıkrası 2. sırada. Takip sorusunda ("Mühendislik fakültesi") sorgu "final sınavına mazeret"
               içerdiği için 2. sıraya çıktı.
+      - [ ] **Fakülteye göre metadata filtresi (plan onaylandı 2026-10-16; uygulama ve her koşu ayrıca onaylanır).**
+            Dayanak: hukuk (Madde 32), tıp (Madde 39), diş (Madde 38) yönetmelikleri "bu yönetmelikte hüküm bulunmayan
+            hallerde Önlisans, Lisans Eğitim-Öğretim Yönetmeliği uygulanır" diyor: önce fakültenin kendi yönetmeliği,
+            hüküm yoksa genel. Kendi yönetmeliği olmayan fakülte (mühendislik, ziraat, İİBF...) için doğrudan genel.
+            Kullanıcının ilk fikri (cevap üret → yanlışsa genel belgelere dön) yerine deterministik hâli: fakülte belli
+            olunca retrieval filtrelenir; ek LLM çağrısı yok.
+            - **Bileşenler:** (1) fakülte tanıma: birim adı sözlüğü ("mühendislik", "iibf", "fen edebiyat", "MYO"...) →
+              `data/belge_kapsam_v1.json` etiketleri; sorudan ve geçmişten (kullanıcı fakültesini söylediyse).
+              (2) filtre: kendi kapsamı + `genel_onlisans_lisans` + `tum_*`; diğer fakültelerin belgeleri ve `kurum`
+              çıkar; belgenin `haric` listesine uyulur (akademik takvim tıp/diş/hukuk/turizm/Mengen MYO/lisansüstü
+              hariç). (3) filtre varken birim adı retrieval sorgusundan çıkarılır (ziraat örneği: adla genel madde ilk
+              10'da yok, adsız 1. sırada); LLM'e giden soruda kalır. (4) prompt: "kendi yönetmeliğinde hüküm varsa onu,
+              yoksa genel yönetmeliği uygula ve belirt". (5) fakülte biliniyorsa netleştirme açılmaz.
+            - **Deney sırası (tek değişken):** A1 filtre (`scope_filter`, retrieval-only, kota yok) → A2 + sorgudan
+              birim adını çıkarma (retrieval-only) → B prompt kuralı + netleştirme (LLM).
+            - **Metrikler:** fakülte belirtilen sorularda MRR@10 ve context hit; yeni "yabancı kapsam oranı" (context'te
+              öğrencinin fakültesine ait olmayan paralel kapsam chunk'ı); B'de cevap doğruluğu ve tekrar sorma oranı.
+            - **Gereken set (4.3 = 4.2 + takip seti, ~12 soru):** yönetmeliği olmayan fakülte + fakülteye göre değişen
+              konu (6), yönetmeliği olan fakültede o yönetmeliğin sessiz kaldığı konu (3, genel yönetmelikten
+              cevaplanmalı; konular corpus'tan doğrulanacak), ilk turda fakülte adıyla soru (3). Set 4.2'de birim adı
+              geçen 42 soru da ölçülür.
+            - **Riskler:** birim adını yanlış tanıma (ör. "mühendislik" MYO bölümü olabilir); birden fazla fakülteyi
+              kıyaslayan sorular (birleştirme soruları: hepsi filtreye alınmalı); fakültedeki lisansüstü öğrenci
+              (öğretim düzeyi fakülteden önce gelir); etiket hatası (etiket JSON'da düzeltilir, index değişmez).
       - [-] **Cevap yoksa yalnız "bilgim yok":** kullanıcı kararıyla atlandı (2026-10-16).
       - [x] **Set etiketi 80 → 90:** set 4.2'de (kredi transferi yönetmeliği kaynak olarak eklendi).
       - [ ] **Set etiketi (sonraki sürüm):** "Kaç gün rapor hakkım var?" sorusu "dahil" (rapor günleri devamsızlığa
