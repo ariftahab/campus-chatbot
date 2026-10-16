@@ -51,7 +51,8 @@
            Not: birleşim 60 adaya çıkabilir; reranker yalnız RRF'in ilk 30'unu görür.
           Sonuç: 0,966 -> 0,974 (+1 soru, kayıp yok), MRR aynı, latency 329 -> 562 ms. Production'a alınmadı
           (karar bekliyor). Havuzdaki her ilgili chunk zaten RRF'in ilk 30'unda → B'nin recall kazancı olamaz.
-     - [ ] **Havuz derinliği B:** A + `rerank_candidates` 30 → 60 (havuzun tamamı). Gecikme ölçülür (sunucu kapalı).
+     - [x] **Havuz derinliği B** (EXP-030): A + `rerank_candidates` 30 → 60. Recall aynı, MRR 0,819 → 0,818
+          (2 soru biraz düştü), latency 562 → 892 ms. Alınmadı.
      - [ ] **Hybrid + reranker ablasyonu:** `retrieval` hybrid → vector, aday sayısı eşit. Soru: BM25 havuza
            reranker'ın kullandığı aday katıyor mu? (Reranker'ın gerekliliği aşama metriklerinden belli: EXP-027'de
            RRF 0,629 → final 0,818.)
