@@ -61,7 +61,8 @@
           (EXP-027'de 15+15 listenin birleşimi ortalama 23,5 aday; EXP-029 ve -031'de hep 30; EXP-030'da 47,7).
           Eski ölçümlerdeki 562 / 892 ms GPU paylaşımından şişmişti. Hybrid ile vector arasında latency farkı yok
           (BM25 ucuz).
-    - [ ] **Production kararı:** A (+1 soru recall, +90 ms) alınsın mı, hybrid kalsın mı.
+    - [x] **Production kararı** (2026-10-16): A alındı, hybrid kaldı. EXP-032 = EXP-029 + yaz okulu sabit cevabı
+          (koşu yok; 9/9 yaz sorusu sabit cevap). Production EXP-028 → EXP-032.
     - [ ] **Cevap uzunluğu:** netleştirmede model diğer kapsamları sayıp sonra soruyor (ör. kayıt dondurmada 2635
            karakter). Hedef: önce genel kural, sonra fakülte sorusu. Olumlu biçim tarif eden prompt deneyi.
      - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).

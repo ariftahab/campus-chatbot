@@ -1,6 +1,6 @@
 # Experiment Log
 
-> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-028**. Ayrıntılar: `experiments/results/EXP-*.json`.
+> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-032**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
 **Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
@@ -44,6 +44,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-029 | EXP-027 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-030 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-031 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
+| EXP-032 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
 
 ## 2. Results
 
@@ -81,6 +82,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-029 | Havuz derinliği A: vector_k ve bm25_k 15 → 30 (rerank_candidates 30 sabit) | 4.1 | 0.819 | 0.735 | 0.949 | 0.949 | 5785 | 562 ms | rerank_input_recall ↑ iyileşti (p=1.00, anlamlı değil) | ~ |
 | EXP-030 | Havuz derinliği B: rerank_candidates 30 → 60 (reranker havuzun tamamını görür) | 4.1 | 0.818 | 0.735 | 0.949 | 0.949 | 5812 | 892 ms | rerank_input_recall = değişmedi (p=1.00, anlamlı değil) | ✓ |
 | EXP-031 | Hybrid ablasyonu: retrieval hybrid → vector (reranker ve 30 aday sabit) | 4.1 | 0.820 | 0.735 | 0.940 | 0.940 | 5727 | 723 ms | rerank_input_recall ↓ kötüleşti (p=1.00, anlamlı değil) | ~ |
+| EXP-032 | Production yapılandırması: EXP-029 (havuz derinliği A) + yaz okulu sabit cevabı (fixed_answers=summer_v1) | | | | | | | | koşulmadı | |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -163,3 +165,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-029:** Havuz 15 -> 30: reranker girdisi isabeti 0,966 -> 0,974 (+1 soru, kayıp yok), MRR aynı; latency 329 -> 562 ms. Kalan 3 kayıp ilk 30'da da yok, B'nin kazancı olamaz.
 - **EXP-030:** Reranker havuzun tamamını görüyor: recall aynı (0,974), MRR 0,819 -> 0,818 (2 soru biraz düştü, iyileşen yok), latency 562 -> 892 ms. Alınmaz.
 - **EXP-031:** Vector-only: BM25'in getirdiği tek soru kayboldu (recall 0,974 -> 0,966), 3 soru biraz iyileşti, MRR aynı (0,820). Latency ölçümü GPU paylaşımı yüzünden güvenilir değil.
+- **EXP-032:** Production yapılandırması, koşu yok: EXP-029 retrieval'ı + yaz okulu sabit cevabı (9/9). Latency 347 → 437 ms. Production EXP-028 → EXP-032.
