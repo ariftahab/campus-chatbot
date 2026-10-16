@@ -255,6 +255,17 @@ _V5_SCOPE_RULE = """- Bu soruda öğrencinin fakültesi, bölümü veya öğreti
   fakültede veya programda okuyorsunuz?\""""
 _V5_SYSTEM = _V3_SYSTEM.replace(_V3_SCOPE_RULE, _V5_SCOPE_RULE)
 
+# v5_birlestirme: v3'te "her kuralı kapsamıyla ayrı ayrı yaz" ile "aynı kuralı tekrar etme" çelişiyordu; model aynı kuralı
+# her kapsam için ayrı yazıyordu (ör. lisans ve hukuk için aynı kredi iki satır). Kapsam maddesi kuralları önce
+# karşılaştırmayı ve aynı olanları tek satırda birleştirmeyi tarif eder; ayrı birleştirme maddesi bu yüzden kalkar.
+_V3_MERGE_RULE = "- Farklı belgeler aynı kuralı aynı şekilde veriyorsa tekrar etme; tek cevapta birleştir.\n"
+_MERGE_SCOPE_RULE = """- Aynı soruya bağlamdaki belgeler farklı kapsamlar için kural veriyorsa yalnızca birini seçme. Önce kuralları
+  karşılaştır: aynı olan kapsamları tek satırda birleştir ve kaynaklarını aynı köşeli parantezde ';' ile ayırarak yaz,
+  ör. "X ve Y programları: <ortak kural> [Belge A, Madde N; Belge B, Madde M]". Kuralı farklı olan
+  her kapsamı ayrı satırda, hangi kapsam için geçerli olduğunu söyleyerek yaz."""
+assert _V3_MERGE_RULE in _V3_SYSTEM
+_V5_MERGE_SYSTEM = _V3_SYSTEM.replace(_V3_SCOPE_RULE, _MERGE_SCOPE_RULE).replace(_V3_MERGE_RULE, "")
+
 
 def _format_v1(docs):
     # create_stuff_documents_chain varsayılanı: parça metinleri boş satırla birleştirilir.
@@ -292,6 +303,15 @@ PROMPTS = {
     "v4_netlestirme": {
         "template": ChatPromptTemplate.from_messages([
             ("system", _V4_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,
+        "history": True,
+    },
+    "v5_birlestirme": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V5_MERGE_SYSTEM),
             MessagesPlaceholder("history"),
             ("human", "{input}"),
         ]),
