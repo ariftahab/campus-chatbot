@@ -1,0 +1,33 @@
+{
+ "id": "EXP-031",
+ "baslik": "Hybrid ablasyonu: retrieval hybrid → vector (reranker ve 30 aday sabit)",
+ "ust_deney": "EXP-029",
+ "veri_seti": "sorular_v41",
+ "neden": "Hybrid retrieval (EXP-007) ve BM25'in reranker'la birlikte katkısı (EXP-012) yalnız 3 belgelik corpus ve 27 soruluk set 2.0 üzerinde ölçülmüştü. O sette tavan etkisi vardı: EXP-012'de 'BM25'in katkısı reranker ile de gösterilemedi'. Mimari o günden beri büyüdü (corpus v4: 129 belge, set 4.1: 117 cevaplı soru, öğrenci dili ve takip soruları). Bu yüzden ablasyon bugünkü corpus ve set üzerinde yeniden koşuluyor; amaç tez için asıl sonucu almak: BM25 havuza reranker'ın kullandığı aday katıyor mu? Üst deney EXP-029: vector-only'de reranker vector listesinin ilk 30'unu görür, yani aday sayısı hybrid'deki gibi 30 kalır, yalnız adayların kaynağı değişir (bm25_k bu yapılandırmada kullanılmaz).",
+ "hipotez": "Ölçmeden önce: (1) rerank_input_recall 0,974'ten en çok 1 soru düşer (0,966): EXP-029'da ilgili chunk'ı yalnız BM25'in getirdiği tek soru 'Engelli öğrencilere sınavlarda ek süre veriliyor mu?' (vector'ın ilk 30'unda yok). (2) Final MRR@10 (0,819) aynı kalır ya da biraz düşer; reranker sırayı yeniden kurduğu için vector'ın ilk 30'u hybrid havuzunun ilgili adaylarının neredeyse hepsini içeriyor. (3) Latency aşağı yukarı aynı (BM25 ucuz, reranker girdisi yine 30 aday). Ölçülemeyen: cevap kalitesi (retrieval-only); vector'ın 31. sıradan sonrası.",
+ "birincil_metrik": "rerank_input_recall",
+ "beklenen_yon": "azalis",
+ "params": {
+  "corpus": "v4",
+  "device": "cuda",
+  "pdf_parser": "pdfplumber",
+  "chunking": "structural_v2",
+  "chunk_size": 1500,
+  "chunk_overlap": 150,
+  "embedding_model": "BAAI/bge-m3",
+  "normalize_embeddings": true,
+  "retrieval": "vector",
+  "vector_k": 30,
+  "bm25_k": 30,
+  "rrf_k": 60,
+  "reranker_model": "BAAI/bge-reranker-v2-m3",
+  "reranker_max_length": 512,
+  "rerank_candidates": 30,
+  "final_k": 5,
+  "llm_model": "gemini-3.1-flash-lite",
+  "llm_temperature": 0.3,
+  "prompt_version": "v3_kapsam",
+  "reranker_dtype": "fp16",
+  "clarify_trigger": "scope_labels_v1"
+ }
+}
