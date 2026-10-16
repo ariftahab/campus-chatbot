@@ -29,5 +29,7 @@
   "prompt_version": "v3_kapsam",
   "reranker_dtype": "fp16",
   "clarify_trigger": "scope_labels_v1"
- }
+ },
+ "notlar": "Sıralama hipotezi tuttu. rerank_input_recall 0,974 -> 0,966 (1 kötüleşen, 0 iyileşen; McNemar p=1,0): kaybedilen soru beklenen 'Engelli öğrencilere sınavlarda ek süre veriliyor mu?' (ilgili chunk vector'ın ilk 30'unda yok, yalnız BM25 16. sırada getiriyordu; hybrid'de final 5. sıra, şimdi bağlamda yok). Buna karşılık üç soru vector-only'de biraz daha iyi: BM25'in havuza kattığı ilgisiz adaylar artık reranker'ı şaşırtmıyor: 'Güz dönemi final sınavları ne zaman bitiyor?' 4 -> 2, 'Okulu uzattım, azami süre dolunca hemen atılır mıyım?' 10 -> 7, 'Tıp fakültesinden 240 AKTS ile mezun olabilir miyim?' 5 -> 4. Net: MRR@10 0,819 -> 0,820 (p=0,47), Hit@5 ve bağlam isabeti 0,949 -> 0,940 (tek soru). Yani bugünkü corpus ve sette BM25'in katkısı tek bir soruya indirgeniyor; EXP-012'deki 3 belgelik sonuçla ('BM25'in katkısı reranker ile gösterilemedi') uyumlu, ama artık o soru için gerçek ve ölçülebilir bir katkı var. Latency 562 -> 723 ms (Wilcoxon p<0,001) beklenenin tersi ve GÜVENİLİR DEĞİL: koşu sırasında aynı GPU'yu kullanan bir Android emülatörü ve başka bir uygulama açıktı (kullanıcı bildirimi, 2026-10-16). Bu durum EXP-029 ve EXP-030 latency ölçümlerini de etkilemiş olabilir (EXP-027: 329 ms sunucu kapalıyken). GPU boşken üç yapılandırma aynı süreçte, sırası değiştirilerek yeniden ölçülecek. Süre: getirme 86 sn.",
+ "kisa_not": "Vector-only: BM25'in getirdiği tek soru kayboldu (recall 0,974 -> 0,966), 3 soru biraz iyileşti, MRR aynı (0,820). Latency ölçümü GPU paylaşımı yüzünden güvenilir değil."
 }
