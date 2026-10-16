@@ -117,6 +117,8 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - `eval/sorular_v41.json` (set 4.1) — 4.0 + 4 etiket düzeltmesi; fakülte belirtilmeyen kapsam sorularında hedef
   davranış genel kural + fakülteyi sormak (`beklenen_davranis: netlestirme`, koşucuda `netlestirme_isabeti` /
   `gereksiz_netlestirme`).
+- `eval/sorular_v42.json` (set 4.2) — 4.1 + 10 birleştirme sorusu (grup E, `birlestirme`: cevapta tam bir kez geçmesi
+  gereken ortak değer) + açık öğretimden örgün öğretime geçiş etiketi 80 → 90 (kredi transferi yönetmeliği). EXP-033'ten beri.
 
 ## Notlar
 - LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. EXP-013'ten beri `gemini-3.1-flash-lite`:
