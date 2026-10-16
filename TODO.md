@@ -63,22 +63,28 @@
           (BM25 ucuz).
     - [x] **Production kararı** (2026-10-16): A alındı, hybrid kaldı. EXP-032 = EXP-029 + yaz okulu sabit cevabı
           (koşu yok; 9/9 yaz sorusu sabit cevap). Production EXP-028 → EXP-032.
-    - [ ] **Cevap uzunluğu:** netleştirmede model diğer kapsamları sayıp sonra soruyor (ör. kayıt dondurmada 2635
-           karakter). Hedef: önce genel kural, sonra fakülte sorusu. Olumlu biçim tarif eden prompt deneyi.
-     - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).
-     - [ ] **4. Birleştirme:** gelen kurallar karşılaştırılır, aynı kural tek satırda verilir ("Lisans (Hukuk
-           dahil): 240 AKTS"); yalnız farklı olanlar ayrı yazılır. Prompt deneyi.
-     - [ ] **Set etiketi:** açık öğretimden örgün öğretime yatay geçiş not ortalaması 80 → 90 (kredi transferi
-           yönetmeliği 28/2/2026 değişikliği); bir sonraki set sürümünde. Çelişki değil: normal yatay geçiş (80) ile
-           açık öğretimden örgün öğretime geçiş (90) ayrı kurallar; model doğru cevap verdi.
+    - **Prompt deneyleri (2026-10-16, onaylı; Gemini kotası bittiği için koşular 2026-10-17'de).** Sıra: önce
+      baseline, sonra deneyler tek tek; her biri bir öncekinin sonucu yorumlandıktan sonra.
+      - [ ] **EXP-033 baseline:** production (EXP-032) set 4.2'de (`--llm`, ~140 istek). Config commit'li.
+      - [ ] **EXP-034 cevap uzunluğu:** `clarify_prompt` v4 → `v5_netlestirme_kisa` (genel kural + "farklı
+            olabilir" + fakülte sorusu; biçim tarif edilir). Birincil: `netlestirme_uzunlugu` (EXP-027'de 602
+            karakter), netleştirme isabeti ve cevap doğruluğu düşmemeli. Config commit'li.
+      - [ ] **EXP-035 birleştirme:** `prompt_version` v3_kapsam → `v5_birlestirme` (v3'teki "ayrı ayrı yaz" ile
+            "tekrar etme" çelişkisi kaldırıldı). Birincil: `birlestirme_isabeti` (set 4.2 grup E, 10 soru). Üst deney
+            EXP-034 kabul edilirse EXP-034, edilmezse EXP-033; config bu yüzden EXP-034'ten sonra yazılacak.
+      - [ ] **EXP-036 atıfta fıkra:** `citation_style` madde → fikra. Birincil: `fikra_atif_orani` (EXP-027: 0,023),
+            ikincil `fikra_dogrulugu` (kanıt cümlesi atıf yapılan fıkrada mı). Üst deney kabul edilen son deney.
+            Panelde fıkra vurgusu ayrı UI işi (atıf linki "Madde 24/2" ile bozulmuyor).
+      - [-] **Cevap yoksa yalnız "bilgim yok":** kullanıcı kararıyla atlandı (2026-10-16).
+      - [x] **Set etiketi 80 → 90:** set 4.2'de (kredi transferi yönetmeliği kaynak olarak eklendi).
    - [ ] **Veriden öğrenme:** Yeterli gerçek kullanıcı sorusu birikince, sistemin hangi soru türlerinde hata yaptığı
          analiz edilir. Gerçek sorulardan seçilenler yeni bir soru seti sürümü olarak eklenebilir (eski setler değiştirilmez).
-   - [ ] **Atıfta fıkra (yapılacak):** LLM şu an atıflarda fıkra yazmıyor (2026-10-08: log'daki 64 atıfın
-         hiçbirinde yok), bu yüzden panelde fıkra vurgulanamıyor. Fıkrayı yazdırmak bir prompt değişikliği, yani deney.
    - [ ] **Soru setleri: dev / validation / test** (overfitting): set 4.1 dev seti (ayar, eşik seçimi) olarak
          kalır. Aynı corpus'tan sıfırdan yazılmış ayrı bir validation seti, dev'de seçilen eşik ve kararları
          doğrular (ör. EXP-027'nin netleştirme tetiği set 4.1'de hem seçildi hem ölçüldü). Kilitli test seti tezin
          sonunda bir kez (aşağıda "Diğer açık işler").
+     - [x] Validation taslağı: `eval/taslak/sorular_val_v1_taslak.json` (44 soru, set 4.x'te sorulmamış belgelerden;
+           kanıtlar doğrulandı). **Kullanıcı düzeltecek**, sonra `eval/sorular_val_v1.json` olarak eklenir.
    - [ ] **Incremental indexing:** şu an parmak izi bütün PDF'leri kapsıyor; tek belge değişince index baştan
          kuruluyor (corpus v4: 3753 chunk, 341 sn). Öneri: belge bazında cache (PDF byte'ları + chunking
          parametreleri + `ingest.py` hash'i → o belgenin chunk'ları ve embedding'leri `vectorstore/_cache/`),
