@@ -73,6 +73,10 @@
             model system prompt'a daha iyi uyar). 3.5'in ayrı kotasıyla 2026-10-16'da koşuldu; EXP-033 koşulunca
             `python -m experiments.run EXP-035 --karsilastir` ile karşılaştırma tamamlanır. Sonraki prompt deneyleri
             hangi modelle yapılacak, buna göre karar verilir.
+            Ara sonuç (eşleştirilmiş test EXP-033'ten sonra): cevap doğruluğu 0,973; EXP-027'nin (3.1, retrieval biraz
+            farklı) aynı 139 sorusuna göre 0,921 → 0,971 (8 soru düzeldi, 1 bozuldu; en çok çekimser kalma ve kapsam
+            gruplarında). Gereksiz netleştirme 0,26 → 0,19, netleştirme cevapları 602 → 496 karakter, birleştirme 4/10.
+            **LLM latency ~5 kat**: ortalama 14,5 sn (medyan 10,3), 3.1'de ~3 sn. Karar latency'yi de içermeli.
       - [ ] **EXP-036 birleştirme:** `prompt_version` v3_kapsam → `v5_birlestirme` (v3'teki "ayrı ayrı yaz" ile
             "tekrar etme" çelişkisi kaldırıldı). Birincil: `birlestirme_isabeti` (set 4.2 grup E, 10 soru). Üst deney
             EXP-034 kabul edilirse EXP-034, edilmezse EXP-033; config bu yüzden EXP-034'ten sonra yazılacak.
