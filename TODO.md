@@ -41,8 +41,8 @@
      - [x] **Kapsam sorunu (2026-10-15):** hedef davranış "bütün fakülteleri say" yerine "genel kural + fakülteyi
            sor" (set 4.1). EXP-024 baseline, EXP-025 netleştirme prompt'u (%45 gereksiz sorma, alınmadı), EXP-026 kapsam
            tamamlama (reddedildi), EXP-027 netleştirmeyi belge kapsam etiketleri tetikler (production adayı).
-     - [ ] **EXP-028** (onaylandı): EXP-027 + `fixed_answers="summer_v1"`, set 4.1 (tek parametre farkı), `--llm`,
-           arayüz sunucusu kapalı (gecikme). Sonuç doğruysa `config.PRODUCTION_EXPERIMENT` = EXP-028.
+     - [x] **EXP-028 production** (2026-10-16): EXP-027 + `fixed_answers="summer_v1"`. Deney koşulmadı (mimari
+           değişmedi); 9/9 yaz sorusu sabit cevabı aldı, diğer 130 soruda eşleşme yok.
      - Kapsam kararı kesin (2026-10-16): kuralı fakülteye göre değişen sorularda genel kural verilir ve fakülte
        sorulur; retrieval tarafında kapsam tamamlama yapılmaz.
      - [ ] **Havuz derinliği A** (retrieval-only, kota harcamaz): `vector_k` 15 → 30, `bm25_k` 15 → 30,

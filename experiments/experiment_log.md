@@ -1,6 +1,6 @@
 # Experiment Log
 
-> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-023**. Ayrıntılar: `experiments/results/EXP-*.json`.
+> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-028**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
 **Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
@@ -40,6 +40,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-025 | EXP-024 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v4_netlestirme** | 3.1-flash-lite | 3753 |
 | EXP-026 | EXP-024 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-027 | EXP-024 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
+| EXP-028 | EXP-027 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
 
 ## 2. Results
 
@@ -73,6 +74,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-025 | Prompt v4_netlestirme: fakülte belirtilmemişse genel kural + fakülteyi sor | 4.1 | 0.818 | 0.735 | 0.940 | 0.940 | 5783 | 1.8 s | answer acc. ↓ kötüleşti (p=0.69, anlamlı değil) | ✗ |
 | EXP-026 | Kapsam tamamlama (scope_search=parallel_v1): reddedilen alternatifin ölçümü | 4.1 | 0.817 | 0.735 | 0.940 | 0.940 | 6986 | 490 ms | context chars ↑ kötüleşti (p<0.01, anlamlı) | ✓ |
 | EXP-027 | Netleştirmeyi belge kapsam etiketleri tetikler (clarify_trigger=scope_labels_v1) | 4.1 | 0.818 | 0.735 | 0.940 | 0.940 | 5783 | 329 ms | answer acc. ↓ kötüleşti (p=0.25, anlamlı değil) | ✗ |
+| EXP-028 | Production yapılandırması: EXP-027 + yaz okulu sabit cevabı (fixed_answers=summer_v1) | | | | | | | | koşulmadı | |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -145,3 +147,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-025:** Netleştirme 8/8 ama gereksiz netleştirme %45 (beklenen <= %5): model fakülteden bağımsız sorularda da soruyor; fakülte belirtilen 17 soruda 1. Cevap 0,928 (anlamca fark yok). Production'a alınmaz; tetikleme LLM'e bırakılınca aşırı.
 - **EXP-026:** Reddedilen alternatif: kapsam isabeti 0,507 -> 0,576 (12 sorunun yalnız 2'si iyileşti), ama 117 sorunun 50'sinde tetiklendi ve context +%21 (tetiklenenlerde +%48) uzadı; MRR@10 değişmedi. Bırakıldı.
 - **EXP-027:** Etiketle tetikleme: netleştirme 6/8, gereksiz 0,45 -> 0,26, fakülte belirtilende 0/17; sorma yalnız tetik açıkken. Cevap anlamca aynı (0,921). Cevaplar hâlâ diğer kapsamları sayıyor.
+- **EXP-028:** Production yapılandırması, koşu yok: 9/9 yaz sorusu sabit cevap, diğer 130 soruda eşleşme yok. Production EXP-023 → EXP-028.
