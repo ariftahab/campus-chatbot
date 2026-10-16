@@ -53,10 +53,13 @@
           (karar bekliyor). Havuzdaki her ilgili chunk zaten RRF'in ilk 30'unda → B'nin recall kazancı olamaz.
      - [x] **Havuz derinliği B** (EXP-030): A + `rerank_candidates` 30 → 60. Recall aynı, MRR 0,819 → 0,818
           (2 soru biraz düştü), latency 562 → 892 ms. Alınmadı.
-     - [ ] **Hybrid + reranker ablasyonu:** `retrieval` hybrid → vector, aday sayısı eşit. Soru: BM25 havuza
-           reranker'ın kullandığı aday katıyor mu? (Reranker'ın gerekliliği aşama metriklerinden belli: EXP-027'de
-           RRF 0,629 → final 0,818.)
-     - [ ] **Cevap uzunluğu:** netleştirmede model diğer kapsamları sayıp sonra soruyor (ör. kayıt dondurmada 2635
+     - [x] **Hybrid + reranker ablasyonu** (EXP-031, üst deney EXP-029): vector-only'de BM25'in getirdiği tek soru
+          kayboldu (recall 0,974 → 0,966), 3 soru biraz iyileşti, MRR aynı (0,820).
+    - [ ] **Latency yeniden ölçümü:** EXP-029, EXP-030, EXP-031 koşulurken GPU'yu emülatör ve başka bir uygulama
+          paylaşıyordu. GPU boşken üç yapılandırma tek süreçte, tek Retriever ile (`cfg.retrieval` değiştirilerek;
+          iki Retriever modelleri iki kez yükleyip VRAM'i taşırıyor) ve soru başına sırası değiştirilerek ölçülecek.
+          Production kararı (A alınsın mı, hybrid kalsın mı) bundan sonra.
+    - [ ] **Cevap uzunluğu:** netleştirmede model diğer kapsamları sayıp sonra soruyor (ör. kayıt dondurmada 2635
            karakter). Hedef: önce genel kural, sonra fakülte sorusu. Olumlu biçim tarif eden prompt deneyi.
      - [ ] **3. Prompt: cevap yoksa** yalnız "bilgim yok" (ilgisiz bilgi ekleme).
      - [ ] **4. Birleştirme:** gelen kurallar karşılaştırılır, aynı kural tek satırda verilir ("Lisans (Hukuk
