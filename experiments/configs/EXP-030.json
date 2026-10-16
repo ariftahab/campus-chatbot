@@ -1,0 +1,33 @@
+{
+ "id": "EXP-030",
+ "baslik": "Havuz derinliği B: rerank_candidates 30 → 60 (havuzun tamamı reranker'a)",
+ "ust_deney": "EXP-029",
+ "veri_seti": "sorular_v41",
+ "neden": "EXP-029'da vector_k ve bm25_k 30'a çıktı; birleşim ortalama 48 aday ama reranker yalnız RRF'in ilk 30'unu görüyor. Bu deney havuzun tamamını reranker'a verir. EXP-029'un verisine göre ilgili chunk'ı havuzda olan her soruda o chunk zaten RRF'in ilk 30'unda, yani bu sette recall kazancı beklenmiyor; deney bunu ampirik olarak doğrular ve reranker'ın daha fazla ilgisiz adaya karşı dayanıklı olup olmadığını ölçer (tez için).",
+ "hipotez": "Ölçmeden önce: (1) rerank_input_recall değişmez (0,974): RRF'in 31-48. sıralarında ilgili chunk yok. (2) MRR@10 aynı kalır ya da biraz düşer (en çok -0,01): yeni gelen ~18 aday ilgisiz, reranker bazılarını ilgili chunk'ın üstüne koyabilir. (3) Latency belirgin artar (562 ms'den ~800-900 ms'ye): reranker girdisi 30'dan ortalama 48 adaya çıkıyor. Ölçülemeyen: cevap kalitesi (retrieval-only).",
+ "birincil_metrik": "rerank_input_recall",
+ "beklenen_yon": "degisim_yok",
+ "params": {
+  "corpus": "v4",
+  "device": "cuda",
+  "pdf_parser": "pdfplumber",
+  "chunking": "structural_v2",
+  "chunk_size": 1500,
+  "chunk_overlap": 150,
+  "embedding_model": "BAAI/bge-m3",
+  "normalize_embeddings": true,
+  "retrieval": "hybrid",
+  "vector_k": 30,
+  "bm25_k": 30,
+  "rrf_k": 60,
+  "reranker_model": "BAAI/bge-reranker-v2-m3",
+  "reranker_max_length": 512,
+  "rerank_candidates": 60,
+  "final_k": 5,
+  "llm_model": "gemini-3.1-flash-lite",
+  "llm_temperature": 0.3,
+  "prompt_version": "v3_kapsam",
+  "reranker_dtype": "fp16",
+  "clarify_trigger": "scope_labels_v1"
+ }
+}
