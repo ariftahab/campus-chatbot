@@ -46,6 +46,12 @@ function norm(s) {
 // eşleşme "en iyi çaba"dır: madde numarası yazılmışsa birebir aynı olmalı, belge adının kelimelerinin çoğu
 // kaynağın başlığında geçmeli. Eşleşmeyen atıf düz metin kalır.
 
+// Atıftaki fıkra numarası: "Madde 24/2", "Madde 24, fıkra 2", "Madde 24 (2). fıkra" (prompt citation_style="fikra").
+function citedFikra(part) {
+  const m = part.match(/madde\s*\d+\s*(?:\/\s*(\d+)|,?\s*fıkra\s*\(?(\d+)\)?|,?\s*\(?(\d+)\)?\s*\.?\s*fıkra)/i);
+  return m ? Number(m[1] || m[2] || m[3]) : null;
+}
+
 function matchSource(part, sources) {
   const m = part.match(/madde\s*(\d+)/i);
   const madde = m ? m[1] : null;
@@ -75,7 +81,10 @@ function linkCitations(text, sources) {
   return text.replace(/\[([^\]\n]{3,300})\](?!\()/g, (whole, inner) => {
     const parts = inner.split(";").map((part) => {
       const s = matchSource(part, sources);
-      return s ? `<a href="#" class="cite" data-chunk="${s.chunk_id}">${escapeHtml(part.trim())}</a>` : escapeHtml(part);
+      if (!s) return escapeHtml(part);
+      const fikra = citedFikra(part);
+      return `<a href="#" class="cite" data-chunk="${s.chunk_id}"${fikra ? ` data-fikra="${fikra}"` : ""}>` +
+        `${escapeHtml(part.trim())}</a>`;
     });
     return `[${parts.join("; ")}]`;
   });
@@ -139,16 +148,62 @@ function pdfUrl(source, page) {
   return `/files/${encodeURIComponent(source)}${page ? `#page=${page}` : ""}`;
 }
 
-async function openChunk(chunkId) {
+// Fıkra sınırları: "(N)" bir fıkranın başıysa madde başında ("MADDE 6- (1)"), satır başında ya da cümle sonundan
+// sonra gelir. "(Değişik:RG-...)(1)" gibi dipnot işaretleri ")" ile bitişik olduğu için fıkra sayılmaz.
+function fikraStart(text, n, from = 0) {
+  const re = new RegExp(`(?:MADDE\\s*\\d+\\s*[–—-]\\s*|[.:;]\\s+|^\\s*)\\(${n}\\)`, "gm");
+  re.lastIndex = from;
+  const m = re.exec(text);
+  return m ? m.index + m[0].lastIndexOf("(") : -1;
+}
+
+// Fıkra n'nin metindeki aralığı [başlangıç, bitiş): bir sonraki fıkranın başına ya da metnin sonuna kadar.
+function fikraRange(text, n) {
+  const start = fikraStart(text, n);
+  if (start < 0) return null;
+  const next = fikraStart(text, n + 1, start + 1);
+  return [start, next < 0 ? text.length : next];
+}
+
+function chunkHtml(text, range) {
+  if (!range) return `<p class="chunk-text">${escapeHtml(text)}</p>`;
+  const [a, b] = range;
+  return `<p class="chunk-text">${escapeHtml(text.slice(0, a))}<mark class="fikra">${escapeHtml(text.slice(a, b))}</mark>` +
+    `${escapeHtml(text.slice(b))}</p>`;
+}
+
+// Uzun maddeler birden fazla chunk'a bölünür; atıf yapılan fıkra tıklanan chunk'ta yoksa aynı maddenin diğer
+// chunk'larında aranır. Bulunursa o chunk gösterilir.
+async function findFikraChunk(c, fikra) {
+  if (c.madde == null) return null;
+  const sameMadde = new RegExp(`, Madde ${c.madde},`);
+  const chunks = await api(`/documents/${encodeURIComponent(c.source)}/chunks`);
+  const hit = chunks.find((d) => d.chunk_id !== c.chunk_id && sameMadde.test(d.label) && fikraRange(reflow(d.text), fikra));
+  if (!hit) return null;
+  const page = hit.label.match(/, s\. (\d+)$/);
+  return { ...c, chunk_id: hit.chunk_id, label: hit.label, text: hit.text, page: page ? Number(page[1]) : c.page };
+}
+
+async function openChunk(chunkId, fikra = null) {
   panel.show({ title: "Yükleniyor…", html: "" });
   try {
-    const c = await api(`/chunks/${chunkId}`);
+    let c = await api(`/chunks/${chunkId}`);
+    let range = fikra ? fikraRange(reflow(c.text), fikra) : null;
+    if (fikra && !range) {
+      const other = await findFikraChunk(c, fikra);
+      if (other) { c = other; range = fikraRange(reflow(c.text), fikra); }
+    }
+    let sub = c.label.slice(c.title.length).replace(/^,\s*/, "");
+    if (fikra) sub += range ? ` · fıkra ${fikra}` : ` · fıkra ${fikra} bu metinde bulunamadı`;
     panel.show({
       title: c.title,
-      sub: c.label.slice(c.title.length).replace(/^,\s*/, ""),
-      html: `<p class="chunk-text">${escapeHtml(reflow(c.text))}</p>`,
+      sub,
+      html: chunkHtml(reflow(c.text), range),
       pdf: { url: pdfUrl(c.source, c.page), page: c.page },
     });
+    // Vurgulanan fıkra panelin üst kısmına gelsin (madde uzunsa fıkra aşağıda kalabilir).
+    const mark = panel.el.querySelector("mark.fikra");
+    if (mark) mark.scrollIntoView({ block: "start" });
   } catch (e) {
     panel.show({ title: "Kaynak açılamadı", html: `<p>${escapeHtml(e.message)}</p>` });
   }
@@ -181,7 +236,7 @@ document.addEventListener("click", (e) => {
   e.preventDefault();
   document.querySelectorAll(".source-chip.active").forEach((b) => b.classList.remove("active"));
   if (el.classList.contains("source-chip")) el.classList.add("active");
-  openChunk(Number(el.dataset.chunk));
+  openChunk(Number(el.dataset.chunk), el.dataset.fikra ? Number(el.dataset.fikra) : null);
 });
 
 // --- Üst bar durumu ---
