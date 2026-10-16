@@ -464,6 +464,30 @@ def run(exp_id, use_llm, wait, rerun, datasets):
         print(f"  Karar ({k['metrik']}): {k['sonuc']} | Hipotez: {k['hipotez']}")
 
 
+def late_compare(exp_id):
+    """Üst deneyi sonradan koşulan bir sonucun boş kalan karşılaştırmasını tamamlar (LLM çağrısı yok).
+
+    Örnek: model deneyi o modelin kotasıyla, üst deney (baseline) ise diğer modelin kotası yenilenince koşuldu.
+    Ölçümler (retrieval, llm, per_question) değişmez; yalnız boş 'karsilastirma' alanı doldurulur ve ne zaman
+    doldurulduğu yazılır. Karşılaştırması zaten olan sonuca dokunulmaz.
+    """
+    exp, result = config.load_experiment(exp_id), load_result(exp_id)
+    if not result:
+        raise SystemExit(f"{exp_id}: sonuç yok.")
+    if result.get("karsilastirma"):
+        print(f"{exp_id}: karşılaştırma zaten var, değiştirilmedi.")
+        return
+    parent = load_result(exp["ust_deney"]) if exp["ust_deney"] else None
+    if not parent:
+        raise SystemExit(f"{exp_id}: üst deney {exp['ust_deney']} hâlâ koşulmamış.")
+    result["karsilastirma"] = compare(exp, result, parent)
+    result["karsilastirma_sonradan"] = datetime.now().isoformat(timespec="seconds")
+    (RESULTS_DIR / f"{exp_id}.json").write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
+    k = result["karsilastirma"].get("karar")
+    if k:
+        print(f"  {exp_id} karar ({k['metrik']}): {k['sonuc']} | Hipotez: {k['hipotez']}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("ids", nargs="*")
@@ -471,6 +495,8 @@ def main():
     parser.add_argument("--llm", action="store_true", help="cevap kalitesini de ölç (Gemini kotası harcar)")
     parser.add_argument("--bekle", type=float, default=4.0, help="LLM çağrıları arası saniye")
     parser.add_argument("--yeniden", action="store_true", help="var olan sonucun üzerine yaz")
+    parser.add_argument("--karsilastir", action="store_true",
+                        help="koşmadan, boş kalan karşılaştırmayı üst deneyin sonucuyla tamamla")
     args = parser.parse_args()
 
     ids = sorted(p.stem for p in CONFIGS_DIR.glob("EXP-*.json")) if args.all else args.ids
@@ -490,7 +516,10 @@ def main():
         return cache[name]
 
     for exp_id in ids:
-        run(exp_id, args.llm, args.bekle, args.yeniden, datasets)
+        if args.karsilastir:
+            late_compare(exp_id)
+        else:
+            run(exp_id, args.llm, args.bekle, args.yeniden, datasets)
     report.build()
     print(f"\nGünlük güncellendi: {report.LOG_FILE}")
     return 0
