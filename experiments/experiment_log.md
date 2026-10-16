@@ -2,9 +2,9 @@
 
 > Otomatik üretilir (`python -m experiments.report`). Production: **EXP-032**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
-**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
+**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v42.json` v4.2 (127 cevaplı + 22 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
-**Sabit parametreler:** `rrf_k=60`, `reranker_max_length=512`, `llm_temperature=0.3`
+**Sabit parametreler:** `citation_style=madde`, `rrf_k=60`, `reranker_max_length=512`, `llm_temperature=0.3`
 
 ## 1. Setup (hyperparameters)
 
@@ -45,6 +45,9 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-030 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-031 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-032 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
+| EXP-033 | EXP-032 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
+| EXP-034 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
+| EXP-035 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | **3.5-flash-lite** | – |
 
 ## 2. Results
 
@@ -83,6 +86,9 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-030 | Havuz derinliği B: rerank_candidates 30 → 60 (reranker havuzun tamamını görür) | 4.1 | 0.818 | 0.735 | 0.949 | 0.949 | 5812 | 892 ms | rerank_input_recall = değişmedi (p=1.00, anlamlı değil) | ✓ |
 | EXP-031 | Hybrid ablasyonu: retrieval hybrid → vector (reranker ve 30 aday sabit) | 4.1 | 0.820 | 0.735 | 0.940 | 0.940 | 5727 | 723 ms | rerank_input_recall ↓ kötüleşti (p=1.00, anlamlı değil) | ~ |
 | EXP-032 | Production yapılandırması: EXP-029 (havuz derinliği A) + yaz okulu sabit cevabı (fixed_answers=summer_v1) | | | | | | | | koşulmadı | |
+| EXP-033 | Baseline: production (EXP-032) set 4.2'de (birleştirme soruları + 80 → 90 etiketi) | | | | | | | | koşulmadı | |
+| EXP-034 | Netleştirme cevabının biçimi tarif edilir (clarify_prompt=v5_netlestirme_kisa) | | | | | | | | koşulmadı | |
+| EXP-035 | LLM gemini-3.1-flash-lite → gemini-3.5-flash-lite | | | | | | | | koşulmadı | |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 

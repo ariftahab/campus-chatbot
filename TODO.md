@@ -69,10 +69,14 @@
       - [ ] **EXP-034 cevap uzunluğu:** `clarify_prompt` v4 → `v5_netlestirme_kisa` (genel kural + "farklı
             olabilir" + fakülte sorusu; biçim tarif edilir). Birincil: `netlestirme_uzunlugu` (EXP-027'de 602
             karakter), netleştirme isabeti ve cevap doğruluğu düşmemeli. Config commit'li.
-      - [ ] **EXP-035 birleştirme:** `prompt_version` v3_kapsam → `v5_birlestirme` (v3'teki "ayrı ayrı yaz" ile
+      - [ ] **EXP-035 model:** `llm_model` gemini-3.1-flash-lite → gemini-3.5-flash-lite (kullanıcının hipotezi: yeni
+            model system prompt'a daha iyi uyar). 3.5'in ayrı kotasıyla 2026-10-16'da koşuldu; EXP-033 koşulunca
+            `python -m experiments.run EXP-035 --karsilastir` ile karşılaştırma tamamlanır. Sonraki prompt deneyleri
+            hangi modelle yapılacak, buna göre karar verilir.
+      - [ ] **EXP-036 birleştirme:** `prompt_version` v3_kapsam → `v5_birlestirme` (v3'teki "ayrı ayrı yaz" ile
             "tekrar etme" çelişkisi kaldırıldı). Birincil: `birlestirme_isabeti` (set 4.2 grup E, 10 soru). Üst deney
             EXP-034 kabul edilirse EXP-034, edilmezse EXP-033; config bu yüzden EXP-034'ten sonra yazılacak.
-      - [ ] **EXP-036 atıfta fıkra:** `citation_style` madde → fikra. Birincil: `fikra_atif_orani` (EXP-027: 0,023),
+      - [ ] **EXP-037 atıfta fıkra:** `citation_style` madde → fikra. Birincil: `fikra_atif_orani` (EXP-027: 0,023),
             ikincil `fikra_dogrulugu` (kanıt cümlesi atıf yapılan fıkrada mı). Üst deney kabul edilen son deney.
             Panelde fıkra vurgusu ayrı UI işi (atıf linki "Madde 24/2" ile bozulmuyor).
       - [-] **Cevap yoksa yalnız "bilgim yok":** kullanıcı kararıyla atlandı (2026-10-16).

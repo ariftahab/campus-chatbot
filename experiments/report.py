@@ -24,7 +24,7 @@ SHORT_VALUES = {
     "paraphrase-multilingual-MiniLM-L12-v2": "MiniLM", "BAAI/bge-m3": "bge-m3",
     "BAAI/bge-reranker-v2-m3": "bge-reranker", None: "–", True: "✓", False: "✗",
     "v1_prototip": "v1", "v2_kaynakli": "v2",
-    "gemini-2.5-flash": "2.5-flash", "gemini-3.1-flash-lite": "3.1-flash-lite",
+    "gemini-2.5-flash": "2.5-flash", "gemini-3.1-flash-lite": "3.1-flash-lite", "gemini-3.5-flash-lite": "3.5-flash-lite",
 }
 METRIC_NAMES = {"mrr@10": "MRR@10", "context_chars": "context chars", "answer_acc": "answer acc."}
 
