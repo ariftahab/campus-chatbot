@@ -140,11 +140,6 @@ def evaluate_retrieval(cfg, retriever, items, rewrite=None):
             row[f"hit@{k}"] = int(bool(first and first <= k))
         if query != item["soru"]:
             row["query"] = query
-        if item.get("kategori") == "coklu_kapsam":
-            # Kapsam isabeti: doğru kaynakların kaçı LLM'e giden context'te? (herhangi biri yetmez; hepsi gerekir)
-            covered = set().union(*(ev.matched_sources(item, ev.norm(c.page_content), c.metadata["source"])
-                                    for c in context))
-            row["kapsam_isabeti"] = round(len(covered) / len(ev.sources(item)), 4)
         if trace.get("scope_added"):
             row["scope_added"] = trace["scope_added"]
         row["asamalar"] = stage_ranks(item, retriever.chunks, trace)
@@ -192,10 +187,6 @@ def retrieval_metrics(rows):
     for k in ev.HIT_KS:
         m[f"hit@{k}"] = summarize(rows, f"hit@{k}")
     m["context_hit"] = summarize(rows, "context_hit")
-    coverage = [r["kapsam_isabeti"] for r in rows if "kapsam_isabeti" in r]
-    if coverage:
-        m["kapsam_isabeti"] = round(statistics.mean(coverage), 4)
-        m["kapsam_isabeti_n"] = len(coverage)
     m["context_chars"] = round(statistics.mean(r["context_chars"] for r in rows), 1)
     m["latency_ms"] = round(statistics.mean(r["latency_ms"] for r in rows), 1)
     m["latency_ms_median"] = round(statistics.median(r["latency_ms"] for r in rows), 1)
@@ -335,9 +326,6 @@ def subset_metrics(rows, items, answers=None):
     for name, ids in sorted(groups.items()):
         out[name] = {"n": len(ids), "mrr@10": round(statistics.mean(by_id[i]["rr"] for i in ids), 4),
                      "hit@5": round(statistics.mean(by_id[i]["hit@5"] for i in ids), 4)}
-        coverage = [by_id[i]["kapsam_isabeti"] for i in ids if "kapsam_isabeti" in by_id[i]]
-        if coverage:
-            out[name]["kapsam_isabeti"] = round(statistics.mean(coverage), 4)
         answered = [ok[i] for i in ids if i in ok]
         if answered:
             out[name]["answer_acc"] = round(statistics.mean(answered), 4)
