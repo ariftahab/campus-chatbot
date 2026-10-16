@@ -30,5 +30,7 @@
   "prompt_version": "v3_kapsam",
   "reranker_dtype": "fp16",
   "clarify_trigger": "scope_labels_v1"
- }
+ },
+ "notlar": "Yön doğru, anlamlı değil. rerank_input_recall 0,966 -> 0,974 (117 cevaplı sorudan 1 iyileşen, 0 kötüleşen; McNemar p=1,0). Kazanılan soru 'Engelli öğrencilere sınavlarda ek süre veriliyor mu?': ilgili chunk BM25'te 16. sırada, eskiden havuzun dışındaydı; şimdi RRF'te 27., reranker onu 5. sıraya taşıdı (Hit@5 ve bağlam isabeti +1 soru). Hipotezdeki 'eski adaylar dışarı itilebilir' riski gerçekleşmedi: hiçbir soruda ilgili chunk reranker girdisinden düşmedi; 20 soruda RRF sırası değişti ama final sıra yalnız bu bir soruda değişti, reranker sırayı yeniden kurduğu için. MRR@10 0,818 -> 0,819, kapsam isabeti aynı (0,507). Kalan 3 kayıp ('Ders kaydımda seçtiğim dersleri kim onaylıyor?', 'Kaç gün rapor hakkım var?', 'Başka bir üniversitede aldığım derslerden muaf olabilir miyim?') vector ve BM25'in ilk 30'unda da yok. Önemli: ilgili chunk havuzdaki her soruda zaten RRF'in ilk 30'unda; yani bu sette rerank_candidates 30 -> 60 (havuz derinliği B) reranker'a yeni ilgili chunk getiremez, yalnız ilgisiz aday ekler. Bedel: retrieval latency 329 -> 562 ms (medyan 333 -> 522, Wilcoxon p<0,001; sunucu kapalı). Kısmi açıklama: vector ve BM25 birleşimi ortalama 23,7 adaydan 48'e çıktı, reranker'a giden aday sayısı 23,7 -> 30 (+%27); artışın kalanı muhtemelen batch'teki uzun chunk'ların padding'i (ölçülmedi). Süre: getirme 67 sn.",
+ "kisa_not": "Havuz 15 -> 30: reranker girdisi isabeti 0,966 -> 0,974 (+1 soru, kayıp yok), MRR aynı; latency 329 -> 562 ms. Kalan 3 kayıp ilk 30'da da yok, B'nin kazancı olamaz."
 }
