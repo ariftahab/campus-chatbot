@@ -47,7 +47,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-032 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
 | EXP-033 | EXP-032 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
 | EXP-034 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
-| EXP-035 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | **3.5-flash-lite** | – |
+| EXP-035 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | **3.5-flash-lite** | 3753 |
 
 ## 2. Results
 
@@ -88,7 +88,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-032 | Production yapılandırması: EXP-029 (havuz derinliği A) + yaz okulu sabit cevabı (fixed_answers=summer_v1) | | | | | | | | koşulmadı | |
 | EXP-033 | Baseline: production (EXP-032) set 4.2'de (birleştirme soruları + 80 → 90 etiketi) | | | | | | | | koşulmadı | |
 | EXP-034 | Netleştirme cevabının biçimi tarif edilir (clarify_prompt=v5_netlestirme_kisa) | | | | | | | | koşulmadı | |
-| EXP-035 | LLM gemini-3.1-flash-lite → gemini-3.5-flash-lite | | | | | | | | koşulmadı | |
+| EXP-035 | LLM gemini-3.1-flash-lite → gemini-3.5-flash-lite | 4.2 | 0.833 | 0.756 | 0.953 | 0.953 | 5752 | 430 ms | baseline |  |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -115,6 +115,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-029 | 0.625 | 0.517 | 0.625 | 0.974 | 0.819 |
 | EXP-030 | 0.625 | 0.517 | 0.625 | 0.974 | 0.818 |
 | EXP-031 | 0.625 | – | – | 0.966 | 0.820 |
+| EXP-035 | 0.649 | 0.534 | 0.636 | 0.976 | 0.833 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -136,6 +137,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-029 | 0.933 (26) | 0.787 (91) | 0.911 (46) | 0.759 (71) | 0.814 (17) | 0.737 (12) |
 | EXP-030 | 0.931 (26) | 0.786 (91) | 0.910 (46) | 0.758 (71) | 0.814 (17) | 0.737 (12) |
 | EXP-031 | 0.942 (26) | 0.786 (91) | 0.917 (46) | 0.758 (71) | 0.814 (17) | 0.737 (12) |
+| EXP-035 | 0.933 (26) | 0.807 (101) | 0.911 (46) | 0.788 (81) | 0.814 (17) | 0.834 (22) |
 
 ## 5. Notes
 
