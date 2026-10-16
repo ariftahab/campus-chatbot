@@ -30,13 +30,15 @@ HIT_KS = (1, 3, 5, 10)
 METRIC_DIRECTION = {
     "mrr@10": +1, "hit@1": +1, "hit@3": +1, "hit@5": +1, "hit@10": +1,
     "context_hit": +1, "context_chars": -1, "latency_ms": -1, "answer_acc": +1,
+    "rerank_input_recall": +1,
 }
 PER_QUESTION_KEY = {  # özet metrik -> soru başına değer anahtarı
     "mrr@10": "rr", "hit@1": "hit@1", "hit@3": "hit@3", "hit@5": "hit@5", "hit@10": "hit@10",
     "context_hit": "context_hit", "context_chars": "context_chars", "latency_ms": "latency_ms",
     "answer_acc": "answer_ok",
+    "rerank_input_recall": None,  # soru başına değer aşama sırasından türetilir (run.per_question_value)
 }
-BINARY_METRICS = {"hit@1", "hit@3", "hit@5", "hit@10", "context_hit", "answer_acc"}
+BINARY_METRICS = {"hit@1", "hit@3", "hit@5", "hit@10", "context_hit", "answer_acc", "rerank_input_recall"}
 NO_CHANGE_EPS = 1e-9
 
 

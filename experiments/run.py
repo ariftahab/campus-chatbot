@@ -263,6 +263,14 @@ def answer_ok(item, answer):
     return all(any(normalize(alt) in answer for alt in kw.split("|")) for kw in item["beklenen"])
 
 
+def per_question_value(row, metric, key):
+    """Soru başına metrik değeri; rerank_input_recall: ilgili parça reranker'a giden adaylar içinde mi (0/1)."""
+    if metric == "rerank_input_recall":
+        stages = row.get("asamalar", {})
+        return int(stages["rerank_input"] is not None) if "rerank_input" in stages else None
+    return row[key]
+
+
 def compare(exp, result, parent):
     """Üst deneyle aynı sorular üzerinde eşleştirilmiş karşılaştırma."""
     same_data = parent["dataset"]["hash"] == result["dataset"]["hash"]
@@ -275,9 +283,11 @@ def compare(exp, result, parent):
         a, b = parent.get(source), result.get(source)
         if not a or not b or not a.get("tamamlandi", True) or not b.get("tamamlandi", True):
             continue
-        before_rows = {r["id"]: r[key] for r in a["per_question"]}
-        after_rows = {r["id"]: r[key] for r in b["per_question"]}
-        ids = [i for i in after_rows if i in before_rows]
+        before_rows = {r["id"]: per_question_value(r, metric, key) for r in a["per_question"]}
+        after_rows = {r["id"]: per_question_value(r, metric, key) for r in b["per_question"]}
+        ids = [i for i in after_rows if before_rows.get(i) is not None and after_rows[i] is not None]
+        if not ids:
+            continue
         before = [before_rows[i] for i in ids]
         after = [after_rows[i] for i in ids]
         before_mean, after_mean = statistics.mean(before), statistics.mean(after)
