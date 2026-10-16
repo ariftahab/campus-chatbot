@@ -329,6 +329,29 @@ PROMPTS = {
     },
 }
 
+# citation_style="fikra": atıf kuralı, madde metnindeki fıkra numarasını da istemek üzere değiştirilir (prompt sürümünden
+# bağımsız; v3 tabanlı bütün prompt'larda aynı satır). Panelde fıkrayı vurgulayabilmek için (2026-10-08: 64 atıfın
+# hiçbirinde fıkra yoktu). Örnek soyut tutulur: gerçek bir madde/fıkra soru setindeki bir cevabı ele verebilir.
+_CITE_RULE = ("- Kullandığın her bilginin sonunda kaynağını köşeli parantezle belirt (bağlamdaki parça etiketlerinde yazan "
+              "belge adı ve madde).")
+_CITE_RULE_FIKRA = ("- Kullandığın her bilginin sonunda kaynağını köşeli parantezle belirt: bağlamdaki parça etiketinde yazan "
+                    "belge adı, madde ve fıkra. Fıkra, madde metninde paragrafın başındaki parantez içindeki sayıdır (\"(2) ...\" ile "
+                    "başlayan paragraf ikinci fıkradır). Atıfı [Belge adı, Madde N/F] biçiminde yaz (N madde, F fıkra "
+                    "numarası). Bilgi birden fazla fıkradaysa hepsini yaz; madde metninde fıkra numarası yoksa yalnız maddeyi "
+                    "yaz.")
+
+
+def with_citation_style(template, style):
+    """Sistem mesajındaki atıf kuralını citation_style'a göre değiştirilmiş yeni bir template döndürür."""
+    if style == "madde":
+        return template
+    system = template.messages[0].prompt.template
+    if _CITE_RULE not in system:
+        raise ValueError("citation_style='fikra' yalnız v3 tabanlı prompt'larla kullanılabilir.")
+    return ChatPromptTemplate.from_messages([("system", system.replace(_CITE_RULE, _CITE_RULE_FIKRA)),
+                                             *template.messages[1:]])
+
+
 RECITATION_HINT = ("\n\n(Cevabı belge metnini kelimesi kelimesine kopyalamadan, kendi cümlelerinle yaz; kaynak "
                    "atıflarını koru.)")
 RECITATION_FALLBACK = ("Bu sorunun cevabı aşağıdaki kaynaklarda yer alıyor, ancak metin otomatik olarak aktarılamadı. "
@@ -368,6 +391,9 @@ class RagBot:
         self.retriever = retriever
         self.llm = llm
         self.prompt = PROMPTS[cfg.prompt_version]
+        self.template = with_citation_style(self.prompt["template"], cfg.citation_style)
+        self.clarify_template = (with_citation_style(PROMPTS[cfg.clarify_prompt]["template"], cfg.citation_style)
+                                 if cfg.clarify_trigger else None)
         self.scope_labels = {}  # belge -> kapsam etiketi (yalnız clarify_trigger açıksa)
         if cfg.clarify_trigger:
             self.scope_labels = {src: v.get("kapsam") for src, v in json.loads(
@@ -429,7 +455,7 @@ class RagBot:
                 "today": date.today().strftime("%d.%m.%Y"),
             })
         clarify = self.needs_clarification(query, docs)
-        template = PROMPTS[self.cfg.clarify_prompt]["template"] if clarify else self.prompt["template"]
+        template = self.clarify_template if clarify else self.template
         chain = template | self.llm
         started = time.perf_counter()  # yalnız cevap üretimi: retrieval ve rewrite hariç
         message = chain.invoke(variables)

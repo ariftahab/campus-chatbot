@@ -67,7 +67,7 @@ def corpus_paths(name):
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
 PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None,
-                  "clarify_prompt": "v4_netlestirme"}
+                  "clarify_prompt": "v4_netlestirme", "citation_style": "madde"}
 
 
 def full_params(params):
@@ -108,6 +108,7 @@ class RagConfig:
                                     # varsa ve soru kapsam anmıyorsa clarify_prompt kullanılır (rag.RagBot)
     clarify_prompt: str           # netleştirme açıldığında kullanılan rag.PROMPTS anahtarı: "v4_netlestirme" |
                                   # "v5_netlestirme_kisa" (genel kural + tek soru biçimi tarif edilir)
+    citation_style: str           # "madde": [Belge, Madde N] | "fikra": [Belge, Madde N/F] (cevap ve netleştirme prompt'unda)
     scope_search: Optional[str]  # None | "parallel_v1": context'te temsil edilmeyen paralel kapsamları (genel, tıp,
                                  # diş, hukuk, lisansüstü) kendi belgelerinde ayrıca arayıp ekler (rag.Retriever)
     # Üretim
@@ -142,6 +143,8 @@ class RagConfig:
             raise ValueError("scope_search hybrid retrieval ve reranker gerektirir.")
         if cfg.clarify_prompt not in ("v4_netlestirme", "v5_netlestirme_kisa"):
             raise ValueError(f"Bilinmeyen clarify_prompt: {cfg.clarify_prompt}")
+        if cfg.citation_style not in ("madde", "fikra"):
+            raise ValueError(f"Bilinmeyen citation_style: {cfg.citation_style}")
         if cfg.reranker_dtype not in ("fp32", "fp16"):
             raise ValueError(f"Bilinmeyen reranker_dtype: {cfg.reranker_dtype}")
         if cfg.reranker_dtype == "fp16" and cfg.device != "cuda":
