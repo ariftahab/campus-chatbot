@@ -5,8 +5,9 @@
 Production yapılandırması; LLM modeli ve isteğe bağlı başka parametreler (ör. prompt sürümleri) değiştirilerek. Her senaryoda önce fakülteye göre değişen bir soru
 sorulur (netleştirme açılır ve model fakülteyi sorar), sonra kullanıcı kendi yönetmeliği olmayan bir fakülteyi söyler.
 Ölçülen: ikinci turda netleştirme yeniden açıldı mı, model fakülteyi tekrar sordu mu, rewrite ve cevap.
-Senaryo başına ~3 LLM isteği (7 senaryo, ~21 istek; yandal senaryosu 2026-10-17'de eklendi: kural her
-fakültede aynı, fakülte sorulsa da ikinci turda kural verilmeli).
+Senaryo başına ~3 LLM isteği (9 senaryo, ~27 istek; 2026-10-17'de eklenenler: yandal, kural her fakültede
+aynı, fakülte sorulsa da ikinci turda kural verilmeli; staj, her birimin kendi yönergesi var, ikinci turda o birimin
+süresi gelmeli).
 """
 import json
 import sys
@@ -29,6 +30,8 @@ SCENARIOS = [
     ("Okulu en fazla kaç yılda bitirmem gerekiyor?", "ziraat fakültesindeyim"),
     ("Mezun olmak için not ortalamam en az kaç olmalı?", "Mimarlık"),
     ("Yan dal yaparken bir dönemde en fazla kaç AKTS ders alabilirim?", "Mühendislik fakültesindeyim"),
+    ("Stajımı kaç gün yapmam gerekiyor?", "Turizm rehberliği bölümündeyim"),
+    ("Stajımı kaç gün yapmam gerekiyor?", "Mühendislik fakültesi"),
 ]
 
 
