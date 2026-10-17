@@ -5034,5 +5034,143 @@
   "llm_sn": 2160.9,
   "toplam_sn": 2499.4
  },
- "karsilastirma": null
+ "karsilastirma": {
+  "ust_deney": "EXP-033",
+  "ayni_veri_seti": true,
+  "metrikler": {
+   "mrr@10": {
+    "once": 0.8295,
+    "sonra": 0.8328,
+    "fark": 0.0033,
+    "test": "Wilcoxon",
+    "p": 0.6547208460185769
+   },
+   "hit@1": {
+    "once": 0.748,
+    "sonra": 0.7559,
+    "fark": 0.0079,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 1
+   },
+   "hit@3": {
+    "once": 0.9134,
+    "sonra": 0.9055,
+    "fark": -0.0079,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 1,
+    "iyilesen": 0
+   },
+   "hit@5": {
+    "once": 0.9528,
+    "sonra": 0.9528,
+    "fark": 0.0,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 0
+   },
+   "hit@10": {
+    "once": 0.9685,
+    "sonra": 0.9685,
+    "fark": 0.0,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 0
+   },
+   "context_hit": {
+    "once": 0.9528,
+    "sonra": 0.9528,
+    "fark": 0.0,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 0
+   },
+   "context_chars": {
+    "once": 5756.4016,
+    "sonra": 5751.811,
+    "fark": -4.5906,
+    "test": "Wilcoxon",
+    "p": 1.0
+   },
+   "latency_ms": {
+    "once": 447.2787,
+    "sonra": 430.4205,
+    "fark": -16.8583,
+    "test": "Wilcoxon",
+    "p": 4.207307280603566e-11
+   },
+   "answer_acc": {
+    "once": 0.9664,
+    "sonra": 0.9732,
+    "fark": 0.0067,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 1,
+    "iyilesen": 2
+   },
+   "rerank_input_recall": {
+    "once": 0.9764,
+    "sonra": 0.9764,
+    "fark": 0.0,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 0
+   },
+   "cevap_uzunlugu": {
+    "once": 482.1275,
+    "sonra": 426.302,
+    "fark": -55.8255,
+    "test": "Wilcoxon",
+    "p": 0.0045515587204329345
+   },
+   "netlestirme_uzunlugu": {
+    "once": 674.025,
+    "sonra": 538.875,
+    "fark": -135.15,
+    "test": "Wilcoxon",
+    "p": 0.0027222440436937374
+   },
+   "birlestirme_isabeti": {
+    "once": 0.3,
+    "sonra": 0.4,
+    "fark": 0.1,
+    "test": "McNemar (kesin)",
+    "p": 1.0,
+    "kotulesen": 0,
+    "iyilesen": 1
+   },
+   "fikra_atif_orani": {
+    "once": 0.0294,
+    "sonra": 0,
+    "fark": -0.0294,
+    "test": "Wilcoxon",
+    "p": 0.06559969214707187
+   }
+  },
+  "karar": {
+   "metrik": "answer_acc",
+   "beklenen_yon": "artis",
+   "sonuc": "Sayısal iyileşme (istatistiksel olarak anlamlı değil)",
+   "hipotez": "Yön doğru, anlamlı değil"
+  },
+  "degisen_sorular": [
+   {
+    "id": "D06",
+    "once": 3,
+    "sonra": 4
+   },
+   {
+    "id": "D07",
+    "once": 2,
+    "sonra": 1
+   }
+  ]
+ },
+ "karsilastirma_sonradan": "2026-10-17T13:09:09"
 }
