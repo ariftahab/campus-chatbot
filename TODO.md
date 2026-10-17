@@ -73,6 +73,11 @@
             Sonuç (2026-10-17): 674 -> 359 karakter (p<0,001), isabet aynı; ama "tam olarak şu üç parçayla yaz"
             çekimser kalmayı eziyor (2 soruda "bilgim yok" yerine genel kural), gereksiz netleştirme 0,21 -> 0,24.
             Kabul kararı bekliyor; önerilen düzeltme: v5 + "cevap bağlamda yoksa önce bilgim yok de" önceliği (yeni deney).
+            **v6_netlestirme_durumlu alt küme teşhisi (2026-10-17, 14 soru, `experiments/teshis_alt_kume.py`):** üç durum
+            (kurallar farklı / aynı / cevap yok) olumlu talimatla. Ders hocası sorusunda "bilgim yok" geri geldi, katkı
+            payı tutarı sorusunda gelmedi; gereksiz fakülte sorusu 4/4 sürdü (tek kurallı yandal AKTS sorusu dahil); tetik
+            açılan 6 netleştirme sorusunda uzunluk v5'te ~374, v6'da ~567 karakter (v4 ~1150): "farklı kurallar veriyorsa"
+            koşulu modele kapsamları yeniden saydırıyor. İyileşme değil, bütün set koşulmadı.
       - [x] **EXP-035 model:** `llm_model` gemini-3.1-flash-lite → gemini-3.5-flash-lite (kullanıcının hipotezi: yeni
             model system prompt'a daha iyi uyar). 3.5'in ayrı kotasıyla 2026-10-16'da koşuldu; EXP-033 koşulunca
             `python -m experiments.run EXP-035 --karsilastir` ile karşılaştırma tamamlanır. Sonraki prompt deneyleri
