@@ -67,9 +67,12 @@
       baseline, sonra deneyler tek tek; her biri bir öncekinin sonucu yorumlandıktan sonra.
       - [x] **EXP-033 baseline** (2026-10-17): production (EXP-032) set 4.2'de. Cevap doğruluğu 0,966, birleştirme
             3/10, netleştirme cevabı 674 karakter, fıkra atıf oranı 0,029, LLM latency 4,0 sn (medyan 2,3).
-      - [ ] **EXP-034 cevap uzunluğu:** `clarify_prompt` v4 → `v5_netlestirme_kisa` (genel kural + "farklı
+      - [x] **EXP-034 cevap uzunluğu:** `clarify_prompt` v4 → `v5_netlestirme_kisa` (genel kural + "farklı
             olabilir" + fakülte sorusu; biçim tarif edilir). Birincil: `netlestirme_uzunlugu` (EXP-027'de 602
             karakter), netleştirme isabeti ve cevap doğruluğu düşmemeli. Config commit'li.
+            Sonuç (2026-10-17): 674 -> 359 karakter (p<0,001), isabet aynı; ama "tam olarak şu üç parçayla yaz"
+            çekimser kalmayı eziyor (2 soruda "bilgim yok" yerine genel kural), gereksiz netleştirme 0,21 -> 0,24.
+            Kabul kararı bekliyor; önerilen düzeltme: v5 + "cevap bağlamda yoksa önce bilgim yok de" önceliği (yeni deney).
       - [x] **EXP-035 model:** `llm_model` gemini-3.1-flash-lite → gemini-3.5-flash-lite (kullanıcının hipotezi: yeni
             model system prompt'a daha iyi uyar). 3.5'in ayrı kotasıyla 2026-10-16'da koşuldu; EXP-033 koşulunca
             `python -m experiments.run EXP-035 --karsilastir` ile karşılaştırma tamamlanır. Sonraki prompt deneyleri
