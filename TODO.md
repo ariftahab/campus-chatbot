@@ -78,6 +78,14 @@
             payı tutarı sorusunda gelmedi; gereksiz fakülte sorusu 4/4 sürdü (tek kurallı yandal AKTS sorusu dahil); tetik
             açılan 6 netleştirme sorusunda uzunluk v5'te ~374, v6'da ~567 karakter (v4 ~1150): "farklı kurallar veriyorsa"
             koşulu modele kapsamları yeniden saydırıyor. İyileşme değil, bütün set koşulmadı.
+            **Kapsam kararı kesin (2026-10-17):** model kapsamları hiç sıralamaz; soruda kapsam yoksa genel kural + fakülte
+            sorusu, varsa o kapsamın kuralı; gereksiz fakülte sorusu hata sayılmaz (takipte doğru cevap yeter); tetik
+            kalır; fakülte metadata filtresi planı da bu kararla kapandı. `v7_kapsamsiz` + `v7_netlestirme` (tamamen olumlu).
+            Alt küme teşhisi (12 tek tur + 7 takip senaryosu, ~33 istek): 12/12 doğru; ders hocası ve katkı payı soruları
+            düzeldi; takip senaryolarında 7/7 ikinci tur doğru, tekrar sorma yok (yandal: sordu, sonra 15 AKTS);
+            netleştirme cevapları v5 düzeyinde (aynı 4 soruda v4 ~1100, v5 ~376, v7 ~426); yatay geçiş listesi kalktı
+            (914 -> 521). Kalan: staj süresi sorusu hâlâ birimleri sıralıyor (1258 karakter; bütün öğrencileri kapsayan tek
+            bir staj belgesi yok). Bütün set koşusu kullanıcı kararını bekliyor.
       - [x] **EXP-035 model:** `llm_model` gemini-3.1-flash-lite → gemini-3.5-flash-lite (kullanıcının hipotezi: yeni
             model system prompt'a daha iyi uyar). 3.5'in ayrı kotasıyla 2026-10-16'da koşuldu; EXP-033 koşulunca
             `python -m experiments.run EXP-035 --karsilastir` ile karşılaştırma tamamlanır. Sonraki prompt deneyleri
