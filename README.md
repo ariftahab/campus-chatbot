@@ -24,10 +24,11 @@ GOOGLE_API_KEY=...
 ```bash
 python chat.py                          # sohbet ('çık' ile çıkılır, 'yeni' geçmişi temizler)
 python ingest.py [EXP-ID]               # bir yapılandırmanın indeksini elle kur (normalde otomatik)
-python -m experiments.run EXP-008       # bir deneyi koş (getirme metrikleri, API çağrısı yok)
+python -m experiments.run EXP-008       # bir deneyi koş (retrieval metrikleri, API çağrısı yok)
 python -m experiments.run --all         # sonucu olmayan tüm deneyleri koş
 python -m experiments.run EXP-010 --llm # cevap doğruluğunu da ölç (Gemini kotası harcar)
 python -m experiments.report            # deney günlüğünü yeniden üret
+python experiments/teshis_alt_kume.py   # bir değişikliği yalnız seçilen sorularda dene (deney değil)
 ```
 
 Sohbet uygulaması `config.PRODUCTION_EXPERIMENT` ile seçilen deneyin parametreleriyle çalışır.
