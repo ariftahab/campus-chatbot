@@ -85,7 +85,15 @@
             düzeldi; takip senaryolarında 7/7 ikinci tur doğru, tekrar sorma yok (yandal: sordu, sonra 15 AKTS);
             netleştirme cevapları v5 düzeyinde (aynı 4 soruda v4 ~1100, v5 ~376, v7 ~426); yatay geçiş listesi kalktı
             (914 -> 521). Kalan: staj süresi sorusu hâlâ birimleri sıralıyor (1258 karakter; bütün öğrencileri kapsayan tek
-            bir staj belgesi yok). Bütün set koşusu kullanıcı kararını bekliyor.
+            bir staj belgesi yok; aslında var: uygulamalı eğitimler yönergesi, bağlamda 2. sırada). Bütün set koşusu
+            kullanıcı kararını bekliyor.
+            **`context_format=kapsam_v1` teşhisi (2026-10-17):** chunk başlığının altına belgenin kapsam etiketi (ör.
+            "Kapsam: tüm öğrenciler (genel kural)"). Staj sorusu ilk turda yine birimleri sıralıyor (1258 -> 1043 karakter;
+            genel kuralı artık "Genel Kural" diye adlandırıyor ama listenin sonunda), takipte doğru (turizm rehberliği
+            30+30, mühendislik 40 iş günü). Ders hocası sorusunda "bilgim yok" yine kayboldu; diğerleri aynı. İyileşme yok;
+            parametre varsayılanı v2, production etkilenmedi. Hipotez: genel kural somut sayı vermeyince ("en az 20 gün,
+            bölüm kurulu belirler") model birimlerin sayılarını yazıyor; staj belgelerinin etiketleri tetiği açmadığı için
+            kısa netleştirme prompt'u devreye girmiyor.
       - [x] **EXP-035 model:** `llm_model` gemini-3.1-flash-lite → gemini-3.5-flash-lite (kullanıcının hipotezi: yeni
             model system prompt'a daha iyi uyar). 3.5'in ayrı kotasıyla 2026-10-16'da koşuldu; EXP-033 koşulunca
             `python -m experiments.run EXP-035 --karsilastir` ile karşılaştırma tamamlanır. Sonraki prompt deneyleri
