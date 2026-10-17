@@ -93,7 +93,15 @@
             30+30, mühendislik 40 iş günü). Ders hocası sorusunda "bilgim yok" yine kayboldu; diğerleri aynı. İyileşme yok;
             parametre varsayılanı v2, production etkilenmedi. Hipotez: genel kural somut sayı vermeyince ("en az 20 gün,
             bölüm kurulu belirler") model birimlerin sayılarını yazıyor; staj belgelerinin etiketleri tetiği açmadığı için
-            kısa netleştirme prompt'u devreye girmiyor.
+            kısa netleştirme prompt'u devreye girmiyor.
+            **Kullanıcı kararı:** etiket kaldırıldı (`git revert`, v7 etiketsiz hâline dönüldü). Birim belirtilmeyen staj
+            sorusuna sabit cevap: `fixed_answers="summer_staj_v1"` (yaz okulu + staj; retrieval yapılmadan fakülte/bölüm
+            sorulur). Kota harcamayan kontrol: set 4.2'de yalnız "Stajımı kaç gün yapmam gerekiyor?" eşleşiyor (set bu
+            davranışı bekliyor); mühendislik staj soruları ve takipler normal yoldan. Canlı deneme: sabit cevap → "Turizm
+            rehberliği bölümündeyim" 30+30 iş günü, "Mühendislik fakültesi" 40 iş günü.
+            **Sıradaki:** EXP-036 = v7 prompt'ları (`prompt_version` + `clarify_prompt`, `coklu_degisiklik_gerekcesi`),
+            üst deney EXP-033; tam koşu kullanıcı onayıyla. Production sonra EXP-036 + `summer_staj_v1` (koşu yok,
+            EXP-028/032 gibi).
       - [x] **EXP-035 model:** `llm_model` gemini-3.1-flash-lite → gemini-3.5-flash-lite (kullanıcının hipotezi: yeni
             model system prompt'a daha iyi uyar). 3.5'in ayrı kotasıyla 2026-10-16'da koşuldu; EXP-033 koşulunca
             `python -m experiments.run EXP-035 --karsilastir` ile karşılaştırma tamamlanır. Sonraki prompt deneyleri
