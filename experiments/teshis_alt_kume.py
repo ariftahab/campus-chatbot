@@ -1,6 +1,6 @@
-"""Teşhis (deney değil): bir deneyin yapılandırmasıyla, bir parametre değiştirilerek yalnız seçilen sorular sorulur.
+"""Teşhis (deney değil): bir deneyin yapılandırmasıyla, parametreler değiştirilerek yalnız seçilen sorular sorulur.
 
-  python experiments/teshis_alt_kume.py <EXP-ID> <param=değer> <soru id'leri, virgülle> <çıktı.json> [karşılaştırılacak EXP-ID'ler...]
+  python experiments/teshis_alt_kume.py <EXP-ID> <param=değer>[+<param=değer>...] <soru id'leri, virgülle> <çıktı.json> [karşılaştırılacak EXP-ID'ler...]
 
 Bütün seti koşmadan önce bir değişikliğin sorunlu sorularda işe yarayıp yaramadığını görmek için (ör. EXP-034'te
 çekimser kalmayan iki soru): soru başına 1 LLM isteği (takip sorularında +1 rewrite). İyileşme varsa değişiklik yeni
@@ -19,10 +19,10 @@ import rag  # noqa: E402
 from experiments.run import answer_rows, dataset_name, load_result  # noqa: E402
 
 
-def main(exp_id, override, ids, out_path, compare_ids):
+def main(exp_id, overrides, ids, out_path, compare_ids):
     exp = config.load_experiment(exp_id)
-    key, value = override.split("=", 1)
-    cfg = config.RagConfig.from_dict({**exp["params"], key: value})  # from_dict değeri de denetler
+    changes = dict(o.split("=", 1) for o in overrides.split("+"))
+    cfg = config.RagConfig.from_dict({**exp["params"], **changes})  # from_dict değerleri de denetler
     dataset = json.loads((config.ROOT / "eval" / f"{dataset_name(exp)}.json").read_text(encoding="utf-8"))
     wanted = ids.split(",")
     items = [q for q in dataset["sorular"] if q["id"] in wanted]
@@ -39,7 +39,7 @@ def main(exp_id, override, ids, out_path, compare_ids):
             print(f"  {c}: ok={r['answer_ok']} sordu={r['netlestirme']} {len(r['answer'])} kr | {r['answer'][:300]}")
         print(f"  YENİ: ok={row['answer_ok']} sordu={row['netlestirme']} tetik={row.get('netlestirme_tetik')} "
               f"{len(row['answer'])} kr | {row['answer']}")
-    Path(out_path).write_text(json.dumps({"deney": exp_id, "degisiklik": override, "sorular": rows},
+    Path(out_path).write_text(json.dumps({"deney": exp_id, "degisiklik": changes, "sorular": rows},
                                          ensure_ascii=False, indent=1), encoding="utf-8")
 
 

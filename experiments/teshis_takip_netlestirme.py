@@ -1,11 +1,12 @@
 """Teşhis (deney değil): netleştirmeden sonra kullanıcı yönetmeliği olmayan bir fakülteyi söyleyince ne oluyor?
 
-  python experiments/teshis_takip_netlestirme.py <llm_model> <çıktı.json>
+  python experiments/teshis_takip_netlestirme.py <llm_model> <çıktı.json> [<param=değer>+<param=değer>...]
 
-Production yapılandırması, yalnız LLM modeli değiştirilerek. Her senaryoda önce fakülteye göre değişen bir soru
+Production yapılandırması; LLM modeli ve isteğe bağlı başka parametreler (ör. prompt sürümleri) değiştirilerek. Her senaryoda önce fakülteye göre değişen bir soru
 sorulur (netleştirme açılır ve model fakülteyi sorar), sonra kullanıcı kendi yönetmeliği olmayan bir fakülteyi söyler.
 Ölçülen: ikinci turda netleştirme yeniden açıldı mı, model fakülteyi tekrar sordu mu, rewrite ve cevap.
-Senaryo başına ~3 LLM isteği (6 senaryo, ~18 istek).
+Senaryo başına ~3 LLM isteği (7 senaryo, ~21 istek; yandal senaryosu 2026-10-17'de eklendi: kural her
+fakültede aynı, fakülte sorulsa da ikinci turda kural verilmeli).
 """
 import json
 import sys
@@ -27,11 +28,13 @@ SCENARIOS = [
     ("Finalden kalırsam bütünleme sınavına girebilir miyim?", "eğitim fakültesi"),
     ("Okulu en fazla kaç yılda bitirmem gerekiyor?", "ziraat fakültesindeyim"),
     ("Mezun olmak için not ortalamam en az kaç olmalı?", "Mimarlık"),
+    ("Yan dal yaparken bir dönemde en fazla kaç AKTS ders alabilirim?", "Mühendislik fakültesindeyim"),
 ]
 
 
-def main(model, out_path):
-    cfg = replace(config.production_config(), llm_model=model)
+def main(model, out_path, overrides=None):
+    changes = dict(o.split("=", 1) for o in overrides.split("+")) if overrides else {}
+    cfg = replace(config.production_config(), llm_model=model, **changes)
     store, chunks, _ = ingest.load_index(cfg)
     bot = rag.RagBot(cfg, rag.Retriever(cfg, store, chunks),
                      ChatGoogleGenerativeAI(model=model, temperature=cfg.llm_temperature, max_retries=0))
@@ -50,4 +53,4 @@ def main(model, out_path):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
