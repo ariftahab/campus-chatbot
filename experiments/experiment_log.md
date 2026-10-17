@@ -46,7 +46,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-031 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | **vector** | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-032 | EXP-029 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
 | EXP-033 | EXP-032 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
-| EXP-034 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | – |
+| EXP-034 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-035 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | **3.5-flash-lite** | 3753 |
 
 ## 2. Results
@@ -87,7 +87,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-031 | Hybrid ablasyonu: retrieval hybrid → vector (reranker ve 30 aday sabit) | 4.1 | 0.820 | 0.735 | 0.940 | 0.940 | 5727 | 723 ms | rerank_input_recall ↓ kötüleşti (p=1.00, anlamlı değil) | ~ |
 | EXP-032 | Production yapılandırması: EXP-029 (havuz derinliği A) + yaz okulu sabit cevabı (fixed_answers=summer_v1) | | | | | | | | koşulmadı | |
 | EXP-033 | Baseline: production (EXP-032) set 4.2'de (birleştirme soruları + 80 → 90 etiketi) | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 447 ms | baseline |  |
-| EXP-034 | Netleştirme cevabının biçimi tarif edilir (clarify_prompt=v5_netlestirme_kisa) | | | | | | | | koşulmadı | |
+| EXP-034 | Netleştirme cevabının biçimi tarif edilir (clarify_prompt=v5_netlestirme_kisa) | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 417 ms | netlestirme_uzunlugu ↓ iyileşti (p<0.01, anlamlı) | ✓ |
 | EXP-035 | LLM gemini-3.1-flash-lite → gemini-3.5-flash-lite | 4.2 | 0.833 | 0.756 | 0.953 | 0.953 | 5752 | 430 ms | answer acc. ↑ iyileşti (p=1.00, anlamlı değil) | ~ |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
@@ -116,6 +116,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-030 | 0.625 | 0.517 | 0.625 | 0.974 | 0.818 |
 | EXP-031 | 0.625 | – | – | 0.966 | 0.820 |
 | EXP-033 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
+| EXP-034 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
 | EXP-035 | 0.649 | 0.534 | 0.636 | 0.976 | 0.833 |
 
 ## 4. Soru grupları (MRR@10)
@@ -139,6 +140,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-030 | 0.931 (26) | 0.786 (91) | 0.910 (46) | 0.758 (71) | 0.814 (17) | 0.737 (12) |
 | EXP-031 | 0.942 (26) | 0.786 (91) | 0.917 (46) | 0.758 (71) | 0.814 (17) | 0.737 (12) |
 | EXP-033 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
+| EXP-034 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
 | EXP-035 | 0.933 (26) | 0.807 (101) | 0.911 (46) | 0.788 (81) | 0.814 (17) | 0.834 (22) |
 
 ## 5. Notes
@@ -177,4 +179,5 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-031:** Vector-only: BM25'in getirdiği tek soru kayboldu (recall 0,974 -> 0,966), 3 soru biraz iyileşti, MRR aynı (0,820). Latency ölçümü GPU paylaşımı yüzünden güvenilir değil.
 - **EXP-032:** Production yapılandırması, koşu yok: EXP-029 retrieval'ı + yaz okulu sabit cevabı (9/9). Latency 347 → 437 ms. Production EXP-028 → EXP-032.
 - **EXP-033:** 3.1 baseline set 4.2: cevap doğruluğu 0,966, birleştirme 3/10, netleştirme cevabı 674 karakter, LLM latency 4,0 sn. Sonraki prompt deneylerinin referansı.
+- **EXP-034:** Kısa netleştirme: netleştirme cevabı 674 -> 359 karakter (p<0,001), ama 2 çekimser kalma sorusunda 'bilgim yok' yerine genel kural yazıyor; gereksiz netleştirme 0,21 -> 0,24.
 - **EXP-035:** 3.5 flash-lite: cevap doğruluğu 0,966 -> 0,973 (anlamca ~eşit), cevaplar ve netleştirme belirgin kısa, LLM latency 4,0 -> 14,5 sn. Öneri: 3.1'de kal.
