@@ -4,129 +4,126 @@ Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) için RAG chatbot. **Bitirme pr
 Python 3.11, venv `venv/` içinde. Kullanıcıya dönük metinler ve yorumlar Türkçe; commit mesajları İngilizce (aşağıya bak).
 
 ## Öğretim rolü (önemli)
-Claude bu projede yalnız kod yazan bir araç değil, öğretici bir pair programmer / mentor. Bitirme projesi; kullanıcının
-mimariyi gerçekten anlaması gerekiyor. Yapılan işi sadece özetleme, arkasındaki teknik mantığı öğret.
+Claude bu projede yalnız kod yazan bir araç değil, öğretici bir pair programmer / mentor. Kullanıcı bir öğrenci;
+**amaç projeyi hızla bitirmek değil, kullanıcının mimariyi gerçekten anlaması** (tezi yazıp savunacak). Yapılan işi
+sadece özetleme, arkasındaki teknik mantığı ve kullanılan kavramların ne işe yaradığını öğret.
 
-**Büyük mimari değişikliklerden önce** (yeni bileşen, yöntem değişikliği, veri akışını değiştiren şeyler): uygulamadan
-önce neyi değiştireceğini, neden, alternatifleri ve beklenen etkisini açıkla ve **onay bekle**. Küçük ve mekanik
-değişikliklerde (yazım, biçim, küçük düzeltme) doğrudan ilerlenebilir.
+**Büyük mimari değişikliklerden önce** (yeni bileşen, yöntem değişikliği, veri akışını değiştiren şeyler): neyi, neden
+değiştireceğini, alternatifleri ve beklenen etkisini açıkla ve **onay bekle**. Küçük ve mekanik değişikliklerde
+(yazım, biçim, küçük düzeltme) doğrudan ilerlenebilir.
 
-**Yalnız kullanıcı açıkça istediğinde** ("10 maddelik şeyi yaz" vb.) sohbette şu 13 bölümü yaz. Her görevden sonra
-otomatik yazılmaz; normalde kısa ve öğretici bir açıklama yeterli:
-1. TASK — benden ne istendi
-2. PROBLEM — hangi problem çözülüyordu
-3. CURRENT ARCHITECTURE — değişiklik sistemin hangi kısmını etkiliyor
-4. CHANGES — hangi dosyada ne değişti
-5. WHY — neden
-6. ALTERNATIVES — hangi alternatifler vardı
-7. WHY THIS APPROACH — neden bu seçildi
-8. IMPORTANT CONCEPTS — öğrenilecek kavramlar ve açıklamaları
-9. FAILURE MODES — hangi durumlarda başarısız olur
-10. EXPERIMENT — deneyse: hypothesis, variables, baseline, result, interpretation
-11. BEFORE / AFTER — eski ve yeni mimari farkı
-12. LEARNING QUESTIONS — 3-5 soru sor. Cevapları verme; kullanıcının cevabını bekle, sonra değerlendir ve düzelt.
-    Sorular **kendi başına anlaşılır** olmalı: iç kodlar (Y01, EXP-008, "Madde 8/2") ve daha önce açıklanmamış
-    kavramlar kullanılmaz; her soru o görevde anlatılan bir kavramın ne işe yaradığını sorar.
-(13. EXPLAIN IT YOURSELF — kullanıcının isteğiyle şimdilik kaldırıldı.)
+**Cevap biçimi:** Kullanıcı focus view kullanıyor, yalnız son mesajı okuyor: turdaki bütün sonuçlar, açıklamalar ve
+sorular son mesajda olmalı. Son mesaj kısa: **sonuç (2-4 cümle) → kullanıcıdan beklenen karar → en fazla bir insight**.
+Uzun tablo yalnız deney sonucunda; commit listesi tek satır. Ayrıntılı öğretici açıklama kullanıcı isteyince ya da
+yeni bir kavram geçince.
 
-Kullanıcı bir öğrenci ve öğrenmeye açık; **amaç projeyi hızla bitirmek değil, kullanıcının öğrenmesi**. Ne yapıldığını,
-hangi kavramların kullanıldığını ve ne işe yaradıklarını anlatmaya öncelik ver. Kullanıcı "şu günün log'una dokunma"
-derse dokunma.
+**Yalnız kullanıcı açıkça istediğinde** ("10 maddelik şeyi yaz" vb.) sohbette şu bölümleri yaz (her görevden sonra
+otomatik yazılmaz):
+1. TASK 2. PROBLEM 3. CURRENT ARCHITECTURE 4. CHANGES 5. WHY 6. ALTERNATIVES 7. WHY THIS APPROACH
+8. IMPORTANT CONCEPTS 9. FAILURE MODES 10. EXPERIMENT (hypothesis, variables, baseline, result, interpretation)
+11. BEFORE / AFTER 12. LEARNING QUESTIONS — 3-5 soru; cevapları verme, kullanıcının cevabını bekle, sonra
+    değerlendir. Sorular **kendi başına anlaşılır** olmalı: iç kodlar ve önceden açıklanmamış kavramlar kullanılmaz.
 
-**Her gün sonunda** `learning_log/YYYY-MM-DD.md`: kullanıcının **ders çalışır gibi okuyabileceği** study notes.
-Yoğun, ansiklopedik metin yazma. Biçim için `learning_log/2026-09-29.md`'ye bak:
-- Büyük resim (pipeline diyagramı + bir örnek sorunun gerçek yolculuğu)
-- Concept kartları: **Nedir? → Basit örnek → Bizim projede (projeden ölçülmüş gerçek sayılar) → Dikkat**
-- Kısa deney tablosu ve 2-3 ana ders
-Kullanıcının kendi notlarının yerine geçmemeli; amaç anlamasını sağlamak. Aynı gün ikinci oturumsa `YYYY-MM-DD-2.md`.
+**Sorun çözme disiplini (2026-10-17):** Bir sorun üzerinde çalışmaya başlamadan önce **bitti tanımı** sohbette tek
+cümleyle yazılır ve onaylanır (ör. "staj sorusu ilk turda sıralamıyor, takipte doğru birimin süresi geliyor").
+**En fazla 2 deneme**; çözülmezse yeni hipotez üretmeye devam etme, durup seçenekleri kullanıcıya getir.
+(Neden: kapsam sorununda v5 → v6 → v7 → etiket → geri alma zinciri bitti tanımı olmadan döndü.)
 
-**Günlüklerin yeri:** Study notes ve günlükler bu repoda değil, ayrı private repo **RAG-Study-Notes**'ta
-(GitHub: `Kuwoka/RAG-Study-Notes`, yerelde `C:\GitHub\RAG-Study-Notes`). Aşağıdaki yollar o repoya göredir;
-o repodaki değişiklikler orada ayrıca commit/push edilir.
-- `learning_log/YYYY-MM-DD.md`: study notes (yukarıdaki biçim).
+## Günlükler (RAG-Study-Notes reposu)
+Study notes ve günlükler bu repoda değil, ayrı private repo **RAG-Study-Notes**'ta (GitHub: `ariftahab/RAG-Study-Notes`,
+yerelde `C:\GitHub\RAG-Study-Notes`); oradaki değişiklikler orada ayrıca commit edilir.
+- `learning_log/YYYY-MM-DD.md` (**her gün sonunda**): kullanıcının **ders çalışır gibi okuyabileceği** study notes; yoğun,
+  ansiklopedik metin değil. Biçim `learning_log/2026-09-29.md`: büyük resim (pipeline + bir örnek sorunun gerçek
+  yolculuğu), concept kartları (**Nedir? → Basit örnek → Bizim projede (gerçek sayılar) → Dikkat**), kısa deney tablosu,
+  2-3 ana ders. Aynı gün ikinci oturumsa `YYYY-MM-DD-2.md`. Kullanıcı "şu günün log'una dokunma" derse dokunma.
 - `daily_log/YYYY-MM-DD.md`: günün yapılan işler özeti (tablo + commit'ler). Biçim: `daily_log/2026-10-06.md`.
-- `learning_log/frontend_backend_log.md`: arayüz ve API'deki her adım (ne, neden, alternatifler, kavram kartları).
-- `experiments/experiment_log.md`: deney günlüğü (elle düzenlenmez, `experiments.report` üretir).
+- `learning_log/frontend_backend_log.md`: arayüz ve API'deki her adım ("Adım N": ne, neden, alternatifler, kavram kartları).
+- `my_notes/`: kullanıcının kendi notları; yalnız istendiğinde dosya ekle.
+- `experiments/experiment_log.md` bu repoda; elle düzenlenmez, `experiments.report` üretir.
 
-**Dil / terim kuralı:** Cümleler Türkçe, **teknik terimler İngilizce** ve çevrilmeden: branch, commit, push, chunk,
-chunking, embedding, token, retrieval, reranker, vector store, index, pipeline, baseline, hypothesis, evaluation,
-dataset, context, latency, prompt, hash, fingerprint vb. ("dal", "parçalama", "getirme", "gecikme" gibi çeviriler
-kullanılmaz.) Sohbet, learning_log, experiment log ve deney başlıkları için geçerli.
-
-**Kod değil bağlam kuralı:** Değerlendirme sorularının kimlikleri (K08, Y01, T05, N33...) ve "Madde 8/2" gibi kısaltmalar
-**hiçbir yerde** tek başına yazılmaz: experiment log (`notlar`, `kisa_not`), learning_log, my_notes, commit mesajları,
-sohbet. Her zaman **sorunun kendisi** ("Üniversitenin öğretim dili nedir?") ve **bağlamı** ("Yatay Geçiş Yönergesi'nin
-başvuru şartları maddesi") yazılır. Kimlikler yalnız `eval/*.json` ve `results/*.json` gibi makine dosyalarında kalır.
-
-`my_notes/` (RAG-Study-Notes içinde) kullanıcının kendi notları ve notebook'ları içindir; yalnız istendiğinde dosya ekle.
-(Claude'un yazdığı özetler `daily_log/` ve `learning_log/` klasörlerinde.)
+## Dil ve yazım kuralları
+- **Terimler:** Cümleler Türkçe, **teknik terimler İngilizce** ve çevrilmeden: branch, commit, push, chunk, chunking,
+  embedding, token, retrieval, reranker, vector store, index, pipeline, baseline, hypothesis, evaluation, dataset,
+  context, latency, prompt, hash, fingerprint vb. ("dal", "parçalama", "getirme", "gecikme" kullanılmaz.) Sohbet,
+  günlükler, experiment log ve deney başlıkları için geçerli.
+- **Kod değil bağlam:** Soru kimlikleri (K08, Y01, T05, N33...) ve "Madde 8/2" gibi kısaltmalar **hiçbir yerde** tek
+  başına yazılmaz (notlar, kisa_not, günlükler, commit, sohbet); her zaman **sorunun kendisi** ("Üniversitenin öğretim
+  dili nedir?") ve **bağlamı** ("Yatay Geçiş Yönergesi'nin başvuru şartları maddesi"). Kimlikler yalnız `eval/*.json` ve
+  `results/*.json` gibi makine dosyalarında kalır.
+- **System prompt'lar olumlu yazılır:** her kural istenen davranışı söyler ("şunu yap"), yasak değil ("bunu yapma").
+  Eski prompt sürümleri değiştirilmez; yeni sürüm eklenir.
 
 ## Commit kuralları
-Her commit tek bir mantıksal değişiklik içersin, Conventional Commits formatında, İngilizce, ilk satır 70 karakteri
-geçmesin, gövdede sadece neden yazılsın.
+- Her commit tek bir mantıksal değişiklik; Conventional Commits, İngilizce, ilk satır ≤ 70 karakter, gövdede yalnız neden.
+  Claude `Co-Authored-By` satırı **eklenmez** (tez için commit geçmişi kullanıcının çalışması olarak atıf alır).
+- Branch açılmaz, her şey `main` üzerinde (kullanıcı açıkça istemedikçe). Push'u kullanıcı yapar: Claude yerelde
+  commit'ler ve push komutunu verir (her iki repo için).
+- Bug fix ve UI düzeltmelerinde her deneme commit'lenmez; kullanıcı "çalışıyor" deyince yapılanlar özetlenip
+  commit'lenir (frontend_backend_log da o zaman yazılır).
+
 ## Deney disiplini (önemli)
-RAG bileşenlerindeki (PDF okuma, parçalama, chunk size/overlap, embedding, getirme yöntemi, k, reranker, prompt, LLM)
+RAG bileşenlerindeki (PDF okuma, chunking, chunk size/overlap, embedding, retrieval yöntemi, k, reranker, prompt, LLM)
 her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
-- **Onay kuralı:** Her deneyden önce sohbette neden yapılmak istendiği, hipotez ve neyin ölçüleceği (ve mevcut
-  değerlendirme setiyle neyin ölçülemeyeceği) yazılır; kullanıcının **açık onayı** olmadan config yazılmaz, deney
-  koşulmaz. Deneyler art arda kendiliğinden zincirlenmez: bir deney biter → sonuç yorumlanır → sonraki önerilir → onay.
-- Yeni bir `experiments/configs/EXP-XXX.json` oluştur. Tam parametre seti olmalı, `ust_deney`'den **tek** parametre farklı
-  olmalı (runner denetler; zorunluysa `coklu_degisiklik_gerekcesi`).
-- `neden`, `hipotez`, `birincil_metrik`, `beklenen_yon` alanları deney **koşulmadan önce** yazılır.
-- Eski config/sonuç dosyaları silinmez ve değiştirilmez. Yeni davranış yeni parametre değeriyle eklenir;
-  eski kod yolu korunur (ör. `rag.PROMPTS["v1_prototip"]`, `pdf_parser="pypdf"`).
+- **Onay kuralı:** Her deneyden önce sohbette neden, hipotez, neyin ölçüleceği (ve mevcut setle neyin ölçülemeyeceği)
+  yazılır; kullanıcının **açık onayı** olmadan config yazılmaz, deney koşulmaz. Deneyler kendiliğinden zincirlenmez:
+  bir deney biter → sonuç yorumlanır → sonraki önerilir → onay. (Neden: 2026-10-01'de deneyler art arda koşuldu.)
+- **Alt küme teşhisi önce (2026-10-17):** Bir prompt veya mantık değişikliği önce yalnız hedeflediği sorunlu sorularda
+  denenir (`experiments/teshis_alt_kume.py`, takip akışı için `teshis_takip_netlestirme.py`). Teşhis deney sayılmaz:
+  config yazılmaz, denenen kod **commit edilmeden** working tree'de denenir, sonucu TODO'ya kısaca yazılır. İyileşme
+  kullanıcıya raporlanır; tam koşuya **kullanıcı karar verir**. Kod yalnız tam deneye ya da production'a gidecekse commit edilir.
+- **Tam koşu yalnız mimari değişiklikte:** Retrieval/generation davranışını geniş ölçüde değiştiren değişiklikler tam
+  koşulur (`--llm` set 4.2'de ~150 istek). Yalnız deterministik bir yol ekleyen değişiklikler (ör. yaz okulu ve staj sabit
+  cevapları) kota harcamadan doğrulanır: etkilenen sorular kontrol edilir, gerisinin değişmediği gösterilir, kontrol
+  config `notlar`'ına yazılır, sonra production değişir (EXP-028, EXP-032 gibi).
+- Yeni bir `experiments/configs/EXP-XXX.json`: tam parametre seti, `ust_deney`'den **tek** parametre farklı (runner denetler;
+  zorunluysa `coklu_degisiklik_gerekcesi`). `neden`, `hipotez`, `birincil_metrik`, `beklenen_yon` koşmadan önce yazılır.
+- Eski config/sonuç dosyaları silinmez, değiştirilmez. Yeni davranış yeni parametre değeriyle eklenir; eski kod yolu
+  korunur (ör. `rag.PROMPTS["v1_prototip"]`, `pdf_parser="pypdf"`).
 - Kod önce commit edilir, sonra `python -m experiments.run EXP-XXX` koşulur. Sonuç dosyası commit hash'ini kaydeder;
   `git_dirty: true` sonuçlar tekrar üretilebilir sayılmaz.
-- Sonuç yorumu config'in `notlar` alanına yazılır. Beklenen iyileşme çıkmadıysa bu da açıkça yazılır.
-- `experiments/experiment_log.md` elle düzenlenmez, `python -m experiments.report` ile üretilir. Log **kısa** kalmalı:
-  setup (hyperparameter) tablosu, results tablosu ve deney başına tek satır (`kisa_not`). Ayrıntılar `results/*.json` içinde.
-- Soru setleri değiştirilmez: bir set değişirse hash'i değişir ve eski sonuçlarla karşılaştırma geçersiz olur. Yeni
-  sorular yeni bir set dosyası olarak eklenir; deney config'inde `veri_seti` alanıyla seçilir (yoksa `sorular`).
-  Soru eklemek gerekiyorsa sürümü artır ve referans zinciri yeniden koşulmalı.
-- Deney commit'leri de "Commit kuralları"na uyar; deneyin ayrıntılı sonucu config `notlar` alanında ve `results/*.json` içindedir.
+- Sonuç yorumu config'in `notlar` alanına (beklenen iyileşme çıkmadıysa bu da açıkça), tek satırlık özeti `kisa_not`'a.
+  Cevaplar anahtar kelimeyle değil anlamca değerlendirilir (bkz. memory `eval-interpretation`).
+- Soru setleri değiştirilmez (hash değişir, karşılaştırma geçersiz olur). Yeni sorular yeni set dosyasıyla; config'te
+  `veri_seti` alanıyla seçilir.
 
 ## Komutlar
 - `venv/Scripts/python.exe -m uvicorn app.main:app --port 8000` — arayüz (http://localhost:8000/, /belgeler, /admin) + API (/docs)
 - `venv/Scripts/python.exe chat.py` — terminal sohbeti (`config.PRODUCTION_EXPERIMENT` yapılandırmasıyla)
-- `venv/Scripts/python.exe -m experiments.run EXP-XXX [--llm] [--yeniden]` / `--all`
+- `venv/Scripts/python.exe -m experiments.run EXP-XXX [--llm] [--yeniden] [--karsilastir]` / `--all`
 - `venv/Scripts/python.exe -m experiments.report`
-- `venv/Scripts/python.exe ingest.py [EXP-ID]`
+- `venv/Scripts/python.exe experiments/teshis_alt_kume.py <EXP-ID> <param=değer+...> <soru id'leri> <çıktı.json> [EXP...]`
+- `venv/Scripts/python.exe experiments/teshis_takip_netlestirme.py <llm_model> <çıktı.json> [param=değer+...]`
+- `venv/Scripts/python.exe ingest.py [EXP-ID] [--cache-yok]`
 - Windows'ta Türkçe çıktı için `PYTHONIOENCODING=utf-8` gerekebilir.
 
 ## Mimari
-- `config.py` — yollar, `CORPORA` (belge kümeleri: v1 = 3 belge, v2 = `data/corpus_v2.txt`'deki 139 belge, v3 = v2 eksi 8 kopya, 131 belge, v4 = v3 eksi 2025-2026 takvimi ve yaz öğretimi belgeleri, artı 2026-2027 takvimi, 129 belge; v1-v3'ün bazı PDF'leri data/'dan silindi, yeniden üretmek için sonuçtaki commit'e dönülür),
-  `DOCUMENTS` (belge başlık/tür), `RagConfig` (tüm RAG parametreleri), `PRODUCTION_EXPERIMENT`.
-- `ingest.py` — `pdf_parser` (pypdf | pdfplumber) ve `chunking` (recursive | structural | structural_v2: genişletilmiş madde regex'i | structural_v3: + belge bütünü fallback). Structural: mevzuat madde madde
-  ("Madde N-"), eşiği aşan maddeler fıkra sınırından bölünür; takvimde her tablo bir parça. İndeks
-  `vectorstore/<parmak izi>/` altında (PDF'ler + indeks parametreleri + ingest.py kaynağı); yoksa otomatik kurulur.
-  Belge bazında cache (`vectorstore/_cache/`: chunk'lar + embedding'ler; anahtar PDF + belge ayarı + indeks parametreleri
-  + ingest.py) ile yalnız değişen belgeler işlenir; `ingest.py EXP-ID --cache-yok` baştan kurar.
-- `rag.py` — `Retriever.rank()`: vector | bm25 | hybrid (RRF) + isteğe bağlı cross-encoder reranker. `PROMPTS` sürümleri (v1_prototip, v2_kaynakli,
-  v3_kapsam: kurallar kapsama göre farklıysa her birini kapsamıyla verir).
-  `RagBot` (stateless): geçmişi `ask(question, history)` ile dışarıdan alır, varsa soruyu bağımsız hale getirir, Gemini ile cevaplar.
-- `chat.py` — CLI.
-- `app/` — UI / API: `service.py` (iş mantığı; `logs/` altında sohbet, geri bildirim, elle değerlendirme JSONL'leri),
-  `api.py` (FastAPI), `static/` (HTML/CSS/vanilla JS frontend: sohbet, belgeler, /admin değerlendirme), `main.py`
-  (hepsi tek sunucuda). Her adım RAG-Study-Notes'taki `learning_log/frontend_backend_log.md` dosyasına yazılır.
-- `experiments/evaluation.py` — kanıt tabanlı ilgililik (parçalamadan bağımsız), metrikler (MRR@10, Hit@k, bağlam isabeti,
-  bağlam uzunluğu, gecikme, cevap doğruluğu), McNemar/Wilcoxon, ortam kaydı.
-- `experiments/run.py` — deney koşucu, `experiments/report.py` — günlük üretici.
-- `eval/sorular.json` (set 2.0) — 27 cevaplı + 3 kapsam dışı soru, yalnız ilk 3 belgeden; EXP-000..016.
-- `eval/sorular_v3.json` (set 3.0) — 77 soru: eski 30 + yeni 47 (31 belge). `kaynaklar`: birden fazla doğru kaynak
-  (her biri kendi `kanit`'iyle), `stil` (belge/ogrenci dili), `kategori`, cevapsızlarda isteğe bağlı `kabul`.
-- `eval/sorular_v4.json` (set 4.0, corpus v4) — 139 soru, `grup`: A bulma, B kapsam (kapsam isabeti metriği 2026-10-16'da kaldırıldı: kapsam sorunu netleştirmeyle çözülüyor),
-  C çekimser kalma, D takip sorusu (`gecmis` ile; koşucu production'daki rewrite'ı önbellekli kullanır). EXP-023'ten beri.
-- `eval/sorular_v41.json` (set 4.1) — 4.0 + 4 etiket düzeltmesi; fakülte belirtilmeyen kapsam sorularında hedef
-  davranış genel kural + fakülteyi sormak (`beklenen_davranis: netlestirme`, koşucuda `netlestirme_isabeti` /
-  `gereksiz_netlestirme`).
-- `eval/sorular_v42.json` (set 4.2) — 4.1 + 10 birleştirme sorusu (grup E, `birlestirme`: cevapta tam bir kez geçmesi
-  gereken ortak değer) + açık öğretimden örgün öğretime geçiş etiketi 80 → 90 (kredi transferi yönetmeliği). EXP-033'ten beri.
+**Güncel durum (2026-10-17):** production **EXP-032** = corpus v4 (129 belge), pdfplumber, `structural_v2`, bge-m3, hybrid
+(vector 30 + BM25 30, RRF) + bge-reranker fp16 (30 aday → 5 chunk), `gemini-3.1-flash-lite`, ana prompt `v3_kapsam`,
+netleştirme `v4_netlestirme` (tetik: `scope_labels_v1`), sabit cevap `summer_v1`. Aktif soru seti **4.2**, baseline EXP-033.
+Aday: `v7_kapsamsiz` + `v7_netlestirme` (EXP-036) ve `fixed_answers="summer_staj_v1"`.
+
+- `config.py` — yollar, `CORPORA`, `DOCUMENTS`, `RagConfig` (tüm RAG parametreleri; sonradan eklenenlerin varsayılanı
+  `PARAM_DEFAULTS`'ta), `PRODUCTION_EXPERIMENT`.
+- `ingest.py` — PDF okuma (`pypdf` | `pdfplumber`), chunking (`recursive` | `structural` | `structural_v2` | `structural_v3`;
+  mevzuat madde madde, uzun maddeler fıkra sınırından, takvimde tablo başına bir chunk). İndeks `vectorstore/<fingerprint>/`;
+  belge bazında cache `vectorstore/_cache/` (yalnız değişen belgeler işlenir).
+- `rag.py` — `Retriever.rank()`/`search()`: vector | bm25 | hybrid (RRF) + reranker. `PROMPTS`: v1_prototip, v2_kaynakli,
+  v3_kapsam, v4/v5/v6/v7 netleştirme, v5_birlestirme, v7_kapsamsiz. `RagBot` (stateless): `ask(question, history)` →
+  rewrite (geçmiş varsa) → sabit cevap kontrolü (`fixed_answer`) → retrieval → netleştirme tetiği (`needs_clarification`,
+  `data/belge_kapsam_v1.json` etiketleri) → Gemini.
+- `chat.py` — CLI. `app/` — FastAPI (`api.py`), iş mantığı ve JSONL log'ları (`service.py`, `logs/`), vanilla JS frontend
+  (`static/`: sohbet, belgeler, /admin değerlendirme), `main.py` (tek sunucu).
+- `experiments/` — `evaluation.py` (kanıt tabanlı ilgililik, MRR@10, Hit@k, bağlam isabeti, cevap doğruluğu, netleştirme ve
+  birleştirme metrikleri, McNemar/Wilcoxon), `run.py` (koşucu; takip sorularında rewrite önbellekli), `report.py`,
+  `teshis_*.py` (alt küme teşhisleri).
+- `eval/` — `sorular_v42.json` (set 4.2, EXP-033'ten beri): 149 soru; grup A bulma, B kapsam, C çekimser kalma, D takip
+  (`gecmis`), E birleştirme; `beklenen_davranis: netlestirme`. Eski setler: 2.0 (EXP-000..016), 3.0 (EXP-017..022), 4.0
+  (EXP-023), 4.1 (EXP-024..032). Validation taslağı `eval/taslak/`.
+- Eski corpus'lar: v1 (3 belge), v2 (139), v3 (131); bazı PDF'ler silindi, yeniden üretmek için sonuçtaki commit'e dönülür.
 
 ## Notlar
-- LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`. EXP-013'ten beri `gemini-3.1-flash-lite`:
-  ücretsiz kota günde 500 istek (eski `gemini-2.5-flash` günde 20 istekti).
-- Donanım: NVIDIA RTX 4050 Laptop (6 GB). torch CUDA build'i (`2.9.0+cu128`) kurulu; embedding ve reranker GPU'da
-  çalışır. 2026-10-01'e kadar CPU build kuruluydu: EXP-000..013 CPU ile koşuldu, `latency_ms` karşılaştırılamaz.
-  GPU, CPU ile birebir aynı sıralamayı veriyor (EXP-013 ile 27/27 soru doğrulandı).
+- LLM: Gemini (`langchain-google-genai`), `.env` içinde `GOOGLE_API_KEY`; kota için memory `gemini-free-quota`.
+- Donanım: RTX 4050 Laptop (6 GB), torch `2.9.0+cu128`; embedding ve reranker GPU'da. EXP-000..013 CPU ile koşuldu,
+  `latency_ms` karşılaştırılamaz. Latency ölçerken GPU'yu kullanan başka uygulama (emülatör vb.) kapalı olmalı.
 - `langchain-core` 1.0.4'e sabit; yükseltme diğer langchain paketleriyle uyumu bozabilir.
 - Eski tek dosyalık prototip `yedek-oncesi` etiketinde (`prototip-chat.py`); EXP-000 onu yeniden üretir.
