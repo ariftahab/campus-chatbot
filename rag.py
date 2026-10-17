@@ -443,6 +443,19 @@ SUMMER_PATTERN = re.compile(r"yaz\s*okul|yaz\s*öğretim")
 SUMMER_ANSWER = (f"{config.NO_ANSWER} Yaz öğretimi (yaz okulu) yönetmeliği yürürlükten kaldırıldığı için yaz okulu "
                  "hakkında güncel bir bilgi veremiyorum. Güncel durum için Öğrenci İşleri Daire Başkanlığına başvurabilirsiniz.")
 
+# fixed_answers="summer_staj_v1": staj kuralları her birimin kendi yönergesinde; herkesi kapsayan uygulamalı eğitimler
+# yönergesi somut süre vermiyor ("en az 20 iş günü, bölüm kurulu belirler"). Birim belirtilmeyen staj sorusunda model
+# bütün birimlerin yönergelerini sıralıyordu (v7 ve kapsam etiketli context ile de, 2026-10-17); kullanıcı kararıyla
+# retrieval yapılmadan birim sorulur. Takip sorusunda rewrite birim adını sorguya kattığı için normal yol çalışır
+# (turizm rehberliği: 30+30, mühendislik: 40 iş günü). Kalıp yeniden yazılmış sorguya uygulanır.
+STAJ_PATTERN = re.compile(r"\bstaj")
+UNIT_MENTION = re.compile(
+    r"fakülte|yüksekokul|\bmyo\b|meslek yüksek|bölüm|program|enstitü|\btıp|\bdiş|hukuk|turizm|rehberli|otelcilik|"
+    r"mühendis|mimarlık|ziraat|iibf|iktisadi|fizik tedavi|hemşire|eğitim fakülte|gerede|mengen|sağlık bilim|"
+    r"spor bilim|güzel sanat|islami|ilahiyat|fen edebiyat|lisansüstü|yüksek lisans|doktora|ön ?lisans")
+STAJ_ANSWER = ("Staj süresi ve kuralları fakülteden fakülteye, hatta bölümden bölüme değişiklik gösteriyor. Size doğru "
+               "bilgi verebilmem için hangi fakültede veya bölümde okuduğunuzu söyleyebilir misiniz?")
+
 REWRITE_SYSTEM = (
     "Sana bir sohbet geçmişi ve kullanıcının son sorusu verilecek. Son soruyu, geçmişi görmeden de "
     "anlaşılabilecek bağımsız bir soru olarak yeniden yaz (ör. 'peki bunun son günü ne?' -> "
@@ -526,8 +539,11 @@ class RagBot:
 
     def fixed_answer(self, query):
         """Belgelerden cevaplanmaması gereken konular için sabit cevap; yoksa None."""
-        if self.cfg.fixed_answers and SUMMER_PATTERN.search(tr_lower(query)):
+        text = tr_lower(query)
+        if self.cfg.fixed_answers and SUMMER_PATTERN.search(text):
             return SUMMER_ANSWER
+        if self.cfg.fixed_answers == "summer_staj_v1" and STAJ_PATTERN.search(text) and not UNIT_MENTION.search(text):
+            return STAJ_ANSWER
         return None
 
     def retrieve(self, question, history=None):

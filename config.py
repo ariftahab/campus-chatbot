@@ -104,6 +104,7 @@ class RagConfig:
     final_k: int               # LLM'e bağlam olarak verilen parça sayısı
     fixed_answers: Optional[str]  # None | "summer_v1": yaz okulu/yaz öğretimi sorularına retrieval yapmadan sabit cevap
                                   # (yönetmelik yürürlükten kalktı; başka belgelerdeki eski atıflar yanlış cevap üretiyordu)
+                                  # | "summer_staj_v1": + birim belirtilmeyen staj sorusunda birimi sorar (rag.STAJ_ANSWER)
     clarify_trigger: Optional[str]  # None | "scope_labels_v1": context'te en az iki farklı paralel kapsamın belgesi
                                     # varsa ve soru kapsam anmıyorsa clarify_prompt kullanılır (rag.RagBot)
     clarify_prompt: str           # netleştirme açıldığında kullanılan rag.PROMPTS anahtarı: "v4_netlestirme" |
@@ -138,7 +139,7 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
         if cfg.scope_search not in (None, "parallel_v1"):
             raise ValueError(f"Bilinmeyen scope_search: {cfg.scope_search}")
-        if cfg.fixed_answers not in (None, "summer_v1"):
+        if cfg.fixed_answers not in (None, "summer_v1", "summer_staj_v1"):
             raise ValueError(f"Bilinmeyen fixed_answers: {cfg.fixed_answers}")
         if cfg.clarify_trigger not in (None, "scope_labels_v1"):
             raise ValueError(f"Bilinmeyen clarify_trigger: {cfg.clarify_trigger}")
