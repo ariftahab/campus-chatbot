@@ -67,7 +67,7 @@ def corpus_paths(name):
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
 PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None,
-                  "clarify_prompt": "v4_netlestirme", "citation_style": "madde", "context_format": "v2"}
+                  "clarify_prompt": "v4_netlestirme", "citation_style": "madde"}
 
 
 def full_params(params):
@@ -112,8 +112,6 @@ class RagConfig:
                                   # cevap, cevap yoksa "bilgim yok") | "v7_netlestirme" (prompt_version
                                   # "v7_kapsamsiz" ile: genel kural + fakülte sorusu, sıralama yok)
     citation_style: str           # "madde": [Belge, Madde N] | "fikra": [Belge, Madde N/F] (cevap ve netleştirme prompt'unda)
-    context_format: str           # "v2": chunk başına [atıf etiketi] (prompt'un format'ı) | "kapsam_v1": etiketin altında
-                                  # belgenin kapsamı (data/belge_kapsam_v1.json, okunur adıyla; v2/v3 tabanlı prompt'lar)
     scope_search: Optional[str]  # None | "parallel_v1": context'te temsil edilmeyen paralel kapsamları (genel, tıp,
                                  # diş, hukuk, lisansüstü) kendi belgelerinde ayrıca arayıp ekler (rag.Retriever)
     # Üretim
@@ -149,8 +147,6 @@ class RagConfig:
         if cfg.clarify_prompt not in ("v4_netlestirme", "v5_netlestirme_kisa", "v6_netlestirme_durumlu",
                                       "v7_netlestirme"):
             raise ValueError(f"Bilinmeyen clarify_prompt: {cfg.clarify_prompt}")
-        if cfg.context_format not in ("v2", "kapsam_v1"):
-            raise ValueError(f"Bilinmeyen context_format: {cfg.context_format}")
         if cfg.citation_style not in ("madde", "fikra"):
             raise ValueError(f"Bilinmeyen citation_style: {cfg.citation_style}")
         if cfg.reranker_dtype not in ("fp32", "fp16"):
