@@ -65,11 +65,12 @@
           (koşu yok; 9/9 yaz sorusu sabit cevap). Production EXP-028 → EXP-032.
     - **Prompt deneyleri (2026-10-16, onaylı; Gemini kotası bittiği için koşular 2026-10-17'de).** Sıra: önce
       baseline, sonra deneyler tek tek; her biri bir öncekinin sonucu yorumlandıktan sonra.
-      - [ ] **EXP-033 baseline:** production (EXP-032) set 4.2'de (`--llm`, ~140 istek). Config commit'li.
+      - [x] **EXP-033 baseline** (2026-10-17): production (EXP-032) set 4.2'de. Cevap doğruluğu 0,966, birleştirme
+            3/10, netleştirme cevabı 674 karakter, fıkra atıf oranı 0,029, LLM latency 4,0 sn (medyan 2,3).
       - [ ] **EXP-034 cevap uzunluğu:** `clarify_prompt` v4 → `v5_netlestirme_kisa` (genel kural + "farklı
             olabilir" + fakülte sorusu; biçim tarif edilir). Birincil: `netlestirme_uzunlugu` (EXP-027'de 602
             karakter), netleştirme isabeti ve cevap doğruluğu düşmemeli. Config commit'li.
-      - [ ] **EXP-035 model:** `llm_model` gemini-3.1-flash-lite → gemini-3.5-flash-lite (kullanıcının hipotezi: yeni
+      - [x] **EXP-035 model:** `llm_model` gemini-3.1-flash-lite → gemini-3.5-flash-lite (kullanıcının hipotezi: yeni
             model system prompt'a daha iyi uyar). 3.5'in ayrı kotasıyla 2026-10-16'da koşuldu; EXP-033 koşulunca
             `python -m experiments.run EXP-035 --karsilastir` ile karşılaştırma tamamlanır. Sonraki prompt deneyleri
             hangi modelle yapılacak, buna göre karar verilir.
@@ -77,6 +78,11 @@
             farklı) aynı 139 sorusuna göre 0,921 → 0,971 (8 soru düzeldi, 1 bozuldu; en çok çekimser kalma ve kapsam
             gruplarında). Gereksiz netleştirme 0,26 → 0,19, netleştirme cevapları 602 → 496 karakter, birleştirme 4/10.
             **LLM latency ~5 kat**: ortalama 14,5 sn (medyan 10,3), 3.1'de ~3 sn. Karar latency'yi de içermeli.
+            **Kesin sonuç (EXP-033 ile, 2026-10-17):** cevap doğruluğu 0,966 -> 0,973 (2 iyileşen, 1 kötüleşen, p=1,0);
+            anlamca ~eşit (bir iyileşme anahtar kelime tesadüfü). Ara sonuçtaki kazanç yanlış baseline'dandı (EXP-027'de
+            retrieval havuzu ve bir etiket farklıydı). 3.5'in anlamlı kazancı yalnız uzunluk (cevap 482 -> 426, netleştirme
+            674 -> 539 karakter); bedel LLM latency 4,0 -> 14,5 sn. **Öneri: production ve prompt deneyleri 3.1 ile**
+            (kullanıcı onayı bekliyor); uzunluğu EXP-034 prompt'la dener.
       - [ ] **EXP-036 birleştirme:** `prompt_version` v3_kapsam → `v5_birlestirme` (v3'teki "ayrı ayrı yaz" ile
             "tekrar etme" çelişkisi kaldırıldı). Birincil: `birlestirme_isabeti` (set 4.2 grup E, 10 soru). Üst deney
             EXP-034 kabul edilirse EXP-034, edilmezse EXP-033; config bu yüzden EXP-034'ten sonra yazılacak.
@@ -87,9 +93,11 @@
             (ör. "Mühendislik fakültesi") ne oluyor? Teşhis script'i: `experiments/teshis_takip_netlestirme.py`.
             - **(Öncelikli) Geçmişe bakma:** tetik yalnız tıp/diş/hukuk/lisansüstü/önlisans adlarını tanıdığı için
               ikinci turda netleştirme yine açılıyor (6 senaryonun 4'ünde). 3.5 bunu fark edip 6/6 tekrar sormadı; 3.1
-              talimata daha harfiyen uyduğu için tekrar sorabilir (döngü). **Yarın 3.1 ile script koşulacak (~18 istek);
-              tekrar sorarsa:** önceki asistan mesajı fakülteyi sorduysa netleştirme açılmaz (`clarify_trigger`'a yeni
-              değer, deney).
+              talimata daha harfiyen uyduğu için tekrar sorabilir (döngü). **3.1 ile koşuldu (2026-10-17): tetik 5/6
+              senaryoda yine açıldı ama 3.1 de 0/6 tekrar sordu; döngü gözlenmedi, öncelik düştü.** Gerekirse: önceki
+              asistan mesajı fakülteyi sorduysa netleştirme açılmaz (`clarify_trigger`'a yeni değer, deney). Ziraat
+              senaryosunda 3.1'in rewrite'ı ('Ziraat Fakültesi lisans programını ...') genel azami süre maddesini
+              getirdi ve doğru cevapladı (7 yıl); aşağıdaki retrieval bulgusu rewrite'ın kelimelerine bağlı.
             - Tetik herhangi bir birim adını tanısın ("… fakültesi", "… yüksekokulu", "MYO", "… bölümü"): birim adı
               geçiyorsa netleştirme açılmaz; ana prompt'taki "özel düzenleme yoksa genel kuralı ver" kuralı çalışır.
             - **Yeni bulgu (retrieval):** rewrite fakülte adını sorguya ekleyince o fakültenin ilgisiz belgeleri
