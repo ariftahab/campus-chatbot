@@ -328,6 +328,59 @@ def _format_v2(docs):
     return "\n\n".join(f"[{source_label(d)}]\n{d.page_content}" for d in docs)
 
 
+# context_format="kapsam_v1": her chunk'ın atıf etiketinin altına belgenin kapsam etiketi (data/belge_kapsam_v1.json)
+# okunur adıyla yazılır. Model hangi belgenin genel kural olduğunu belge adından tahmin ediyordu (ör. staj süresi
+# sorusunda herkesi kapsayan uygulamalı eğitimler yönergesi 2. sıradaydı, model onu birim listesinin sonuna koydu).
+# Kapsam ayrı satırda: atıf etiketi değişmez, model atıflara kapsamı katmaz. "genel kural" ifadesi v7 prompt'undaki
+# tanımla aynı dili kullanır.
+SCOPE_NAMES = {
+    "tum_ogrenciler": "tüm öğrenciler (genel kural)",
+    "tum_onlisans_lisans": "tüm ön lisans ve lisans öğrencileri (genel kural)",
+    "genel_onlisans_lisans": "ön lisans ve lisans öğrencileri (genel kural)",
+    "tip": "Tıp Fakültesi",
+    "dis": "Diş Hekimliği Fakültesi",
+    "hukuk": "Hukuk Fakültesi",
+    "lisansustu": "lisansüstü (yüksek lisans ve doktora) öğrencileri",
+    "tip_uzmanlik": "tıpta uzmanlık öğrencileri",
+    "turizm": "Turizm Fakültesi",
+    "myo": "meslek yüksekokulları",
+    "mengen_myo": "Mengen Meslek Yüksekokulu",
+    "muhendislik": "Mühendislik Fakültesi",
+    "ziraat": "Ziraat Fakültesi",
+    "iibf": "İktisadi ve İdari Bilimler Fakültesi",
+    "mimarlik": "Mimarlık bölümü",
+    "egitim_fakultesi": "Eğitim Fakültesi",
+    "guzel_sanatlar": "Güzel Sanatlar Fakültesi",
+    "spor_bilimleri": "Spor Bilimleri Fakültesi",
+    "islami_ilimler": "İslami İlimler Fakültesi",
+    "saglik_bilimleri": "Sağlık Bilimleri Fakültesi",
+    "hemsirelik": "Hemşirelik bölümü",
+    "fizik_tedavi": "Fizik Tedavi ve Rehabilitasyon bölümü",
+    "formasyon": "pedagojik formasyon öğrencileri",
+    "hazirlik": "yabancı dil hazırlık öğrencileri",
+    "dikey_gecis": "dikey geçiş yapan ön lisans mezunları",
+    "merkez_kampus_disi": "merkez kampüs dışındaki programlar",
+    "kurum": "üniversite birimleri ve personeli (öğrenci kuralı değil)",
+}
+
+
+def scope_line(info):
+    """Kapsam etiketinin context satırı; etiketi olmayan belge için None."""
+    if not info or info.get("kapsam") not in SCOPE_NAMES:
+        return None
+    line = f"Kapsam: {SCOPE_NAMES[info['kapsam']]}"
+    excluded = [SCOPE_NAMES.get(x, x) for x in info.get("haric", [])]
+    return line + (f"; hariç: {', '.join(excluded)}" if excluded else "")
+
+
+def format_scoped(docs, scope_info):
+    parts = []
+    for d in docs:
+        line = scope_line(scope_info.get(d.metadata["source"]))
+        parts.append(f"[{source_label(d)}]\n" + (f"{line}\n" if line else "") + d.page_content)
+    return "\n\n".join(parts)
+
+
 PROMPTS = {
     "v1_prototip": {
         "template": ChatPromptTemplate.from_template(_V1_TEMPLATE),
@@ -489,10 +542,10 @@ class RagBot:
         self.template = with_citation_style(self.prompt["template"], cfg.citation_style)
         self.clarify_template = (with_citation_style(PROMPTS[cfg.clarify_prompt]["template"], cfg.citation_style)
                                  if cfg.clarify_trigger else None)
-        self.scope_labels = {}  # belge -> kapsam etiketi (yalnız clarify_trigger açıksa)
-        if cfg.clarify_trigger:
-            self.scope_labels = {src: v.get("kapsam") for src, v in json.loads(
-                SCOPE_FILES["parallel_v1"].read_text(encoding="utf-8"))["belgeler"].items()}
+        self.scope_info = {}  # belge -> {"kapsam", "haric"} (yalnız tetik ya da kapsamlı context için)
+        if cfg.clarify_trigger or cfg.context_format == "kapsam_v1":
+            self.scope_info = json.loads(SCOPE_FILES["parallel_v1"].read_text(encoding="utf-8"))["belgeler"]
+        self.scope_labels = {src: v.get("kapsam") for src, v in self.scope_info.items()}
         self.rewrite_chain = ChatPromptTemplate.from_messages([
             ("system", REWRITE_SYSTEM),
             MessagesPlaceholder("history"),
@@ -542,7 +595,9 @@ class RagBot:
         if fixed:
             return {"answer": fixed, "query": query, "docs": [], "generation_ms": 0.0, "clarify": False}
         docs = self.retriever.search(query)
-        variables = {"input": question, "context": self.prompt["format"](docs)}
+        context = (format_scoped(docs, self.scope_info) if self.cfg.context_format == "kapsam_v1"
+                   else self.prompt["format"](docs))
+        variables = {"input": question, "context": context}
         if self.prompt["history"]:
             variables.update({
                 "history": _to_messages(history),
