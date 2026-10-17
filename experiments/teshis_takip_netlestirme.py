@@ -11,6 +11,7 @@ süresi gelmeli).
 """
 import json
 import sys
+import time
 from dataclasses import replace
 from pathlib import Path
 
@@ -21,6 +22,9 @@ import config  # noqa: E402
 import ingest  # noqa: E402
 import rag  # noqa: E402
 from experiments.run import asks_unit  # noqa: E402
+
+# Ücretsiz katman dakikada 15 istek; senaryo başına 3 istek (rewrite dahil) ve her turdan sonra bekleme.
+WAIT = 8.0
 
 SCENARIOS = [
     ("Teorik derslerin yüzde kaçına girmek zorundayım?", "Mühendislik fakültesi"),
@@ -44,6 +48,7 @@ def main(model, out_path, overrides=None):
     rows = []
     for q1, q2 in SCENARIOS:
         a1 = bot.ask(q1)
+        time.sleep(WAIT)
         history = [{"role": "user", "content": q1}, {"role": "assistant", "content": a1["answer"]}]
         a2 = bot.ask(q2, history)
         row = {"soru": q1, "tetik1": a1["clarify"], "sordu1": asks_unit(a1["answer"]), "cevap1": a1["answer"],
@@ -52,6 +57,8 @@ def main(model, out_path, overrides=None):
         rows.append(row)
         print(f"[{q2}] 1. tur: tetik={row['tetik1']} sordu={row['sordu1']} | 2. tur: tetik={row['tetik2']} "
               f"TEKRAR SORDU={row['sordu2']}", flush=True)
+        Path(out_path).write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
+        time.sleep(WAIT)
     Path(out_path).write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
