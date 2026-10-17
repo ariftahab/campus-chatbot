@@ -255,6 +255,23 @@ _V5_SCOPE_RULE = """- Bu soruda öğrencinin fakültesi, bölümü veya öğreti
   fakültede veya programda okuyorsunuz?\""""
 _V5_SYSTEM = _V3_SYSTEM.replace(_V3_SCOPE_RULE, _V5_SCOPE_RULE)
 
+# v6: v5'in "cevabı tam olarak şu üç parçayla yaz" kuralı cevap bağlamda yokken de bir genel kural yazdırıyordu (EXP-034:
+# iki çekimser kalma sorusunda "bilgim yok" yerine başka kapsamın kuralı) ve kurallar aynıyken de fakülteyi sorduruyordu.
+# Üç durum ayrı ayrı, olumlu talimatla tarif edilir (kullanıcı kararı: prompt'ta yasak yerine istenen davranış yazılır).
+_V6_SCOPE_RULE = """- Bu soruda öğrencinin fakültesi, bölümü veya öğretim düzeyi belli değil. Cevabı bağlama göre şu üç durumdan
+  birine uygun yaz:
+  a) Bağlamdaki belgeler bu soruya farklı kapsamlar için farklı kurallar veriyorsa cevabı şu üç parçayla yaz:
+     1) Genel kuralı bir veya iki cümleyle, kaynağıyla birlikte yaz.
+     2) Tek cümleyle bazı fakülte veya programlarda bu kuralın farklı olabileceğini söyle; cevapta yalnız genel kuralın
+        içeriği yer alsın.
+     3) Son cümlede öğrencinin hangi fakültede veya programda okuduğunu sor.
+     Örnek biçim: "Genel olarak ... [Belge, Madde N]. Bazı fakülte ve programlarda bu kural farklı olabilir. Hangi
+     fakültede veya programda okuyorsunuz?"
+  b) Bağlamdaki belgeler bu soruya tek bir kural veriyorsa ya da bütün kapsamlar için aynı kuralı veriyorsa kuralı
+     doğrudan, kaynağıyla birlikte yaz.
+  c) Sorunun cevabı bağlamda yoksa yalnızca "{no_answer}" yaz."""
+_V6_SYSTEM = _V3_SYSTEM.replace(_V3_SCOPE_RULE, _V6_SCOPE_RULE)
+
 # v5_birlestirme: v3'te "her kuralı kapsamıyla ayrı ayrı yaz" ile "aynı kuralı tekrar etme" çelişiyordu; model aynı kuralı
 # her kapsam için ayrı yazıyordu (ör. lisans ve hukuk için aynı kredi iki satır). Kapsam maddesi kuralları önce
 # karşılaştırmayı ve aynı olanları tek satırda birleştirmeyi tarif eder; ayrı birleştirme maddesi bu yüzden kalkar.
@@ -321,6 +338,15 @@ PROMPTS = {
     "v5_netlestirme_kisa": {
         "template": ChatPromptTemplate.from_messages([
             ("system", _V5_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,
+        "history": True,
+    },
+    "v6_netlestirme_durumlu": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V6_SYSTEM),
             MessagesPlaceholder("history"),
             ("human", "{input}"),
         ]),

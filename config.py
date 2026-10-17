@@ -107,7 +107,9 @@ class RagConfig:
     clarify_trigger: Optional[str]  # None | "scope_labels_v1": context'te en az iki farklı paralel kapsamın belgesi
                                     # varsa ve soru kapsam anmıyorsa clarify_prompt kullanılır (rag.RagBot)
     clarify_prompt: str           # netleştirme açıldığında kullanılan rag.PROMPTS anahtarı: "v4_netlestirme" |
-                                  # "v5_netlestirme_kisa" (genel kural + tek soru biçimi tarif edilir)
+                                  # "v5_netlestirme_kisa" (genel kural + tek soru biçimi tarif edilir) |
+                                  # "v6_netlestirme_durumlu" (v5 biçimi yalnız kurallar farklıysa; aynıysa doğrudan
+                                  # cevap, cevap yoksa "bilgim yok")
     citation_style: str           # "madde": [Belge, Madde N] | "fikra": [Belge, Madde N/F] (cevap ve netleştirme prompt'unda)
     scope_search: Optional[str]  # None | "parallel_v1": context'te temsil edilmeyen paralel kapsamları (genel, tıp,
                                  # diş, hukuk, lisansüstü) kendi belgelerinde ayrıca arayıp ekler (rag.Retriever)
@@ -141,7 +143,7 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen clarify_trigger: {cfg.clarify_trigger}")
         if cfg.scope_search and not (cfg.reranker_model and cfg.retrieval == "hybrid"):
             raise ValueError("scope_search hybrid retrieval ve reranker gerektirir.")
-        if cfg.clarify_prompt not in ("v4_netlestirme", "v5_netlestirme_kisa"):
+        if cfg.clarify_prompt not in ("v4_netlestirme", "v5_netlestirme_kisa", "v6_netlestirme_durumlu"):
             raise ValueError(f"Bilinmeyen clarify_prompt: {cfg.clarify_prompt}")
         if cfg.citation_style not in ("madde", "fikra"):
             raise ValueError(f"Bilinmeyen citation_style: {cfg.citation_style}")
