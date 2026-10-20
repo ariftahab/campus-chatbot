@@ -32,6 +32,6 @@
   "fixed_answers": "summer_staj_v1",
   "clarify_prompt": "v7_netlestirme"
  },
- "notlar": "Koşu yapılmadı, doğrudan kontrol edildi (2026-10-20, LLM isteği harcanmadı). Set 4.2'nin 149 sorusunda (takip sorularında önbellekteki rewrite ile) sabit cevap summer_v1'e göre yalnız 'Stajımı kaç gün yapmam gerekiyor?' sorusunda değişiyor (netleştirme beklenen soru; birim soruluyor); yaz okulu ve yaz öğretimi hakkındaki 9 soru iki yapılandırmada da sabit cevabı alıyor, diğer 139 soruda eşleşme yok. Production EXP-037 -> EXP-038.",
+ "notlar": "Koşu yapılmadı, doğrudan kontrol edildi (2026-10-20; önbellekte olmayan bir takip sorusu için 1 rewrite isteği yapıldı, cevap isteği yok). Set 4.2'nin 149 sorusunda (takip sorularında önbellekteki rewrite ile) sabit cevap summer_v1'e göre yalnız 'Stajımı kaç gün yapmam gerekiyor?' sorusunda değişiyor (netleştirme beklenen soru; birim soruluyor); yaz okulu ve yaz öğretimi hakkındaki 9 soru iki yapılandırmada da sabit cevabı alıyor, diğer 139 soruda eşleşme yok. Production EXP-037 -> EXP-038.",
  "kisa_not": "Production yapılandırması, koşu yok: EXP-037 + staj sabit cevabı (yalnız birim belirtmeyen staj sorusu değişiyor). Production EXP-037 -> EXP-038."
 }
