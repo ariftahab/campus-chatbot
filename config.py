@@ -21,7 +21,7 @@ EVAL_FILE = ROOT / "eval" / "sorular.json"
 EXPERIMENTS_DIR = ROOT / "experiments"
 
 # Sohbet uygulamasının kullandığı deney. Yeni bir deney üretime alınacaksa burası değişir.
-PRODUCTION_EXPERIMENT = "EXP-037"  # v8_kapsamsiz ana prompt + v7_netlestirme (fakülte yalnız iki belge cevaplıyorsa sorulur)
+PRODUCTION_EXPERIMENT = "EXP-038"  # EXP-037 (v8_kapsamsiz ana prompt) + staj sabit cevabı (birim belirtilmeyince birim sorulur)
 
 # Belge adları kaynak gösteriminde ve parçaların başlığında kullanılır.
 # Listede olmayan bir PDF eklenirse dosya adı başlık olarak kullanılır.
