@@ -307,6 +307,21 @@ _V7_CLARIFY_RULE = """- Bu soruda öğrencinin fakültesi, bölümü veya öğre
   belgedeki kuraldır."""
 _V7_CLARIFY_SYSTEM = _V7_SYSTEM.replace(_V7_GENERAL_RULE, _V7_CLARIFY_RULE)
 
+# v8: v7'nin genel kuralı ("bağlamda fakülteye özgü kurallar da varsa sor") tetik kapalıyken de fakülteyi sorduruyordu
+# (EXP-036: netleştirme beklenmeyen 141 sorunun 88'inde soru; 56'sında tetik kapalı). Model akademik takvimin "Tıp, Hukuk...
+# hariç" notunu da fakülteye özgü kural sayıyordu. Sorma kararı somut bir teste bağlanır (kullanıcı önerisi): cevap hem
+# genel belgede hem de ayrı bir fakülte/program belgesinde varsa sor; tek belgedeyse doğrudan cevapla.
+_V8_GENERAL_RULE = """- Soru bir kapsam belirtmiyorsa genel kuralı ver. Genel kural, bütün öğrencileri ya da bütün ön lisans ve lisans
+  öğrencilerini kapsayan belgedeki kuraldır.
+- Öğrencinin fakültesini sorup sormayacağına şu iki adımla karar ver:
+  1) Bağlamda bu sorunun cevabını içeren belgeleri belirle.
+  2) Cevap hem genel belgede hem de belirli bir fakülteye, yüksekokula veya programa ait ayrı bir belgede yer alıyorsa
+     (ör. genel yönetmelikte ve Tıp Fakültesi yönetmeliğinde ayrı ayrı düzenlenmişse) genel kuralı yaz, tek cümleyle
+     bazı fakülte veya programlarda bu kuralın farklı olabileceğini söyle ve son cümlede öğrencinin hangi fakültede veya
+     programda okuduğunu sor.
+     Cevap tek bir belgede yer alıyorsa cevabı kaynağıyla doğrudan yaz ve cevabı orada bitir."""
+_V8_SYSTEM = _V7_SYSTEM.replace(_V7_GENERAL_RULE, _V8_GENERAL_RULE)
+
 # v5_birlestirme: v3'te "her kuralı kapsamıyla ayrı ayrı yaz" ile "aynı kuralı tekrar etme" çelişiyordu; model aynı kuralı
 # her kapsam için ayrı yazıyordu (ör. lisans ve hukuk için aynı kredi iki satır). Kapsam maddesi kuralları önce
 # karşılaştırmayı ve aynı olanları tek satırda birleştirmeyi tarif eder; ayrı birleştirme maddesi bu yüzden kalkar.
@@ -400,6 +415,15 @@ PROMPTS = {
     "v7_netlestirme": {
         "template": ChatPromptTemplate.from_messages([
             ("system", _V7_CLARIFY_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,
+        "history": True,
+    },
+    "v8_kapsamsiz": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V8_SYSTEM),
             MessagesPlaceholder("history"),
             ("human", "{input}"),
         ]),
