@@ -49,6 +49,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-034 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | 3.1-flash-lite | 3753 |
 | EXP-035 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | **3.5-flash-lite** | 3753 |
 | EXP-036 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v7_kapsamsiz** | 3.1-flash-lite | 3753 |
+| EXP-037 | EXP-036 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v8_kapsamsiz** | 3.1-flash-lite | 3753 |
 
 ## 2. Results
 
@@ -91,6 +92,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-034 | Netleştirme cevabının biçimi tarif edilir (clarify_prompt=v5_netlestirme_kisa) | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 417 ms | netlestirme_uzunlugu ↓ iyileşti (p<0.01, anlamlı) | ✓ |
 | EXP-035 | LLM gemini-3.1-flash-lite → gemini-3.5-flash-lite | 4.2 | 0.833 | 0.756 | 0.953 | 0.953 | 5752 | 430 ms | answer acc. ↑ iyileşti (p=1.00, anlamlı değil) | ~ |
 | EXP-036 | Prompt v3_kapsam + v4_netlestirme → v7_kapsamsiz + v7_netlestirme | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 538 ms | answer acc. ↓ kötüleşti (p=0.38, anlamlı değil) | ✗ |
+| EXP-037 | Ana prompt v7_kapsamsiz → v8_kapsamsiz (fakülte sorma kararı iki belge testine bağlı) | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 412 ms | answer acc. ↑ iyileşti (p=1.00, anlamlı değil) | ✗ |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -121,6 +123,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-034 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
 | EXP-035 | 0.649 | 0.534 | 0.636 | 0.976 | 0.833 |
 | EXP-036 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
+| EXP-037 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -146,6 +149,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-034 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
 | EXP-035 | 0.933 (26) | 0.807 (101) | 0.911 (46) | 0.788 (81) | 0.814 (17) | 0.834 (22) |
 | EXP-036 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
+| EXP-037 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
 
 ## 5. Notes
 
