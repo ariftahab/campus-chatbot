@@ -97,10 +97,10 @@ her değişiklik "kod iyileştirmesi" olarak değil, **deney** olarak yapılır:
 - Windows'ta Türkçe çıktı için `PYTHONIOENCODING=utf-8` gerekebilir.
 
 ## Mimari
-**Güncel durum (2026-10-17):** production **EXP-032** = corpus v4 (129 belge), pdfplumber, `structural_v2`, bge-m3, hybrid
-(vector 30 + BM25 30, RRF) + bge-reranker fp16 (30 aday → 5 chunk), `gemini-3.1-flash-lite`, ana prompt `v3_kapsam`,
-netleştirme `v4_netlestirme` (tetik: `scope_labels_v1`), sabit cevap `summer_v1`. Aktif soru seti **4.2**, baseline EXP-033.
-Aday: `v7_kapsamsiz` + `v7_netlestirme` (EXP-036) ve `fixed_answers="summer_staj_v1"`.
+**Güncel durum (2026-10-20):** production **EXP-038** = corpus v4 (129 belge), pdfplumber, `structural_v2`, bge-m3, hybrid
+(vector 30 + BM25 30, RRF) + bge-reranker fp16 (30 aday → 5 chunk), `gemini-3.1-flash-lite`, ana prompt `v8_kapsamsiz`,
+netleştirme `v7_netlestirme` (tetik: `scope_labels_v1`), sabit cevap `summer_staj_v1` (yaz okulu + birim belirtilmeyen
+staj). Aktif soru seti **4.2**; prompt ölçümü EXP-037 (EXP-038 yalnız staj sabit cevabını ekler, koşu yok).
 
 - `config.py` — yollar, `CORPORA`, `DOCUMENTS`, `RagConfig` (tüm RAG parametreleri; sonradan eklenenlerin varsayılanı
   `PARAM_DEFAULTS`'ta), `PRODUCTION_EXPERIMENT`.
@@ -108,7 +108,7 @@ Aday: `v7_kapsamsiz` + `v7_netlestirme` (EXP-036) ve `fixed_answers="summer_staj
   mevzuat madde madde, uzun maddeler fıkra sınırından, takvimde tablo başına bir chunk). İndeks `vectorstore/<fingerprint>/`;
   belge bazında cache `vectorstore/_cache/` (yalnız değişen belgeler işlenir).
 - `rag.py` — `Retriever.rank()`/`search()`: vector | bm25 | hybrid (RRF) + reranker. `PROMPTS`: v1_prototip, v2_kaynakli,
-  v3_kapsam, v4/v5/v6/v7 netleştirme, v5_birlestirme, v7_kapsamsiz. `RagBot` (stateless): `ask(question, history)` →
+  v3_kapsam, v4/v5/v6/v7 netleştirme, v5_birlestirme, v7_kapsamsiz, v8_kapsamsiz. `RagBot` (stateless): `ask(question, history)` →
   rewrite (geçmiş varsa) → sabit cevap kontrolü (`fixed_answer`) → retrieval → netleştirme tetiği (`needs_clarification`,
   `data/belge_kapsam_v1.json` etiketleri) → Gemini.
 - `chat.py` — CLI. `app/` — FastAPI (`api.py`), iş mantığı ve JSONL log'ları (`service.py`, `logs/`), vanilla JS frontend
