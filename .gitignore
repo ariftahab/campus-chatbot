@@ -216,3 +216,7 @@ __marimo__/
 daily_log/
 learning_log/
 my_notes/
+
+# Claude ve iç çalışma notları (public repoda yer almaz)
+CLAUDE.md
+TODO.md
