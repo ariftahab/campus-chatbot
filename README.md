@@ -203,3 +203,8 @@ Eski deneyler eski belge kümesiyle ölçüldüğü için yeni kümeyle yapılan
 
 Python 3.11 · LangChain · FAISS · sentence-transformers (bge-m3, bge-reranker-v2-m3) · rank-bm25 · pdfplumber ·
 Google Gemini · FastAPI · vanilla JavaScript
+
+## Lisans
+
+Kod [MIT](LICENSE) lisansıyla dağıtılır. `data/` klasöründeki PDF'ler Bolu Abant İzzet Baysal Üniversitesine aittir ve
+lisansın kapsamında değildir.
