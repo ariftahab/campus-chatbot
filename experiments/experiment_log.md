@@ -1,6 +1,6 @@
 # Experiment Log
 
-> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-032**. Ayrıntılar: `experiments/results/EXP-*.json`.
+> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-038**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
 **Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v42.json` v4.2 (127 cevaplı + 22 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
@@ -50,6 +50,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-035 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v3_kapsam | **3.5-flash-lite** | 3753 |
 | EXP-036 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v7_kapsamsiz** | 3.1-flash-lite | 3753 |
 | EXP-037 | EXP-036 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v8_kapsamsiz** | 3.1-flash-lite | 3753 |
+| EXP-038 | EXP-037 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | – |
 
 ## 2. Results
 
@@ -93,6 +94,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-035 | LLM gemini-3.1-flash-lite → gemini-3.5-flash-lite | 4.2 | 0.833 | 0.756 | 0.953 | 0.953 | 5752 | 430 ms | answer acc. ↑ iyileşti (p=1.00, anlamlı değil) | ~ |
 | EXP-036 | Prompt v3_kapsam + v4_netlestirme → v7_kapsamsiz + v7_netlestirme | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 538 ms | answer acc. ↓ kötüleşti (p=0.38, anlamlı değil) | ✗ |
 | EXP-037 | Ana prompt v7_kapsamsiz → v8_kapsamsiz (fakülte sorma kararı iki belge testine bağlı) | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 412 ms | answer acc. ↑ iyileşti (p=1.00, anlamlı değil) | ✗ |
+| EXP-038 | Production yapılandırması: EXP-037 + staj sabit cevabı (fixed_answers=summer_staj_v1) | | | | | | | | koşulmadı | |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -189,3 +191,5 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-033:** 3.1 baseline set 4.2: cevap doğruluğu 0,966, birleştirme 3/10, netleştirme cevabı 674 karakter, LLM latency 4,0 sn. Sonraki prompt deneylerinin referansı.
 - **EXP-034:** Kısa netleştirme: netleştirme cevabı 674 -> 359 karakter (p<0,001), ama 2 çekimser kalma sorusunda 'bilgim yok' yerine genel kural yazıyor; gereksiz netleştirme 0,21 -> 0,24.
 - **EXP-035:** 3.5 flash-lite: cevap doğruluğu 0,966 -> 0,973 (anlamca ~eşit), cevaplar ve netleştirme belirgin kısa, LLM latency 4,0 -> 14,5 sn. Öneri: 3.1'de kal.
+- **EXP-037:** v8: gereksiz netleştirme 0,624 -> 0,284, cevap 323 karakter, doğruluk 0,953 (yeni hata yok). git_dirty yalnız TODO.md'den. Production.
+- **EXP-038:** Production yapılandırması, koşu yok: EXP-037 + staj sabit cevabı (yalnız birim belirtmeyen staj sorusu değişiyor). Production EXP-037 -> EXP-038.
