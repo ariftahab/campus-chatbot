@@ -7,7 +7,7 @@
 takvim belgelerinden bulur ve her bilginin yanında belgeyi ve madde numarasını verir
 (ör. `[BAİBÜ Yatay Geçiş Yönergesi, Madde 8]`). Cevap belgelerde yoksa uydurmak yerine "Bu konuda bilgim yok." der.
 
-Bu proje bir bitirme projesidir. Sistemdeki her tasarım kararı, ölçülmüş ve tekrar üretilebilir bir **deney** olarak
+Sistemdeki her tasarım kararı, ölçülmüş ve tekrar üretilebilir bir **deney** olarak
 kayıtlıdır (bkz. [Deneyler](#deneyler)).
 
 ---
