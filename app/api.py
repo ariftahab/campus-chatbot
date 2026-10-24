@@ -8,14 +8,18 @@ hataları uygun HTTP durum kodlarına çevirir. İş mantığı (kayıt, geri bi
 """
 import os
 import secrets
+import threading
+import time
+from collections import deque
 from contextlib import asynccontextmanager
 from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
+import config
 from app.service import ChatService
 
 
@@ -25,13 +29,21 @@ from app.service import ChatService
 
 class Message(BaseModel):
     role: Literal["user", "assistant"]
-    content: str
+    content: str = Field(max_length=4000)
 
 
 class AskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=1000, examples=["Yatay geçiş başvurusu ne zaman yapılır?"])
-    history: list[Message] = Field(default_factory=list, description="Önceki mesajlar (stateless: istemci tutar)")
-    session_id: str | None = Field(default=None, description="Aynı sohbetin kayıtlarını gruplamak için")
+    history: list[Message] = Field(default_factory=list, description="Önceki mesajlar (stateless: istemci tutar); "
+                                   f"yalnız son {config.HISTORY_MESSAGES} mesaj kullanılır")
+    session_id: str | None = Field(default=None, max_length=100, description="Aynı sohbetin kayıtlarını gruplamak için")
+
+    @field_validator("history", mode="before")
+    @classmethod
+    def last_messages(cls, value):
+        # Bot zaten yalnız son HISTORY_MESSAGES mesajı kullanıyor; uzun sohbetlerde istek reddedilmez, kırpılır.
+        # mode="before": kırpma doğrulamadan önce yapılır, çok uzun bir listenin her elemanı boşuna doğrulanmaz.
+        return value[-config.HISTORY_MESSAGES:] if isinstance(value, list) else value
 
 
 class Source(BaseModel):
@@ -144,6 +156,60 @@ def get_service(request: Request) -> ChatService:
     return request.app.state.service
 
 
+# --- Rate limit ---
+# Arayüz Cloudflare üzerinden herkese açık; Gemini ücretsiz kotası (dakikada 15, günde 500 istek) tek bir kullanıcının
+# art arda istekleriyle bitebilir. Her /ask en az bir Gemini çağrısı (takip sorusunda +1 rewrite) yapar. Sınırlar
+# kayan pencereyle (sliding window) sayılır: son 60 sn / 24 saatteki istek zamanları tutulur. Bellekte tutulduğu için
+# sunucu yeniden başlayınca sıfırlanır; tek sunucu için yeterli.
+RATE_LIMITS = {  # anahtar -> [(pencere sn, en fazla istek)]
+    "ip": [(60, 10), (24 * 3600, 60)],
+    "toplam": [(60, 12), (24 * 3600, 400)],  # Gemini sınırlarının altında; deney koşularına da kota kalsın
+}
+
+
+class RateLimiter:
+    def __init__(self, limits):
+        self.limits = limits
+        self.hits = {}  # (tür, anahtar) -> istek zamanları (deque)
+        self.lock = threading.Lock()  # düz def endpoint'ler thread havuzunda aynı anda çalışabilir
+
+    def check(self, client):
+        """İstek kabul edilirse None, edilmezse kaç saniye sonra tekrar denenebileceği."""
+        now = time.monotonic()
+        keys = [("ip", client), ("toplam", "")]
+        with self.lock:
+            for kind, key in keys:
+                times = self.hits.setdefault((kind, key), deque())
+                longest = max(w for w, _ in self.limits[kind])
+                while times and now - times[0] > longest:
+                    times.popleft()
+                for window, limit in self.limits[kind]:
+                    recent = [t for t in times if now - t <= window]
+                    if len(recent) >= limit:
+                        return int(window - (now - recent[0])) + 1
+            for kind, key in keys:
+                self.hits[(kind, key)].append(now)
+        return None
+
+
+rate_limiter = RateLimiter(RATE_LIMITS)
+
+
+def client_ip(request: Request) -> str:
+    # Cloudflare tüneli arkasında request.client hep tünelin adresi (127.0.0.1); gerçek adres bu başlıkta gelir.
+    return request.headers.get("cf-connecting-ip") or (request.client.host if request.client else "?")
+
+
+def rate_limit(request: Request):
+    """/ask için dependency: sınır aşılınca 429 ve Retry-After başlığı döner."""
+    wait = rate_limiter.check(client_ip(request))
+    if wait is not None:
+        when = f"{wait} saniye" if wait < 120 else f"{wait // 60} dakika" if wait < 7200 else f"{wait // 3600} saat"
+        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS,
+                            f"Çok fazla soru gönderildi. Lütfen yaklaşık {when} sonra tekrar deneyin.",
+                            headers={"Retry-After": str(wait)})
+
+
 # Endpoint'ler `async def` değil düz `def`: bot.ask() GPU ve Gemini'yi bekleyen bloklayan bir çağrı.
 # FastAPI düz def endpoint'leri ayrı bir thread havuzunda çalıştırır; böylece bir soru cevaplanırken
 # sunucu diğer istekleri (ör. /health) karşılamaya devam eder.
@@ -155,7 +221,7 @@ def health(service: ChatService = Depends(get_service)):
                   documents=len(service.documents()))
 
 
-@app.post("/ask", response_model=AskResponse, tags=["sohbet"])
+@app.post("/ask", response_model=AskResponse, tags=["sohbet"], dependencies=[Depends(rate_limit)])
 def ask(req: AskRequest, service: ChatService = Depends(get_service)):
     """Soruyu cevaplar. Her soru-cevap logs/sohbet.jsonl'e kaydedilir."""
     try:
