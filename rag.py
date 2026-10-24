@@ -321,17 +321,6 @@ _V8_GENERAL_RULE = """- Soru bir kapsam belirtmiyorsa genel kuralı ver. Genel k
      programda okuduğunu sor.
      Cevap tek bir belgede yer alıyorsa cevabı kaynağıyla doğrudan yaz ve cevabı orada bitir."""
 _V8_SYSTEM = _V7_SYSTEM.replace(_V7_GENERAL_RULE, _V8_GENERAL_RULE)
-
-# v9 / v8_netlestirme: kullanıcı başka bir üniversiteyi anınca ("Dokuz Eylül'de okuyorum") rewrite bunu sonraki sorulara
-# da taşıyor, model de her soruya "bilgim yok" diyordu (web'de görüldü, 2026-10-24). Rewrite kullanıcının sözünü doğru
-# aktarıyor; eksik olan cevabın davranışı. Teşhis (iki çok turlu sohbet, 12 tur): "bilgim yok" zinciri kalmadı.
-_NO_ANSWER_RULE = '- Cevap bağlamda yoksa yalnızca "{no_answer}" yaz.\n'
-_INSTITUTION_RULE = ("- Bağlamdaki belgelerin hepsi BAİBÜ'ye aittir. Soru veya sohbet başka bir üniversiteyi anıyorsa ilk "
-                     "cümlede yalnız BAİBÜ mevzuatı hakkında bilgi verebildiğini söyle; ardından bağlamda cevap varsa "
-                     "BAİBÜ'deki kuralı kaynağıyla yaz.\n")
-_V9_SYSTEM = _V8_SYSTEM.replace(_NO_ANSWER_RULE, _NO_ANSWER_RULE + _INSTITUTION_RULE)
-_V8_CLARIFY_SYSTEM = _V7_CLARIFY_SYSTEM.replace(_NO_ANSWER_RULE, _NO_ANSWER_RULE + _INSTITUTION_RULE)
-
 # v5_birlestirme: v3'te "her kuralı kapsamıyla ayrı ayrı yaz" ile "aynı kuralı tekrar etme" çelişiyordu; model aynı kuralı
 # her kapsam için ayrı yazıyordu (ör. lisans ve hukuk için aynı kredi iki satır). Kapsam maddesi kuralları önce
 # karşılaştırmayı ve aynı olanları tek satırda birleştirmeyi tarif eder; ayrı birleştirme maddesi bu yüzden kalkar.
@@ -434,24 +423,6 @@ PROMPTS = {
     "v8_kapsamsiz": {
         "template": ChatPromptTemplate.from_messages([
             ("system", _V8_SYSTEM),
-            MessagesPlaceholder("history"),
-            ("human", "{input}"),
-        ]),
-        "format": _format_v2,
-        "history": True,
-    },
-    "v9_kapsamsiz": {
-        "template": ChatPromptTemplate.from_messages([
-            ("system", _V9_SYSTEM),
-            MessagesPlaceholder("history"),
-            ("human", "{input}"),
-        ]),
-        "format": _format_v2,
-        "history": True,
-    },
-    "v8_netlestirme": {
-        "template": ChatPromptTemplate.from_messages([
-            ("system", _V8_CLARIFY_SYSTEM),
             MessagesPlaceholder("history"),
             ("human", "{input}"),
         ]),
