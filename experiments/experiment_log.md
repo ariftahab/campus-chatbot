@@ -2,7 +2,7 @@
 
 > Otomatik üretilir (`python -m experiments.report`). Production: **EXP-038**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
-**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v42.json` v4.2 (127 cevaplı + 22 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
+**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v42.json` v4.2 (127 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_val_v1.json` vval-1.0 (85 cevaplı + 15 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
 **Sabit parametreler:** `citation_style=madde`, `rrf_k=60`, `reranker_max_length=512`, `llm_temperature=0.3`
 
@@ -52,6 +52,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-037 | EXP-036 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v8_kapsamsiz** | 3.1-flash-lite | 3753 |
 | EXP-038 | EXP-037 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | – |
 | EXP-039 | EXP-038 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v9_kapsamsiz** | 3.1-flash-lite | 3753 |
+| EXP-040 | EXP-038 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3753 |
 
 ## 2. Results
 
@@ -97,6 +98,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-037 | Ana prompt v7_kapsamsiz → v8_kapsamsiz (fakülte sorma kararı iki belge testine bağlı) | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 412 ms | answer acc. ↑ iyileşti (p=1.00, anlamlı değil) | ✗ |
 | EXP-038 | Production yapılandırması: EXP-037 + staj sabit cevabı (fixed_answers=summer_staj_v1) | | | | | | | | koşulmadı | |
 | EXP-039 | Başka üniversite anılınca BAİBÜ kuralını verme: v8_kapsamsiz → v9_kapsamsiz, v7_netlestirme → v8_netlestirme | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 416 ms | baseline |  |
+| EXP-040 | Production (EXP-038) validation setinde: baseline | val-1.0 | 0.840 | 0.753 | 0.953 | 0.953 | 5239 | 413 ms | baseline |  |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -129,6 +131,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-036 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
 | EXP-037 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
 | EXP-039 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
+| EXP-040 | 0.699 | 0.608 | 0.708 | 0.965 | 0.840 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -156,6 +159,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-036 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
 | EXP-037 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
 | EXP-039 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
+| EXP-040 | – | 0.840 (85) | 1.000 (1) | 0.838 (84) | 1.000 (4) | 0.491 (12) |
 
 ## 5. Notes
 
@@ -198,3 +202,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-037:** v8: gereksiz netleştirme 0,624 -> 0,284, cevap 323 karakter, doğruluk 0,953 (yeni hata yok). git_dirty yalnız TODO.md'den. Production.
 - **EXP-038:** Production yapılandırması, koşu yok: EXP-037 + staj sabit cevabı (yalnız birim belirtmeyen staj sorusu değişiyor). Production EXP-037 -> EXP-038.
 - **EXP-039:** Hipotez tutmadı: BAİBÜ açıklaması 23/149 alakasız cevaba sızdı, netleştirme 0,875 -> 0,5, cevap +47 karakter. Production'a alınmadı.
+- **EXP-040:** Validation baseline: doğruluk 0,85 (anlamca 0,95), netleştirme 12/12. En zayıf grup çok maddeli sorular (9/12, ikinci alt soru düşüyor). 10 yanlış etiket kaynaklı.
