@@ -147,7 +147,7 @@ class RagConfig:
         if cfg.scope_search and not (cfg.reranker_model and cfg.retrieval == "hybrid"):
             raise ValueError("scope_search hybrid retrieval ve reranker gerektirir.")
         if cfg.clarify_prompt not in ("v4_netlestirme", "v5_netlestirme_kisa", "v6_netlestirme_durumlu",
-                                      "v7_netlestirme"):
+                                      "v7_netlestirme", "v8_netlestirme"):
             raise ValueError(f"Bilinmeyen clarify_prompt: {cfg.clarify_prompt}")
         if cfg.citation_style not in ("madde", "fikra"):
             raise ValueError(f"Bilinmeyen citation_style: {cfg.citation_style}")
