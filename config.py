@@ -111,7 +111,8 @@ class RagConfig:
                                   # "v5_netlestirme_kisa" (genel kural + tek soru biçimi tarif edilir) |
                                   # "v6_netlestirme_durumlu" (v5 biçimi yalnız kurallar farklıysa; aynıysa doğrudan
                                   # cevap, cevap yoksa "bilgim yok") | "v7_netlestirme" (prompt_version
-                                  # "v7_kapsamsiz" ile: genel kural + fakülte sorusu, sıralama yok)
+                                  # "v7_kapsamsiz" ile: genel kural + fakülte sorusu, sıralama yok) |
+                                  # "v8_netlestirme" (v7 + başka üniversite anılınca BAİBÜ kuralını verme; v9_kapsamsiz ile)
     citation_style: str           # "madde": [Belge, Madde N] | "fikra": [Belge, Madde N/F] (cevap ve netleştirme prompt'unda)
     scope_search: Optional[str]  # None | "parallel_v1": context'te temsil edilmeyen paralel kapsamları (genel, tıp,
                                  # diş, hukuk, lisansüstü) kendi belgelerinde ayrıca arayıp ekler (rag.Retriever)
