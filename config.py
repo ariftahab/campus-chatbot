@@ -21,7 +21,7 @@ EVAL_FILE = ROOT / "eval" / "sorular.json"
 EXPERIMENTS_DIR = ROOT / "experiments"
 
 # Sohbet uygulamasının kullandığı deney. Yeni bir deney üretime alınacaksa burası değişir.
-PRODUCTION_EXPERIMENT = "EXP-038"  # EXP-037 (v8_kapsamsiz ana prompt) + staj sabit cevabı (birim belirtilmeyince birim sorulur)
+PRODUCTION_EXPERIMENT = "EXP-041"  # EXP-038 + staj sabit cevabı v2 (bölüm adları, sigorta konuları, tekrar sorma döngüsü)
 
 # Belge adları kaynak gösteriminde ve parçaların başlığında kullanılır.
 # Listede olmayan bir PDF eklenirse dosya adı başlık olarak kullanılır.
@@ -105,6 +105,8 @@ class RagConfig:
     fixed_answers: Optional[str]  # None | "summer_v1": yaz okulu/yaz öğretimi sorularına retrieval yapmadan sabit cevap
                                   # (yönetmelik yürürlükten kalktı; başka belgelerdeki eski atıflar yanlış cevap üretiyordu)
                                   # | "summer_staj_v1": + birim belirtilmeyen staj sorusunda birimi sorar (rag.STAJ_ANSWER)
+                                  # | "summer_staj_v2": v1 + bölüm adları birim sayılır, sigorta gibi genel konular ve
+                                  #   bot birimi az önce sorduysa sabit cevap verilmez
     clarify_trigger: Optional[str]  # None | "scope_labels_v1": context'te en az iki farklı paralel kapsamın belgesi
                                     # varsa ve soru kapsam anmıyorsa clarify_prompt kullanılır (rag.RagBot)
     clarify_prompt: str           # netleştirme açıldığında kullanılan rag.PROMPTS anahtarı: "v4_netlestirme" |
@@ -139,7 +141,7 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
         if cfg.scope_search not in (None, "parallel_v1"):
             raise ValueError(f"Bilinmeyen scope_search: {cfg.scope_search}")
-        if cfg.fixed_answers not in (None, "summer_v1", "summer_staj_v1"):
+        if cfg.fixed_answers not in (None, "summer_v1", "summer_staj_v1", "summer_staj_v2"):
             raise ValueError(f"Bilinmeyen fixed_answers: {cfg.fixed_answers}")
         if cfg.clarify_trigger not in (None, "scope_labels_v1"):
             raise ValueError(f"Bilinmeyen clarify_trigger: {cfg.clarify_trigger}")

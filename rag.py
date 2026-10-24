@@ -478,6 +478,20 @@ UNIT_MENTION = re.compile(
     r"spor bilim|güzel sanat|islami|ilahiyat|fen edebiyat|lisansüstü|yüksek lisans|doktora|ön ?lisans")
 STAJ_ANSWER = ("Staj süresi ve kuralları fakülteden fakülteye, hatta bölümden bölüme değişiklik gösteriyor. Size doğru "
                "bilgi verebilmem için hangi fakültede veya bölümde okuduğunuzu söyleyebilir misiniz?")
+# fixed_answers="summer_staj_v2" (kod incelemesi, 2026-10-24): v1'in birim listesinde yalnız staj yönergesi olan birimler
+# vardı; "İşletme stajı kaç gün?" gibi listede olmayan bölümler de birim sorusu alıyordu. v2 bölüm adlarını ve
+# "... bölümü/programı/mühendisliği/öğretmenliği" kalıbını birim sayar. Sigorta gibi bütün stajyerleri kapsayan konular
+# birime bağlı olmadığından belgelerden cevaplanır. Bot birimi az önce sorduysa (kullanıcının cevabı rewrite'ta birim
+# adını kaybetse bile) aynı soru tekrar sorulmaz: döngü olmaz.
+UNIT_MENTION_V2 = re.compile(
+    UNIT_MENTION.pattern + r"|\bişletme(?!de)|iktisat|maliye|kamu yönetim|uluslararası ilişki|çalışma ekonomi|"
+    r"ekonometri|siyaset|psikoloji|sosyoloji|coğrafya|felsefe|matematik|\bfizik|kimya|biyoloji|türk dili|"
+    r"edebiyat|ingiliz|alman|fransız|\brus\b|çeviri|mütercim|ebelik|beslenme|diyetetik|sosyal hizmet|sağlık yönetim|"
+    r"odyoloji|ergoterapi|acil yardım|gastronomi|mutfak|rekreasyon|seyahat|antrenör|beden eğitim|öğretmenliğ|müzik|"
+    r"resim|grafik|gazetecilik|radyo|halkla ilişki|bilgisayar|elektri|elektronik|makine|inşaat|\bgıda|çevre|"
+    r"yazılım|peyzaj|tarla|bahçe|bitki koruma|zootekni|tarım|ormancılık|veteriner|eczacılık|hemşirelik|intörn|"
+    r"sosyal bilgiler|\w+ (bölümü|programı|mühendisliği|öğretmenliği)")
+STAJ_GENERAL_TOPIC = re.compile(r"sigorta|\bsgk|iş kazası|meslek hastalığı")
 
 REWRITE_SYSTEM = (
     "Sana bir sohbet geçmişi ve kullanıcının son sorusu verilecek. Son soruyu, geçmişi görmeden de "
@@ -560,12 +574,16 @@ class RagBot:
             return self.rewrite_chain.invoke({"history": messages, "question": question}).text.strip()
         return question
 
-    def fixed_answer(self, query):
+    def fixed_answer(self, query, history=None):
         """Belgelerden cevaplanmaması gereken konular için sabit cevap; yoksa None."""
         text = tr_lower(query)
         if self.cfg.fixed_answers and SUMMER_PATTERN.search(text):
             return SUMMER_ANSWER
         if self.cfg.fixed_answers == "summer_staj_v1" and STAJ_PATTERN.search(text) and not UNIT_MENTION.search(text):
+            return STAJ_ANSWER
+        if (self.cfg.fixed_answers == "summer_staj_v2" and STAJ_PATTERN.search(text)
+                and not UNIT_MENTION_V2.search(text) and not STAJ_GENERAL_TOPIC.search(text)
+                and not (history and history[-1]["content"] == STAJ_ANSWER)):
             return STAJ_ANSWER
         return None
 
@@ -577,7 +595,7 @@ class RagBot:
     def ask(self, question, history=None):
         """Cevap üretir; geçmişi güncellemez (yeni soru-cevabı geçmişe eklemek çağıranın işi)."""
         query = self.rewrite(question, history)
-        fixed = self.fixed_answer(query)
+        fixed = self.fixed_answer(query, history)
         if fixed:
             return {"answer": fixed, "query": query, "docs": [], "generation_ms": 0.0, "clarify": False}
         docs = self.retriever.search(query)
