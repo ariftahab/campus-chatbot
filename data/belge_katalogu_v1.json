@@ -32,12 +32,12 @@
    "tarih_kaynagi": null,
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "'Yaz öğretimine ilişkin hükümler daha sonra değerlendirilecektir' notu var; tablo dışında olduğu için takvim ayrıştırıcısı okumuyor.",
    "dogrulandi": false
   },
   "aktivite merkezi yönetim planı ve işletme esasları.pdf": {
    "baslik": "BAİBÜ Öğrenci Sosyal Aktivite Merkezi Yönetim Planı ve İşletme Esasları",
-   "tur": null,
+   "tur": "usul_esas",
    "kapsam": "kurum",
    "haric": [],
    "yururluk": "yururlukte",
@@ -72,8 +72,8 @@
    ],
    "yururluk": "yururlukte",
    "tarih": "2026-02-25",
-   "tarih_kaynagi": null,
-   "ust_norm": null,
+   "tarih_kaynagi": "Senato",
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -229,7 +229,7 @@
    "yururluk": "yururlukte",
    "tarih": "2025-07-31",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "diş hekimliği eğitim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -255,7 +255,7 @@
    "yururluk": "yururlukte",
    "tarih": "2023-09-07",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "uzaktan-ogretime-iliskin-usul-esas.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -268,7 +268,7 @@
    "yururluk": "yururlukte",
    "tarih": "2023-09-07",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "diş hekimliği eğitim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -359,7 +359,7 @@
    "yururluk": "yururlukte",
    "tarih": "2024-12-26",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -387,7 +387,7 @@
    "tarih_kaynagi": null,
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz okulu hükmü içeriyor; 2026-2027 için yaz öğretimi belirsiz (akademik takvim notu). Dayanak maddesi corpus'ta olmayan eski (2003) AİBÜ yönetmeliğine atıf yapıyor; güncel karşılığı 14/10/2019 tarihli Önlisans, Lisans Eğitim-Öğretim Yönetmeliği olabilir.",
    "dogrulandi": false
   },
   "gerede uygulamalı birimler staj.pdf": {
@@ -400,7 +400,7 @@
    "tarih_kaynagi": null,
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Dayanak maddesi corpus'ta olmayan eski (2003) AİBÜ yönetmeliğine atıf yapıyor; güncel karşılığı 14/10/2019 tarihli Önlisans, Lisans Eğitim-Öğretim Yönetmeliği olabilir.",
    "dogrulandi": false
   },
   "girişimsel olmayan klinik araştırmalar etik kurul.pdf": {
@@ -530,7 +530,7 @@
    "tarih_kaynagi": "Resmî Gazete",
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz öğretimi için yürürlükten kalkmış 13/5/2008 tarihli Yaz Öğretimi Yönetmeliği'ne atıf var.",
    "dogrulandi": false
   },
   "iktisadi ve idari bilimler isteğe bağlı staj yönergesi.pdf": {
@@ -541,7 +541,7 @@
    "yururluk": "yururlukte",
    "tarih": "2026-06-18",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "uygulamali-egitimler-yonergesi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -554,7 +554,7 @@
    "yururluk": "yururlukte",
    "tarih": "2025-09-05",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -567,7 +567,7 @@
    "yururluk": "yururlukte",
    "tarih": "2019-12-26",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -647,7 +647,7 @@
    "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz okulu hükmü içeriyor; 2026-2027 için yaz öğretimi belirsiz (akademik takvim notu).",
    "dogrulandi": false
   },
   "konut tahsis yönergesi.pdf": {
@@ -673,7 +673,7 @@
    "tarih_kaynagi": "Resmî Gazete",
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Açık ve uzaktan öğretimden örgün öğretime geçişte yönerge 80 diyor; üst norm olan yönetmelik 28/2/2026 değişikliğiyle 90 yaptı.",
    "dogrulandi": false
   },
   "kurumsal akademik arşiv ve açık erişim.pdf": {
@@ -713,7 +713,7 @@
    "ust_norm": null,
    "ekler": [
     {
-     "ad": null,
+     "ad": "Ödünç Verme Kuralları",
      "baslangic_sayfasi": 6
     }
    ],
@@ -726,8 +726,8 @@
    "kapsam": "tum_ogrenciler",
    "haric": [],
    "yururluk": "yururlukte",
-   "tarih": null,
-   "tarih_kaynagi": null,
+   "tarih": "2021-03-04",
+   "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
    "notlar": "",
@@ -741,7 +741,7 @@
    "yururluk": "yururlukte",
    "tarih": "2022-03-10",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "lisansüstü eğitim yönetmeliği.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -767,9 +767,9 @@
    "yururluk": "yururlukte",
    "tarih": "2023-07-20",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "lisansüstü eğitim yönetmeliği.pdf",
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yönetmelikte hükmü bulunmayan halleri düzenler (Madde 1).",
    "dogrulandi": false
   },
   "makale destek ofisi.pdf": {
@@ -793,7 +793,7 @@
    "yururluk": "yururlukte",
    "tarih": "2024-12-26",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -821,7 +821,7 @@
    "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Dayanak maddesi corpus'ta olmayan eski (2003) AİBÜ yönetmeliğine atıf yapıyor; güncel karşılığı 14/10/2019 tarihli Önlisans, Lisans Eğitim-Öğretim Yönetmeliği olabilir.",
    "dogrulandi": false
   },
   "mevzuat komisyonu.pdf": {
@@ -847,7 +847,7 @@
    "tarih_kaynagi": null,
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Önlisans, lisans ve lisansüstü yönetmeliklerinin hepsine dayanıyor; tek üst norm seçilmedi.",
    "dogrulandi": false
   },
   "mimarlık bölümü staj.pdf": {
@@ -858,9 +858,9 @@
    "yururluk": "yururlukte",
    "tarih": "2026-08-26",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz okulu hükmü içeriyor; 2026-2027 için yaz öğretimi belirsiz (akademik takvim notu).",
    "dogrulandi": false
   },
   "mühendislik fakültesi staj yönergesi.pdf": {
@@ -871,7 +871,7 @@
    "yururluk": "yururlukte",
    "tarih": "2026-08-05",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "uygulamali-egitimler-yonergesi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -896,7 +896,7 @@
    "haric": [],
    "yururluk": "yururlukte",
    "tarih": "2012-11-24",
-   "tarih_kaynagi": null,
+   "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
    "notlar": "",
@@ -904,7 +904,7 @@
   },
   "Ogrenci_disiplin_Isleri.pdf": {
    "baslik": "2547 Sayılı Yükseköğretim Kanunu Madde 54: Öğrencilerin Disiplin İşleri",
-   "tur": null,
+   "tur": "diger",
    "kapsam": "tum_ogrenciler",
    "haric": [],
    "yururluk": "yururlukte",
@@ -912,7 +912,7 @@
    "tarih_kaynagi": null,
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "2547 sayılı Kanun maddesi; normlar hiyerarşisinde yönetmeliklerin üstünde. Tarih 7437 sayılı Kanunla yapılan değişikliğin tarihi.",
    "dogrulandi": false
   },
   "paydaş danışma kurulu.pdf": {
@@ -922,7 +922,7 @@
    "haric": [],
    "yururluk": "yururlukte",
    "tarih": "2022-08-15",
-   "tarih_kaynagi": null,
+   "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
    "notlar": "",
@@ -1014,7 +1014,7 @@
    "yururluk": "yururlukte",
    "tarih": "2025-12-19",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1038,8 +1038,8 @@
    "kapsam": "tum_ogrenciler",
    "haric": [],
    "yururluk": "yururlukte",
-   "tarih": null,
-   "tarih_kaynagi": null,
+   "tarih": "2021-02-18",
+   "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
    "notlar": "",
@@ -1092,7 +1092,7 @@
    "yururluk": "yururlukte",
    "tarih": "2025-10-23",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "suyam yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1103,9 +1103,9 @@
    "kapsam": "myo",
    "haric": [],
    "yururluk": "yururlukte",
-   "tarih": null,
-   "tarih_kaynagi": null,
-   "ust_norm": null,
+   "tarih": "2021-03-19",
+   "tarih_kaynagi": "Senato",
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1146,7 +1146,7 @@
    "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Dayanak maddesi corpus'ta olmayan 2019 öncesi AİBÜ Ön Lisans, Lisans Eğitim-Öğretim ve Sınav Yönetmeliğine atıf yapıyor; güncel karşılığı 14/10/2019 tarihli Önlisans, Lisans Eğitim-Öğretim Yönetmeliği olabilir.",
    "dogrulandi": false
   },
   "turizm işletmeciliği otel staj.pdf": {
@@ -1159,7 +1159,7 @@
    "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz okulu hükmü içeriyor; 2026-2027 için yaz öğretimi belirsiz (akademik takvim notu). Dayanak maddesi corpus'ta olmayan eski (2003) AİBÜ yönetmeliğine atıf yapıyor; güncel karşılığı 14/10/2019 tarihli Önlisans, Lisans Eğitim-Öğretim Yönetmeliği olabilir.",
    "dogrulandi": false
   },
   "turizm işletmeciliği ve otelcilik staj.pdf": {
@@ -1170,9 +1170,9 @@
    "yururluk": "yururlukte",
    "tarih": null,
    "tarih_kaynagi": null,
-   "ust_norm": null,
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz okulu hükmü içeriyor; 2026-2027 için yaz öğretimi belirsiz (akademik takvim notu). Dayanak maddesi corpus'ta olmayan eski (2003) AİBÜ yönetmeliğine atıf yapıyor; güncel karşılığı 14/10/2019 tarihli Önlisans, Lisans Eğitim-Öğretim Yönetmeliği olabilir.",
    "dogrulandi": false
   },
   "turizm rehberliği staj.pdf": {
@@ -1183,10 +1183,10 @@
    "yururluk": "yururlukte",
    "tarih": "2025-09-18",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "uygulamali-egitimler-yonergesi.pdf",
    "ekler": [
     {
-     "ad": null,
+     "ad": "Staj Sözleşmesi",
      "baslangic_sayfasi": 19
     }
    ],
@@ -1201,9 +1201,9 @@
    "yururluk": "yururlukte",
    "tarih": null,
    "tarih_kaynagi": null,
-   "ust_norm": null,
+   "ust_norm": "uygulamali-egitimler-yonergesi.pdf",
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz okulu hükmü içeriyor; 2026-2027 için yaz öğretimi belirsiz (akademik takvim notu).",
    "dogrulandi": false
   },
   "türkçe öğretimi merkezi yönetmeliği.pdf": {
@@ -1253,7 +1253,7 @@
    "yururluk": "yururlukte",
    "tarih": "2024-10-17",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1292,7 +1292,7 @@
    "yururluk": "yururlukte",
    "tarih": "2022-08-11",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1305,7 +1305,7 @@
    "yururluk": "yururlukte",
    "tarih": "2022-08-11",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1318,7 +1318,7 @@
    "yururluk": "yururlukte",
    "tarih": "2023-08-03",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "uzaktan-ogretime-iliskin-usul-esas.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1331,7 +1331,7 @@
    "yururluk": "yururlukte",
    "tarih": "2025-09-05",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1344,7 +1344,7 @@
    "yururluk": "yururlukte",
    "tarih": "2022-08-11",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1357,7 +1357,7 @@
    "yururluk": "yururlukte",
    "tarih": "2022-08-11",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1370,7 +1370,7 @@
    "yururluk": "yururlukte",
    "tarih": "2022-12-22",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "tıp fakultesi egitim ve sinav yonetmeligi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1424,7 +1424,7 @@
    "tarih_kaynagi": null,
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz okulu hükmü içeriyor; 2026-2027 için yaz öğretimi belirsiz (akademik takvim notu).",
    "dogrulandi": false
   },
   "uzaktan eğitim.pdf": {
@@ -1435,7 +1435,7 @@
    "yururluk": "yururlukte",
    "tarih": null,
    "tarih_kaynagi": null,
-   "ust_norm": null,
+   "ust_norm": "uzaktan-ogretime-iliskin-usul-esas.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1446,11 +1446,11 @@
    "kapsam": "tum_ogrenciler",
    "haric": [],
    "yururluk": "yururlukte",
-   "tarih": "2022-08-18",
+   "tarih": "2022-09-14",
    "tarih_kaynagi": null,
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "YÖK Yürütme Kurulu kararı; kaynak şemada yok.",
    "dogrulandi": false
   },
   "yaban hayatı çalışmaları yönetmeliği.pdf": {
@@ -1485,8 +1485,8 @@
    "kapsam": "tum_ogrenciler",
    "haric": [],
    "yururluk": "yururlukte",
-   "tarih": null,
-   "tarih_kaynagi": null,
+   "tarih": "2021-03-19",
+   "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
    "notlar": "",
@@ -1499,8 +1499,8 @@
    "haric": [],
    "yururluk": "yururlukte",
    "tarih": "2026-02-25",
-   "tarih_kaynagi": null,
-   "ust_norm": null,
+   "tarih_kaynagi": "Senato",
+   "ust_norm": "önlisans lisans eğitim öğretim.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1513,9 +1513,9 @@
    "yururluk": "yururlukte",
    "tarih": "2025-09-05",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "kurumlar arası kredi transferi.pdf",
    "ekler": [],
-   "notlar": "",
+   "notlar": "Açık ve uzaktan öğretimden örgün öğretime geçişte yönerge 80 diyor; üst norm olan yönetmelik 28/2/2026 değişikliğiyle 90 yaptı.",
    "dogrulandi": false
   },
   "yaşlı sağlığı bakımı yönetmeliği.pdf": {
@@ -1539,14 +1539,14 @@
    "yururluk": "yururlukte",
    "tarih": null,
    "tarih_kaynagi": null,
-   "ust_norm": null,
+   "ust_norm": "uygulamali-egitimler-yonergesi.pdf",
    "ekler": [
     {
-     "ad": null,
+     "ad": "Staj Sözleşmesi",
      "baslangic_sayfasi": 12
     }
    ],
-   "notlar": "",
+   "notlar": "Yaz okulu hükmü içeriyor; 2026-2027 için yaz öğretimi belirsiz (akademik takvim notu).",
    "dogrulandi": false
   },
   "çift anadal program yönergesi.pdf": {
@@ -1557,7 +1557,7 @@
    "yururluk": "yururlukte",
    "tarih": "2026-06-18",
    "tarih_kaynagi": "Senato",
-   "ust_norm": null,
+   "ust_norm": "kurumlar arası kredi transferi.pdf",
    "ekler": [],
    "notlar": "",
    "dogrulandi": false
@@ -1588,7 +1588,7 @@
    "tarih_kaynagi": "Resmî Gazete",
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Yaz öğretimi için yürürlükten kalkmış 13/5/2008 tarihli Yaz Öğretimi Yönetmeliği'ne atıf var.",
    "dogrulandi": false
   },
   "önlisans mezunu lisans öğrenimine devam.pdf": {
@@ -1623,8 +1623,8 @@
    "kapsam": "tum_ogrenciler",
    "haric": [],
    "yururluk": "yururlukte",
-   "tarih": null,
-   "tarih_kaynagi": null,
+   "tarih": "2021-03-19",
+   "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
    "notlar": "",
@@ -1636,8 +1636,8 @@
    "kapsam": "tum_ogrenciler",
    "haric": [],
    "yururluk": "yururlukte",
-   "tarih": null,
-   "tarih_kaynagi": null,
+   "tarih": "2020-05-08",
+   "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
    "notlar": "",
@@ -1692,7 +1692,7 @@
    "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
-   "notlar": "",
+   "notlar": "Dayanak maddesi eski 'AİBÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği'ne atıf yapıyor; 2017 tarihli BAİBÜ yönetmeliğiyle aynı olup olmadığı doğrulanmadı.",
    "dogrulandi": false
   },
   "üniversite birimlerinin isimlendirilmesi.pdf": {
@@ -1701,8 +1701,8 @@
    "kapsam": "kurum",
    "haric": [],
    "yururluk": "yururlukte",
-   "tarih": null,
-   "tarih_kaynagi": null,
+   "tarih": "2021-04-22",
+   "tarih_kaynagi": "Senato",
    "ust_norm": null,
    "ekler": [],
    "notlar": "",
