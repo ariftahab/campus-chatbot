@@ -32,5 +32,7 @@
   "fixed_answers": "summer_staj_v2",
   "clarify_prompt": "v7_netlestirme",
   "doc_titles": "katalog_v1"
- }
+ },
+ "notlar": "Yalnız retrieval koşuldu (2026-10-24, --llm yok; kota için cevap ölçümü sonraya bırakıldı). Hipotez doğrulanmadı: MRR@10 0,830 -> 0,814 (Wilcoxon p=0,087, anlamlı değil), Hit@1 0,748 -> 0,740, bağlam isabeti 0,953 -> 0,921 (McNemar p=0,125; 4 soru doğru chunk'ı context'te kaybetti, hiçbiri kazanmadı). Sırası değişen soruların 14'ü kötüleşti, 3'ü iyileşti. Düşüş en çok vector aşamasında (vector MRR@10 0,646 -> 0,615); BM25 aynı kaldı (0,523 -> 0,527). Kötüleşen soruların çoğunda fakülteye özel yönetmelikler genel sorularda öne geçti: 'Teorik derslerde devam zorunluluğu yüzde kaçtır?' sorusunda Tıp Fakültesi Eğitim-Öğretim ve Sınav Yönetmeliği genel yönetmeliğin önüne, 'Bütünleme sınavına kimler giremez?' sorusunda Hukuk Fakültesi yönetmeliği öne çıktı; 'Okulu uzattım, azami süre dolunca hemen atılır mıyım?' sorusunda doğru chunk ilk 10'dan çıktı. Yorum: uzun resmi başlıklar her chunk'a aynı 'Eğitim-Öğretim ve Sınav Yönetmeliği' gibi kelimeleri ekliyor; chunk embedding'i madde içeriğinden başlığa kayıyor ve benzer başlıklı yönetmelikler birbirine yaklaşıyor. Production değişmedi (EXP-041). Sonraki seçenek: başlığı yalnız atıflarda ve arayüzde göstermek, chunk metnine dosya adını ya da kısa bir ad yazmak (ayrı deney).",
+ "kisa_not": "Resmi başlıklar chunk metninde retrieval'ı biraz düşürdü (MRR@10 0,830 -> 0,814, anlamlı değil; bağlam isabeti 0,953 -> 0,921); production değişmedi."
 }
