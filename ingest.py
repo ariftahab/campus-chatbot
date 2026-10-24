@@ -38,9 +38,19 @@ PAGE_FOOTER_RE = re.compile(r"^Sayfa:\s*\d+\s*/\s*\d+$")
 
 # --- Belge okuma ---
 
-def _doc_info(path):
+def _doc_titles(cfg):
+    """doc_titles açıksa {pdf adı: resmi başlık}; yoksa boş (başlık dosya adından gelir)."""
+    if not cfg.doc_titles:
+        return {}
+    data = json.loads(config.TITLE_FILES[cfg.doc_titles].read_text(encoding="utf-8"))
+    if "basliklar" in data:
+        return data["basliklar"]
+    return {name: doc["baslik"] for name, doc in data["belgeler"].items()}  # belge kataloğu
+
+
+def _doc_info(path, cfg):
     info = config.DOCUMENTS.get(path.name, {})
-    return info.get("title", path.stem), info.get("tur")
+    return info.get("title") or _doc_titles(cfg).get(path.name, path.stem), info.get("tur")
 
 
 def _read_lines(pdf):
@@ -224,7 +234,7 @@ def read_pages(path, parser):
 def load_recursive(path, cfg):
     """Sabit boyutlu parçalama (ilk prototipin yöntemi): sayfa metinleri karakter sayısına göre bölünür."""
     splitter = RecursiveCharacterTextSplitter(chunk_size=cfg.chunk_size, chunk_overlap=cfg.chunk_overlap)
-    title, _ = _doc_info(path)
+    title, _ = _doc_info(path, cfg)
     pages = [Document(page_content=text, metadata={"source": path.name, "title": title, "kind": "sayfa", "page": page_no})
              for page_no, text in enumerate(read_pages(path, cfg.pdf_parser), start=1)]
     return splitter.split_documents(pages)
@@ -232,7 +242,7 @@ def load_recursive(path, cfg):
 
 def load_structural(path, cfg):
     article_re = ARTICLE_PATTERNS[cfg.chunking]
-    title, kind = _doc_info(path)
+    title, kind = _doc_info(path, cfg)
     if kind is None:
         with pdfplumber.open(path) as pdf:
             kind = "mevzuat" if any(article_re.match(l) for _, l in _read_lines(pdf)) else "genel"
@@ -290,7 +300,8 @@ def fingerprint(cfg):
     # Yalnız bu küme içindeki belgelerin başlık/tür ayarları: DOCUMENTS'a başka bir kümenin belgesi
     # eklenince bu kümenin indeksi gereksiz yere yeniden kurulmasın.
     documents = {p.name: config.DOCUMENTS[p.name] for p in paths if p.name in config.DOCUMENTS}
-    settings = [cfg.index_params(), documents]
+    titles = _doc_titles(cfg)
+    settings = [cfg.index_params(), documents, {p.name: titles[p.name] for p in paths if p.name in titles}]
     h.update(json.dumps(settings, sort_keys=True, ensure_ascii=False).encode())
     # Satır sonları normalize edilir: git'in CRLF/LF dönüşümü aynı kod için farklı parmak izi üretmesin.
     h.update(Path(__file__).read_bytes().replace(b"\r\n", b"\n"))
@@ -313,13 +324,13 @@ CACHE_DIR = config.INDEX_ROOT / "_cache"
 def document_key(path, cfg):
     """Belgenin cache anahtarı: chunk'larını ve vektörlerini belirleyen her şey.
 
-    PDF byte'ları, belge ayarı (başlık/tür), indeks parametreleri (chunking, embedding modeli, device...) ve bu dosyanın
+    PDF byte'ları, belge ayarı (başlık/tür, doc_titles başlığı), indeks parametreleri (chunking, embedding modeli, device...) ve bu dosyanın
     kaynağı. Kod değişirse chunking de değişmiş olabilir; bu yüzden ingest.py değişince bütün cache geçersizleşir.
     """
     h = hashlib.sha256()
     h.update(path.name.encode())
     h.update(path.read_bytes())
-    h.update(json.dumps([cfg.index_params(), config.DOCUMENTS.get(path.name)], sort_keys=True,
+    h.update(json.dumps([cfg.index_params(), config.DOCUMENTS.get(path.name), _doc_titles(cfg).get(path.name)], sort_keys=True,
                         ensure_ascii=False).encode())
     h.update(Path(__file__).read_bytes().replace(b"\r\n", b"\n"))
     return h.hexdigest()[:24]

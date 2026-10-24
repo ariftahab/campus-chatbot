@@ -32,6 +32,9 @@ DOCUMENTS = {
     "ogrenci-kayıt-yonerge.pdf": {"title": "BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği", "tur": "mevzuat"},
     "yatay-gecis-yonergesi.pdf": {"title": "BAİBÜ Yatay Geçiş Yönergesi", "tur": "mevzuat"},
 }
+# doc_titles parametresi: DOCUMENTS'ta olmayan belgelerin resmi başlıkları (corpus v4'te 126 belge dosya adıyla geliyordu).
+# v1: ilk taslak; katalog_v1: kullanıcının doğruladığı belge kataloğunun baslik alanı (kesin kaynak).
+TITLE_FILES = {"v1": DATA_DIR / "belge_basliklari_v1.json", "katalog_v1": DATA_DIR / "belge_katalogu_v1.json"}
 
 # Belge kümeleri (corpus parametresi). Her küme sabit bir dosya listesidir; data/ klasörüne sonradan
 # eklenen bir PDF eski deneylerin belge kümesini değiştirmez.
@@ -66,7 +69,7 @@ def corpus_paths(name):
 
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
-PARAM_DEFAULTS = {"corpus": "v1", "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None,
+PARAM_DEFAULTS = {"corpus": "v1", "doc_titles": None, "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None,
                   "clarify_prompt": "v4_netlestirme", "citation_style": "madde"}
 
 
@@ -89,6 +92,8 @@ class RagConfig:
                                # | "structural_v2" (genişletilmiş madde deseni) | "structural_v3" (+ belge bütünü fallback)
     chunk_size: int            # recursive: parça boyutu; structural: bu boyutu aşan madde bölünür (karakter)
     chunk_overlap: int         # karakter
+    doc_titles: Optional[str]  # None (DOCUMENTS dışındaki belgelerde başlık dosya adı) | "v1" | "katalog_v1": resmi başlıklar
+                               # (TITLE_FILES); başlık chunk metninin ilk satırına ve atıflara girer
     # Embedding
     embedding_model: str
     normalize_embeddings: bool  # True -> kosinüs benzerliği, False -> ham L2 uzaklığı
@@ -123,7 +128,7 @@ class RagConfig:
     prompt_version: str        # rag.PROMPTS anahtarı
 
     # İndeksi (parçaları ve embedding'leri) etkileyen parametreler
-    INDEX_FIELDS = ("corpus", "device", "pdf_parser", "chunking", "chunk_size", "chunk_overlap",
+    INDEX_FIELDS = ("corpus", "device", "pdf_parser", "chunking", "chunk_size", "chunk_overlap", "doc_titles",
                     "embedding_model", "normalize_embeddings")
 
     @classmethod
@@ -139,6 +144,8 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen device: {cfg.device}")
         if cfg.corpus not in CORPORA:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
+        if cfg.doc_titles not in (None, *TITLE_FILES):
+            raise ValueError(f"Bilinmeyen doc_titles: {cfg.doc_titles}")
         if cfg.scope_search not in (None, "parallel_v1"):
             raise ValueError(f"Bilinmeyen scope_search: {cfg.scope_search}")
         if cfg.fixed_answers not in (None, "summer_v1", "summer_staj_v1", "summer_staj_v2"):
