@@ -32,5 +32,7 @@
   "clarify_trigger": "scope_labels_v1",
   "fixed_answers": "summer_staj_v1",
   "clarify_prompt": "v8_netlestirme"
- }
+ },
+ "notlar": "Hipotez tutmadı. EXP-038'in sonucu olmadığı için karşılaştırma elle EXP-037'yle yapıldı (EXP-038 ondan yalnız birim belirtmeyen staj sorusunun sabit cevabıyla ayrılıyor). Cevap doğruluğu 0,953 -> 0,946 (1 kötüleşen, 0 iyileşen; McNemar p=1,0): 'Açık öğretimden örgün öğretime yatay geçiş için not ortalaması kaç olmalı?' sorusunda yönetmeliğin 90'ı yerine yönergenin 80'i verildi (retrieval aynı; üretim farkı). Asıl sorun yan etki: 'yalnız BAİBÜ mevzuatı hakkında bilgi verebilirim' cümlesi başka üniversite anmayan 149 sorunun 23'ünde cevabın başına eklendi (ör. 'Bahar dönemi bütünleme sınavları hangi tarihlerde?', 'Teorik derslerde devam zorunluluğu yüzde kaçtır?'). Cevap uzunluğu 323 -> 369 karakter, netleştirme cevabı 401 -> 499 (ikisi de Wilcoxon p<0,001). Doğru netleştirme 0,875 -> 0,5 (8 sorunun 4'ünde; 'Yatay geçiş hangi dönemlerde yapılamaz?', 'Kayıt dondurma hangi durumlarda yapılabilir?' ve 'Mezun olmama birkaç ders kaldı, tek-çift sınavına girebilir miyim?' sorularında fakülte artık sorulmadı). Gereksiz netleştirme değişmedi (0,284). Retrieval birebir aynı. Yorum: kural koşulsuz olarak her istemde yer alınca model onu her cevapta uygulanacak bir biçim kuralı gibi okuyor ve netleştirme kuralıyla yarışıyor. Production'a alınmadı (EXP-038 kalıyor). Sonraki öneri: kuralı LLM'e bırakmak yerine deterministik tetiğe bağlamak (soru veya geçmiş BAİBÜ dışında bir üniversite adı içeriyorsa); netleştirme tetiğinde de aynı yol seçilmişti (EXP-025).",
+ "kisa_not": "Hipotez tutmadı: BAİBÜ açıklaması 23/149 alakasız cevaba sızdı, netleştirme 0,875 -> 0,5, cevap +47 karakter. Production'a alınmadı."
 }

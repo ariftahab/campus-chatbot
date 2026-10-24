@@ -51,6 +51,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-036 | EXP-033 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v7_kapsamsiz** | 3.1-flash-lite | 3753 |
 | EXP-037 | EXP-036 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v8_kapsamsiz** | 3.1-flash-lite | 3753 |
 | EXP-038 | EXP-037 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | – |
+| EXP-039 | EXP-038 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | **v9_kapsamsiz** | 3.1-flash-lite | 3753 |
 
 ## 2. Results
 
@@ -95,6 +96,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-036 | Prompt v3_kapsam + v4_netlestirme → v7_kapsamsiz + v7_netlestirme | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 538 ms | answer acc. ↓ kötüleşti (p=0.38, anlamlı değil) | ✗ |
 | EXP-037 | Ana prompt v7_kapsamsiz → v8_kapsamsiz (fakülte sorma kararı iki belge testine bağlı) | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 412 ms | answer acc. ↑ iyileşti (p=1.00, anlamlı değil) | ✗ |
 | EXP-038 | Production yapılandırması: EXP-037 + staj sabit cevabı (fixed_answers=summer_staj_v1) | | | | | | | | koşulmadı | |
+| EXP-039 | Başka üniversite anılınca BAİBÜ kuralını verme: v8_kapsamsiz → v9_kapsamsiz, v7_netlestirme → v8_netlestirme | 4.2 | 0.830 | 0.748 | 0.953 | 0.953 | 5756 | 416 ms | baseline |  |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -126,6 +128,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-035 | 0.649 | 0.534 | 0.636 | 0.976 | 0.833 |
 | EXP-036 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
 | EXP-037 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
+| EXP-039 | 0.646 | 0.523 | 0.635 | 0.976 | 0.830 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -152,6 +155,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-035 | 0.933 (26) | 0.807 (101) | 0.911 (46) | 0.788 (81) | 0.814 (17) | 0.834 (22) |
 | EXP-036 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
 | EXP-037 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
+| EXP-039 | 0.933 (26) | 0.803 (101) | 0.911 (46) | 0.783 (81) | 0.814 (17) | 0.834 (22) |
 
 ## 5. Notes
 
@@ -193,3 +197,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-035:** 3.5 flash-lite: cevap doğruluğu 0,966 -> 0,973 (anlamca ~eşit), cevaplar ve netleştirme belirgin kısa, LLM latency 4,0 -> 14,5 sn. Öneri: 3.1'de kal.
 - **EXP-037:** v8: gereksiz netleştirme 0,624 -> 0,284, cevap 323 karakter, doğruluk 0,953 (yeni hata yok). git_dirty yalnız TODO.md'den. Production.
 - **EXP-038:** Production yapılandırması, koşu yok: EXP-037 + staj sabit cevabı (yalnız birim belirtmeyen staj sorusu değişiyor). Production EXP-037 -> EXP-038.
+- **EXP-039:** Hipotez tutmadı: BAİBÜ açıklaması 23/149 alakasız cevaba sızdı, netleştirme 0,875 -> 0,5, cevap +47 karakter. Production'a alınmadı.
