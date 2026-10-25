@@ -35,6 +35,8 @@ def source_label(doc):
         return f"{m['title']}, Madde {m['madde']}, s. {m['page']}"
     if m.get("section"):
         return f"{m['title']}, {m['section']}, s. {m['page']}"
+    if "page" not in m:  # yapılandırılmış veri (ders programı, personel): sayfa yok
+        return m["title"]
     return f"{m['title']}, s. {m['page']}"
 
 

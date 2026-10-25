@@ -258,9 +258,80 @@ def load_structural(path, cfg):
     return split_structural(docs, cfg)
 
 
+# --- Yapılandırılmış veri (JSON) ---
+# Ders programı ve personel PDF değil, elle doğrulanmış JSON'dur. Chunking parametrelerinden bağımsız olarak kayıt
+# bazında metne çevrilir: ders programında her ders bir chunk (bütün şube, gün ve saatleriyle), personelde her kişi bir
+# chunk; ayrıca dönem bilgisi ve bölüm yönetimi için birer özet chunk. Bölüm adı her chunk'ın başlığında yazar; böylece
+# model bölüm belirtilmeyen soruda bunun hangi bölümün verisi olduğunu söyleyebilir.
+
+def _tr_date(iso):
+    y, m, d = iso.split("-")
+    months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"]
+    return f"{int(d)} {months[int(m) - 1]} {y}"
+
+
+def parse_schedule(path, title):
+    data = json.loads(path.read_text(encoding="utf-8"))
+    meta = {"source": path.name, "title": title, "kind": "ders_programi"}
+    rooms = data["derslikler"]
+    holidays = "; ".join(f"{_tr_date(h['tarih'])} ({h['aciklama']})" for h in data["tatiller"])
+    room_list = ", ".join(f"{k} = {v}" for k, v in rooms.items())
+    docs = [Document(page_content=(
+        f"{title}\nDönem: {data['donem']}. Dersler {_tr_date(data['ders_baslangic'])} tarihinde başlar, "
+        f"{_tr_date(data['ders_bitis'])} tarihinde biter.\nDers yapılmayan günler: {holidays}.\n"
+        f"Derslik kısaltmaları: {room_list}.\nDers saatleri 45 dakikadır; programdaki her saat aralığı bir ders saatidir."),
+        metadata={**meta, "kayit": "donem"})]
+    by_course = {}
+    for row in data["dersler"]:
+        by_course.setdefault((row["ders"], row["kod"]), []).append(row)
+    for (name, code), rows in by_course.items():
+        lines = [f"{title} - {name}", f"Ders: {name} (ders kodu {code}), {rows[0]['sinif']}. sınıf dersi."]
+        if rows[0].get("yuva"):
+            lines.append(f"Seçmeli ders grubu: {rows[0]['yuva']}.")
+        for r in rows:
+            room = r["derslik"] + (f" ({rooms[r['derslik']]})" if r["derslik"] in rooms else "")
+            section = f"Şube {r['sube']}: " if r.get("sube") else ""
+            where = f", derslik {room.rstrip('.')}" if r["derslik"] else ""  # bazı seçmelilerde derslik yazılmamış
+            lines.append(f"{section}{r['gun']} {', '.join(r['saatler'])}{where}.")
+        docs.append(Document(page_content="\n".join(lines), metadata={**meta, "kayit": name}))
+    return docs
+
+
+def parse_staff(path, title):
+    data = json.loads(path.read_text(encoding="utf-8"))
+    meta = {"source": path.name, "title": title, "kind": "personel"}
+    docs, roles = [], []
+    for p in data["personel"]:
+        contact = []
+        if p.get("dahili"):
+            contact.append(f"dahili telefon {p['dahili']}")
+        if p.get("eposta"):
+            contact.append(f"e-posta {p['eposta']}")
+        docs.append(Document(page_content=(
+            f"{title} - {p['ad']}\n{p['ad']}, {data['bolum']} Bölümü. Görevleri: {'; '.join(p['gorevler'])}."
+            + (f"\nİletişim: {', '.join(contact)}." if contact else "")), metadata={**meta, "kayit": p["ad"]}))
+        for g in p["gorevler"]:
+            role, unit = g.rstrip(")").split(" (", 1)
+            if role.startswith("Bölüm Başkan"):
+                roles.append((0 if role == "Bölüm Başkanı" else 1, f"{role}: {p['ad']}"))
+            elif role == "Ana Bilim Dalı Başkanı":  # "Bilgisayar Donanımı Ana Bilim Dalı Başkanlığı" -> "... Başkanı"
+                roles.append((2, f"{unit.replace('Başkanlığı', 'Başkanı')}: {p['ad']}"))
+    roles = [r for _, r in sorted(roles, key=lambda x: x[0])]
+    docs.insert(0, Document(page_content=(
+        f"{title} - Bölüm yönetimi\n{data['bolum']} Bölümü yönetimi ve ana bilim dalı başkanları: {'; '.join(roles)}."),
+        metadata={**meta, "kayit": "yonetim"}))
+    return docs
+
+
+DATA_PARSERS = {"ders_programi": parse_schedule, "personel": parse_staff}
+
+
 def load_document(path, cfg):
     """Tek belgenin chunk'ları. Chunking belge bazındadır (bir belgenin chunk'ları diğer belgelere bağlı değildir);
     belge bazında cache bu sayede mümkün."""
+    if path.suffix == ".json":
+        title, kind = _doc_info(path, cfg)
+        return DATA_PARSERS[kind](path, title)
     if cfg.chunking == "recursive":
         return load_recursive(path, cfg)
     if cfg.chunking in ARTICLE_PATTERNS:

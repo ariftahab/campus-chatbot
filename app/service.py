@@ -182,7 +182,8 @@ class ChatService:
         allowed = {c.metadata["source"] for c in self._chunks.values()}
         if source not in allowed:
             raise KeyError(source)
-        return config.DATA_DIR / source
+        # Yol corpus listesinden çözülür: yapılandırılmış veri alt klasörde olabilir (schedule/...).
+        return {p.name: p for p in config.corpus_paths(self.bot.cfg.corpus)}.get(source, config.DATA_DIR / source)
 
     # --- Elle değerlendirme ---
 

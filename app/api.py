@@ -284,8 +284,9 @@ def pdf_file(source: str, service: ChatService = Depends(get_service)):
         path = service.pdf_path(source)
     except KeyError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Corpus'ta böyle bir belge yok: {source}")
-    # inline: tarayıcı dosyayı indirmek yerine kendi PDF görüntüleyicisinde açar.
-    return FileResponse(path, media_type="application/pdf", filename=source, content_disposition_type="inline")
+    # inline: tarayıcı dosyayı indirmek yerine kendi PDF görüntüleyicisinde açar. Yapılandırılmış veri JSON olarak açılır.
+    media_type = "application/json" if path.suffix == ".json" else "application/pdf"
+    return FileResponse(path, media_type=media_type, filename=source, content_disposition_type="inline")
 
 
 # --- Yönetici (elle değerlendirme) ---
