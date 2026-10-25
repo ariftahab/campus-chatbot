@@ -31,6 +31,10 @@ DOCUMENTS = {
     "akademik-takvim-2026-2027.pdf": {"title": "BAİBÜ 2026-2027 Akademik Takvimi", "tur": "takvim"},
     "ogrenci-kayıt-yonerge.pdf": {"title": "BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği", "tur": "mevzuat"},
     "yatay-gecis-yonergesi.pdf": {"title": "BAİBÜ Yatay Geçiş Yönergesi", "tur": "mevzuat"},
+    # Yapılandırılmış veri (JSON): ingest.DATA_PARSERS kayıt bazında chunk'lar.
+    "bilgisayar_2026-2027_guz.json": {"title": "BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı",
+                                      "tur": "ders_programi"},
+    "personel_bilgisayar.json": {"title": "BAİBÜ Bilgisayar Mühendisliği Bölümü Akademik Personeli", "tur": "personel"},
 }
 # doc_titles parametresi: DOCUMENTS'ta olmayan belgelerin resmi başlıkları (corpus v4'te 126 belge dosya adıyla geliyordu).
 # v1: ilk taslak; katalog_v1: kullanıcının doğruladığı belge kataloğunun baslik alanı (kesin kaynak).
@@ -53,6 +57,8 @@ CORPORA = {
     # v4: v3'ten 2025-2026 akademik takvimi ile yaz öğretimi yönetmeliği ve uygulama esasları çıkarıldı
     # (yaz öğretimi kaldırıldı, yönetmelik yürürlükte değil), 2026-2027 akademik takvimi eklendi (129 belge).
     "v4": DATA_DIR / "corpus_v4.txt",
+    # v5: v4 + Bilgisayar Mühendisliği 2026-2027 güz ders programı ve akademik personeli (JSON, 131 belge).
+    "v5": DATA_DIR / "corpus_v5.txt",
 }
 
 
