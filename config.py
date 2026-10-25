@@ -21,7 +21,7 @@ EVAL_FILE = ROOT / "eval" / "sorular.json"
 EXPERIMENTS_DIR = ROOT / "experiments"
 
 # Sohbet uygulamasının kullandığı deney. Yeni bir deney üretime alınacaksa burası değişir.
-PRODUCTION_EXPERIMENT = "EXP-041"  # EXP-038 + staj sabit cevabı v2 (bölüm adları, sigorta konuları, tekrar sorma döngüsü)
+PRODUCTION_EXPERIMENT = "EXP-044"  # EXP-041 + corpus v5 (Bilgisayar Mühendisliği ders programı ve akademik personeli)
 
 # Belge adları kaynak gösteriminde ve parçaların başlığında kullanılır.
 # Listede olmayan bir PDF eklenirse dosya adı başlık olarak kullanılır.

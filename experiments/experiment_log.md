@@ -1,6 +1,6 @@
 # Experiment Log
 
-> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-041**. Ayrıntılar: `experiments/results/EXP-*.json`.
+> Otomatik üretilir (`python -m experiments.report`). Production: **EXP-044**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
 **Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v42.json` v4.2 (127 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v45.json` v4.5 (139 cevaplı + 26 cevapsız/kapsam dışı) · `eval/sorular_val_v1.json` vval-1.0 (85 cevaplı + 15 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
@@ -222,4 +222,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-041:** Production yapılandırması, koşu yok: staj sabit cevabında bölüm adları, sigorta konuları ve tekrar sorma döngüsü düzeltildi; set 4.2'de karar değişmiyor. Production EXP-038 -> EXP-041.
 - **EXP-042:** Resmi başlıklar chunk metninde retrieval'ı biraz düşürdü (MRR@10 0,830 -> 0,814, anlamlı değil; bağlam isabeti 0,953 -> 0,921); production değişmedi.
 - **EXP-043:** Baseline (v4, set 4.5, yalnız retrieval): eski 127 soru EXP-041 ile aynı; yeni 12 ders programı/personel sorusu bulunamıyor.
-- **EXP-044:** Corpus v5 (ders programı + personel JSON): yeni 12 soru 12/12 doğru, 6 çekimser soru doğru; eski 127 sorunun context'i hiç değişmedi.
+- **EXP-044:** Corpus v5 (ders programı + personel JSON): yeni 12 soru 12/12 doğru, 6 çekimser soru doğru; eski 127 sorunun context'i hiç değişmedi. Production EXP-041 -> EXP-044.
