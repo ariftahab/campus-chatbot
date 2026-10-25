@@ -119,7 +119,14 @@ def validate_dataset(data):
     texts = {}
     # Yalnız soruların kaynak gösterdiği belgeler okunur (139 belgenin hepsini iki okuyucuyla okumak yavaş).
     paths = {config.DATA_DIR / belge for item in data["sorular"] if answerable(item) for belge, _ in sources(item)}
+    json_paths = {p.name: p for p in config.DATA_DIR.rglob("*.json") if p.name in config.DOCUMENTS}
     for path in paths:
+        if path.suffix == ".json":
+            # Yapılandırılmış veri: kanıt ham JSON'da değil, ingest'in ürettiği chunk metninde aranır (okuyucudan bağımsız).
+            doc = config.DOCUMENTS[path.name]
+            text = norm(" ".join(d.page_content for d in ingest.DATA_PARSERS[doc["tur"]](json_paths[path.name], doc["title"])))
+            texts.update({(path.name, parser): text for parser in ("pypdf", "pdfplumber")})
+            continue
         for parser in ("pypdf", "pdfplumber"):
             texts[(path.name, parser)] = norm(" ".join(ingest.read_pages(path, parser))) if path.exists() else ""
     problems = []
