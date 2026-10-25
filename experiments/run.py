@@ -133,7 +133,7 @@ def evaluate_retrieval(cfg, retriever, items, rewrite=None):
             "context_hit": int(any(relevant[:cfg.final_k])),
             "context_chars": sum(len(c.page_content) for c in context),
             "latency_ms": round(latency, 1),
-            "top5": [f"{c.metadata['source']} s.{c.metadata['page']}"
+            "top5": [c.metadata["source"] + (f" s.{c.metadata['page']}" if "page" in c.metadata else "")  # JSON: sayfa yok
                      + (f" m.{c.metadata['madde']}" if "madde" in c.metadata else "") for c in top[:5]],
         }
         for k in ev.HIT_KS:
