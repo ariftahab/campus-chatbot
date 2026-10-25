@@ -31,5 +31,7 @@
   "clarify_trigger": "scope_labels_v1",
   "fixed_answers": "summer_staj_v2",
   "clarify_prompt": "v7_netlestirme"
- }
+ },
+ "notlar": "Yalnız retrieval (2026-10-25). Set 4.5'in tamamında MRR@10 0,758, bağlam isabeti 0,871: düşüş yalnız yeni 12 sorudan (kaynakları v4'te yok, bağlam isabeti 0). Set 4.3'ten gelen cevaplanabilir 127 soruda MRR@10 0,829 ve bağlam isabeti 0,953, EXP-041 ile soru soru aynı: ingest.py'ye JSON ayrıştırıcıları eklenince v4 index'i yeniden kuruldu ve PDF chunk'ları değişmedi. Hipotez doğrulandı.",
+ "kisa_not": "Baseline (v4, set 4.5, yalnız retrieval): eski 127 soru EXP-041 ile aynı; yeni 12 ders programı/personel sorusu bulunamıyor."
 }
