@@ -341,6 +341,19 @@ _V8_GENERAL_RULE = """- Soru bir kapsam belirtmiyorsa genel kuralı ver. Genel k
      programda okuduğunu sor.
      Cevap tek bir belgede yer alıyorsa cevabı kaynağıyla doğrudan yaz ve cevabı orada bitir."""
 _V8_SYSTEM = _V7_SYSTEM.replace(_V7_GENERAL_RULE, _V8_GENERAL_RULE)
+# v9_kapsamsiz / v8_netlestirme (2026-10-28, kullanıcı onayı): hata analizinde eksik madde context'e gelmeyince model
+# boşluğu başka bir birimin kuralıyla ya da uydurmayla dolduruyordu (çok maddeli sorularda ikinci alt soru, netleştirmede
+# diş hekimliği/yandal kuralını genel kural gibi sunma). İki kural v8 ve v7 netleştirme prompt'larına eklenir.
+_V9_RULES = """- Soru birden fazla şey soruyorsa her birini ayrı cevapla: bağlamda cevabı olan kısmı kaynağıyla yaz; cevabı bağlamda
+  olmayan kısım için yalnızca o kısım için "Bu konu belgelerde bulunamadı." yaz.
+- Her kuralı ait olduğu kapsamın (fakülte, yüksekokul, program veya öğretim düzeyi) adıyla sun. Genel kural olarak
+  yalnızca bütün öğrencileri ya da bütün ön lisans ve lisans öğrencilerini kapsayan belgedeki kuralı sun; bağlamda böyle
+  bir belgenin kuralı yoksa bunu belirt ve bağlamdaki kuralları kendi kapsamlarıyla ver.
+"""
+_DATE_RULE = "- Bugünün tarihi:"
+assert _V8_SYSTEM.count(_DATE_RULE) == 1 and _V7_CLARIFY_SYSTEM.count(_DATE_RULE) == 1
+_V9_SYSTEM = _V8_SYSTEM.replace(_DATE_RULE, _V9_RULES + _DATE_RULE)
+_V8_CLARIFY_SYSTEM = _V7_CLARIFY_SYSTEM.replace(_DATE_RULE, _V9_RULES + _DATE_RULE)
 # v5_birlestirme: v3'te "her kuralı kapsamıyla ayrı ayrı yaz" ile "aynı kuralı tekrar etme" çelişiyordu; model aynı kuralı
 # her kapsam için ayrı yazıyordu (ör. lisans ve hukuk için aynı kredi iki satır). Kapsam maddesi kuralları önce
 # karşılaştırmayı ve aynı olanları tek satırda birleştirmeyi tarif eder; ayrı birleştirme maddesi bu yüzden kalkar.
@@ -443,6 +456,24 @@ PROMPTS = {
     "v8_kapsamsiz": {
         "template": ChatPromptTemplate.from_messages([
             ("system", _V8_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,
+        "history": True,
+    },
+    "v9_kapsamsiz": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V9_SYSTEM),
+            MessagesPlaceholder("history"),
+            ("human", "{input}"),
+        ]),
+        "format": _format_v2,
+        "history": True,
+    },
+    "v8_netlestirme": {
+        "template": ChatPromptTemplate.from_messages([
+            ("system", _V8_CLARIFY_SYSTEM),
             MessagesPlaceholder("history"),
             ("human", "{input}"),
         ]),
