@@ -365,13 +365,13 @@ def format_metrics(answers):
 
 
 def subset_metrics(rows, items, answers=None):
-    """Soru alt grupları için ortalamalar: eski/yeni set, stil (belge/öğrenci dili), kategori.
+    """Soru alt grupları için ortalamalar: eski/yeni set, stil (belge/öğrenci dili), kategori, soru türü.
 
     Set 2.0'da bu alanlar yok; o zaman boş döner. Grup küçükse (birkaç soru) ortalama gürültülüdür.
     """
     meta = {q["id"]: q for q in items}
     groups = {}
-    for key in ("stil", "kategori", "grup"):
+    for key in ("stil", "kategori", "grup", "soru_turu"):
         for r in rows:
             if key in meta[r["id"]]:
                 groups.setdefault(f"{key}:{meta[r['id']][key]}", []).append(r["id"])
