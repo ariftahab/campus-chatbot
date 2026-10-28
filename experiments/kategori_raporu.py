@@ -4,6 +4,8 @@
 
 Kararlar experiments/anlamca/<EXP-ID>.json'dan okunur (soru başına 'anahtar' ve 'anlamca'). Soru türü set dosyasındaki
 'soru_turu' alanından; alan yoksa (val-1.0 gibi değiştirilmeyen eski setler) eval/soru_turleri_<set>.json'dan gelir.
+'coklu_belge' türündeki bir sorunun bütün kaynakları aynı belgedeyse 'coklu_madde' (tek belge, birden fazla madde)
+sayılır (kullanıcı kararı, 2026-10-28): ayrım kaynaklardan türetilir, set dosyaları değişmez.
 Çıktı markdown tablosu; config 'notlar' alanına ve günlüklere buradan aktarılır.
 """
 import json
@@ -18,7 +20,8 @@ from experiments.run import dataset_name  # noqa: E402
 TURLER = {
     "duz": "1. Belgede var, düz soru",
     "farkli_ifade": "2. Belgede var, farklı ifade",
-    "coklu_belge": "3. Birden fazla madde/belge",
+    "coklu_madde": "3a. Tek belge, birden fazla madde",
+    "coklu_belge": "3b. Birden fazla belge",
     "belgede_yok": "4. Belgede yok, konu yakın",
     "konu_disi": "5. Konu dışı",
     "yazim_hatali": "6. Yazım hatalı / argo",
@@ -30,10 +33,14 @@ TURLER = {
 
 def question_types(set_name, items):
     if all("soru_turu" in q for q in items):
-        return {q["id"]: q["soru_turu"] for q in items}
-    mapping = json.loads((config.ROOT / "eval" / f"soru_turleri_{set_name.removeprefix('sorular_')}.json")
-                         .read_text(encoding="utf-8"))
-    return mapping["soru_turu"]
+        types = {q["id"]: q["soru_turu"] for q in items}
+    else:
+        types = json.loads((config.ROOT / "eval" / f"soru_turleri_{set_name.removeprefix('sorular_')}.json")
+                           .read_text(encoding="utf-8"))["soru_turu"]
+    for q in items:
+        if types[q["id"]] == "coklu_belge" and len({k["belge"] for k in q.get("kaynaklar", [])}) == 1:
+            types[q["id"]] = "coklu_madde"
+    return types
 
 
 def main(exp_id):
