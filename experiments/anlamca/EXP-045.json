@@ -1,0 +1,422 @@
+{
+ "deney": "EXP-045",
+ "aciklama": "Anlamca değerlendirme (2026-10-28). LLM yalnız 17 soruda koşuldu (teshis_alt_kume): context'i EXP-040'tan farklı olan tek soru (hazırlık güz dersleri), sabit cevap kararı değişen intörnlük sorusu ve context'i ayrı izlenmeyen 15 belgede yok sorusu. Kalan 83 sorunun context'i ve sabit cevap kararı EXP-040 ile aynı; kararları EXP-040'tan (bkz. experiments/anlamca/EXP-040.json). 'anahtar': answer_ok; 'anlamca': cevap anlamca doğru mu.",
+ "kararlar": {
+  "V01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V10": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V11": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V12": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V13": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V14": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V15": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V16": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V17": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V18": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V19": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V20": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V21": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V22": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V23": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V24": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V25": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V26": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V27": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V28": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Etiket: 'vize aranmamaktadır' doğru cevap, kelime alternatifi eksik."
+  },
+  "V29": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V30": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V31": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V32": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V33": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V34": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V35": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V36": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok: ücretin personel olup olmamaya göre belirlendiği söylendi, tutar olmadığı söylendi; uydurma yok."
+  },
+  "V37": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V38": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V39": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V40": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "'Bağlamda yer almıyor' dendi, 'bilgim yok' kalıbı kullanılmadı; anlamca doğru."
+  },
+  "V41": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V42": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V43": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V44": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V45": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V46": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V47": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V48": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V49": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V50": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V51": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V52": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V53": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V54": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V55": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V56": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V57": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V58": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V59": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Danışman zorunluluğu söylendi ama danışmanı olmayan topluluğun faaliyetinin durdurulacağı söylenmedi."
+  },
+  "V60": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V61": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V62": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V63": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V64": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V65": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V66": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V67": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V68": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Çok maddeli: ücret doğru, daha önce dersten kalanın yararlanamayacağı (ikinci alt soru) düştü."
+  },
+  "V69": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Çok maddeli: ortalama hesabı doğru, önlisans derslerinden muafiyet (ikinci alt soru) düştü."
+  },
+  "V70": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V71": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V72": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Çok maddeli: sigorta doğru, 'takip eden ilk staj döneminde' tekrar (ilk alt soru) verilmedi."
+  },
+  "V73": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V74": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V75": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V76": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V77": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V78": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V79": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V80": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V81": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V82": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Etiket: genel kural (2,00) + fakülte sorusu doğru davranış; etiket yalnız lisansüstü değerlerini istiyordu."
+  },
+  "V83": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V84": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V85": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V86": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok etiketi: kontenjan belirleme kuralı belgede var, model onu verdi, uydurma yok."
+  },
+  "V87": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok: kontenjanın Senato'ca belirlendiği söylendi, güncel liste olmadığı söylendi; uydurma yok."
+  },
+  "V88": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Liste olmadığı söylendi, 'bilgim yok' kalıbı kullanılmadı; anlamca doğru."
+  },
+  "V89": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok etiketi: uzaktan eğitim yönergesi ofis saati kuralını içeriyor, model onu verdi."
+  },
+  "V90": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok etiketi: başvuru tarihinin her yıl SKS sitesinde ilan edildiği söylendi, uydurma yok."
+  },
+  "V91": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok etiketi: uzaktan derslerin dönem başında belirlendiği kuralı verildi, uydurma yok."
+  },
+  "V92": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok etiketi: bütünleme programının ilan usulü verildi, uydurma yok."
+  },
+  "V93": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V94": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V95": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V96": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V97": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Etiket: 'karşılamamaktadır' doğru cevap, kelime alternatifi eksik."
+  },
+  "V98": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V99": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "V100": {
+   "anahtar": 1,
+   "anlamca": 1
+  }
+ }
+}

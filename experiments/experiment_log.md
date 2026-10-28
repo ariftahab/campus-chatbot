@@ -57,6 +57,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-042 | EXP-041 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3753 |
 | EXP-043 | EXP-041 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3753 |
 | EXP-044 | EXP-043 | **v5** | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
+| EXP-045 | EXP-044 | v5 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
 
 ## 2. Results
 
@@ -107,6 +108,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-042 | Resmi belge başlıkları: chunk başlığında dosya adı yerine belge kataloğundaki ad (doc_titles=katalog_v1) | 4.2 | 0.814 | 0.740 | 0.921 | 0.921 | 5878 | 437 ms | MRR@10 ↓ kötüleşti (p=0.09, anlamlı değil) | ✗ |
 | EXP-043 | Baseline: production yapılandırması (corpus v4) set 4.5'te, yalnız retrieval | 4.5 | 0.758 | 0.683 | 0.871 | 0.871 | 5776 | 451 ms | referans (yeni soru seti, karşılaştırma yok) | – |
 | EXP-044 | Corpus v5: Bilgisayar Mühendisliği ders programı ve akademik personeli (JSON, kayıt bazında chunk) | 4.5 | 0.841 | 0.763 | 0.957 | 0.957 | 5462 | 479 ms | context_hit ↑ iyileşti (p<0.01, anlamlı) | ✓ |
+| EXP-045 | Production (EXP-044) validation setinde (val-1.0): soru türü başına cevap doğruluğu | val-1.0 | 0.840 | 0.753 | 0.953 | 0.953 | 5227 | 412 ms | referans (yeni soru seti, karşılaştırma yok) | – |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -144,6 +146,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-042 | 0.615 | 0.527 | 0.629 | 0.969 | 0.814 |
 | EXP-043 | 0.590 | 0.478 | 0.584 | 0.892 | 0.758 |
 | EXP-044 | 0.672 | 0.560 | 0.666 | 0.978 | 0.841 |
+| EXP-045 | 0.698 | 0.604 | 0.700 | 0.965 | 0.840 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -176,6 +179,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-042 | 0.952 (26) | 0.779 (101) | 0.897 (46) | 0.767 (81) | 0.789 (17) | 0.823 (22) |
 | EXP-043 | 0.933 (26) | 0.718 (113) | 0.892 (47) | 0.689 (92) | 0.814 (17) | 0.820 (24) |
 | EXP-044 | 0.933 (26) | 0.819 (113) | 0.913 (47) | 0.803 (92) | 0.814 (17) | 0.820 (24) |
+| EXP-045 | – | 0.840 (85) | 1.000 (1) | 0.838 (84) | 1.000 (4) | 0.491 (12) |
 
 ## 5. Notes
 
@@ -223,3 +227,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-042:** Resmi başlıklar chunk metninde retrieval'ı biraz düşürdü (MRR@10 0,830 -> 0,814, anlamlı değil; bağlam isabeti 0,953 -> 0,921); production değişmedi.
 - **EXP-043:** Baseline (v4, set 4.5, yalnız retrieval): eski 127 soru EXP-041 ile aynı; yeni 12 ders programı/personel sorusu bulunamıyor.
 - **EXP-044:** Corpus v5 (ders programı + personel JSON): yeni 12 soru 12/12 doğru, 6 çekimser soru doğru; eski 127 sorunun context'i hiç değişmedi. Production EXP-041 -> EXP-044.
+- **EXP-045:** Production val-1.0'da anlamca 0,96 (anahtar 0,84); intörnlük düzeldi. En zayıf tür birden fazla madde gerektiren sorular (9/12).

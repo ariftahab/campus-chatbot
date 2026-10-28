@@ -31,5 +31,7 @@
   "clarify_trigger": "scope_labels_v1",
   "fixed_answers": "summer_staj_v2",
   "clarify_prompt": "v7_netlestirme"
- }
+ },
+ "notlar": "Retrieval (2026-10-28) EXP-040 ile aynı: MRR@10 0,840, Hit@5 0,953, bağlam isabeti 0,953; ilk 5 chunk yalnız 'Hazırlık sınıfında güz dönemi dersleri ne zaman bitiyor?' sorusunda değişti. LLM yalnız 17 soruda koşuldu (teshis_alt_kume): o soru, sabit cevap kararı değişen intörnlük sorusu ve 15 belgede yok sorusu; kalan 83 sorunun kararı EXP-040'tan (experiments/anlamca/EXP-045.json). Soru türü başına anlamca doğruluk (experiments/kategori_raporu.py): düz soru 33/33, farklı ifade 16/17, birden fazla madde 9/12, belgede yok 15/15, netleştirme 12/12, takip 7/7, yanlış öncül 4/4; toplam 0,96 (anahtar kelimeyle 0,84). Konu dışı ve yazım hatalı soru val-1.0'da yok (val-2.0'da gelecek). Hipotez tuttu: 'İntörnlükte ne kadar devamsızlık yaparsam stajı tekrar ederim?' artık belgelerden doğru (%10). Kalan 4 hata: üçü çok maddeli sorularda bir alt sorunun düşmesi ('ikinci öğretimdeyim sınıfın ilk yüzde onuna girersem…', 'dikey geçişle geldim…', 'mühendislik stajından kalırsam…'), biri 'topluluğumuzun akademik danışmanı yok ne olur' (faaliyetin durdurulacağı söylenmedi). Belgede yok sorularında anahtar kelime 6/15'e düştü (EXP-040'ta 8/15) ama hepsi anlamca doğru: model ilgili kuralı verip 'bağlamda yer almıyor' diyor, 'bilgim yok' kalıbını her zaman kullanmıyor; fark LLM rastgeleliği (temperature 0,3), context aynı.",
+ "kisa_not": "Production val-1.0'da anlamca 0,96 (anahtar 0,84); intörnlük düzeldi. En zayıf tür birden fazla madde gerektiren sorular (9/12)."
 }
