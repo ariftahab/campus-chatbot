@@ -167,10 +167,6 @@ büyüdüğü için satırlar arasında sayı karşılaştırılmaz):
 | EXP-015 | Corpus: 3 belge → 139 belge (bütün mevzuat) | MRR@10 1,00 → 0,86; reranker düşüşü sınırladı (RRF 0,59 → 0,86) |
 | EXP-021 | Reranker'a giden aday 8 → 30 | Doğru chunk'ın reranker'a ulaşma oranı 0,958 → 0,986 |
 | EXP-022 | Reranker fp32 → fp16 | Sıralama birebir aynı, latency 1372 → 363 ms |
-| EXP-027 | Fakülteyi sorma kararı LLM yerine belge kapsam etiketlerinden | Gereksiz netleştirme 0,45 → 0,26 |
-| EXP-028 | Yürürlükten kalkan yaz öğretimi için sabit cevap | 9 yaz sorusunda eskimiş bilgi yerine doğru cevap |
-| EXP-037 | Prompt v8: fakülteyi sorma kararı "cevap iki ayrı belgede mi?" testine bağlandı | Gereksiz netleştirme 0,62 → 0,28, doğruluk 0,953 |
-| EXP-044 | Corpus v5: ders programı ve akademik personel verisi (JSON, kayıt başına bir chunk) | Yeni 12 soru 12/12 doğru, eski soruların context'i değişmedi |
 
 **Güncel sistem** (129 belge, 3753 chunk; 149 soruluk set 4.2: bulma, kapsam, çekimser kalma, takip ve birleştirme
 soruları):
