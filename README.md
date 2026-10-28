@@ -193,6 +193,26 @@ Hangi belgelerin index'e girdiğini belge kümesi belirler (`config.CORPORA`; g�
 Yeni bir belge eklemek için PDF'i `data/`'ya koyup yeni bir belge kümesi tanımlayın; index kendiliğinden yeniden kurulur.
 Eski deneyler eski belge kümesiyle ölçüldüğü için yeni kümeyle yapılan ölçümlerle karşılaştırılamaz.
 
+## Bilinen zayıflıklar
+
+Öğrenci diliyle yazılmış validation setinde (111 soru) anlamca cevap doğruluğu soru türüne göre:
+
+| Soru türü | Doğruluk | Zayıflığın kaynağı |
+|---|---|---|
+| Belgede var, belgenin terimleriyle sorulmuş | 12/12 | — |
+| Belgede var, öğrencinin durumunu anlatan farklı ifade | 26/28 | Örtük çıkarım ("kınama, uyarı dışında bir disiplin cezası mı?"); öğrencinin kelimesi belgedekinden farklı |
+| Tek belgede birden fazla madde gerektiren | **7/12** | İkinci maddenin chunk'ı context'e girmiyor; model o kısma "belirtilmemiş" diyor ya da uyduruyor |
+| Birden fazla belge gerektiren | 2/3 | Aynı sorun: soru tek bir embedding'e çevrilince iki konudan biri kayboluyor |
+| Belgede yok (konu yakın) | 15/15 | — |
+| Konu dışı | 8/8 | Reddediliyor ama asistanın kapsamı söylenmiyor |
+| Yazım hatalı / Türkçe karakter kullanılmamış | **8/10** | Doğru chunk aday listesine hiç girmiyor |
+| Fakülteye göre değişen kural (netleştirme) | **9/12** | Genel yönetmeliğin maddesi reranker'da aşağı itiliyor; model başka bir fakültenin kuralını genel kural gibi sunuyor |
+| Takip sorusu | 7/7 | — |
+| Yanlış öncül | 4/4 | — |
+
+Yanlış cevapların 21'inden 19'unda sorun retrieval'da: doğru chunk ya reranker sonrası ilk 5'in dışında kalıyor ya da
+aday listesine hiç girmiyor. Soru soru ayrıntı: [`experiments/hata_analizi_2026-10-28.md`](experiments/hata_analizi_2026-10-28.md).
+
 ## Sınırlamalar
 
 - Chatbot yalnız index'teki belgeleri bilir; duyurular, ders programları ve birim web sayfaları kapsam dışıdır.
