@@ -12,6 +12,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_google_genai import ChatGoogleGenerativeAI
 from rank_bm25 import BM25Okapi
+import snowballstemmer
 
 import config
 import ingest
@@ -23,10 +24,23 @@ def tr_lower(text):
     return text.replace("I", "ı").replace("İ", "i").lower()
 
 
-def tokenize(text):
-    # Türkçe eklemeli bir dil; kelimelerin ilk 5 harfini almak basit ama etkili bir kök bulma
-    # yöntemi ("geçiş", "geçişi", "geçişler" -> "geçiş").
-    return [w[:5] for w in re.findall(r"\w+", tr_lower(text))]
+_STEMMER = snowballstemmer.stemmer("turkish")
+_FOLD = str.maketrans("ıöüşçğâîû", "iouscgaiu")
+
+
+def tokenize(text, mode="prefix5"):
+    """BM25 için kelime kökleri (her iki tarafa, soru ve chunk'a aynı işlem uygulanır).
+
+    prefix5: kelimenin ilk 5 harfi; basit ama kaba ("kitabı" -> "kitab", "kitap" -> "kitap" eşleşmez).
+    snowball_tr: Snowball Türkçe stemmer isim eklerini atar ("kitabı", "kitaplar" -> "kitap"; "derslerin" -> "ders").
+    snowball_tr_fold: stemmer'dan sonra Türkçe karakterler ASCII'ye katlanır ("yüzde" ve "yuzde" -> aynı token);
+      stemmer doğru Türkçe karakter beklediği için katlama sonra yapılır (2026-10-28).
+    """
+    words = re.findall(r"\w+", tr_lower(text))
+    if mode == "prefix5":
+        return [w[:5] for w in words]
+    stems = _STEMMER.stemWords(words)
+    return [s.translate(_FOLD) for s in stems] if mode == "snowball_tr_fold" else stems
 
 
 def source_label(doc):
@@ -67,7 +81,7 @@ class Retriever:
         self.cfg = cfg
         self.store = store
         self.chunks = chunks
-        self.bm25 = BM25Okapi([tokenize(c.page_content) for c in chunks])
+        self.bm25 = BM25Okapi([tokenize(c.page_content, cfg.bm25_tokenizer) for c in chunks])
         self.reranker = None
         if cfg.reranker_model:
             from sentence_transformers import CrossEncoder
@@ -87,7 +101,7 @@ class Retriever:
         return [d.metadata["chunk_id"] for d in self.store.similarity_search(query, k=k)]
 
     def _bm25_ids(self, query, k):
-        scores = self.bm25.get_scores(tokenize(query))
+        scores = self.bm25.get_scores(tokenize(query, self.cfg.bm25_tokenizer))
         ranked = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
         return [i for i in ranked[:k] if scores[i] > 0]
 
@@ -151,7 +165,7 @@ class Retriever:
             vec = [d.metadata["chunk_id"] for d in self.store.similarity_search(
                 scoped_query, k=SCOPE_CANDIDATES, filter=lambda md: md["chunk_id"] in allowed,
                 fetch_k=len(self.chunks))]
-            bm_scores = self.bm25.get_scores(tokenize(scoped_query))
+            bm_scores = self.bm25.get_scores(tokenize(scoped_query, self.cfg.bm25_tokenizer))
             bm = sorted((i for i in allowed if bm_scores[i] > 0), key=lambda i: bm_scores[i], reverse=True)
             fused = {}
             for ranked in (vec, bm[:SCOPE_CANDIDATES]):

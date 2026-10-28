@@ -76,7 +76,7 @@ def corpus_paths(name):
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
 PARAM_DEFAULTS = {"corpus": "v1", "doc_titles": None, "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None,
-                  "clarify_prompt": "v4_netlestirme", "citation_style": "madde"}
+                  "clarify_prompt": "v4_netlestirme", "citation_style": "madde", "bm25_tokenizer": "prefix5"}
 
 
 def full_params(params):
@@ -107,6 +107,8 @@ class RagConfig:
     retrieval: str             # "vector" | "bm25" | "hybrid"
     vector_k: int              # vektör aramasından alınan aday sayısı
     bm25_k: int                # BM25'ten alınan aday sayısı
+    bm25_tokenizer: str        # "prefix5" (kelimenin ilk 5 harfi) | "snowball_tr" (Snowball Türkçe stemmer) |
+                               # "snowball_tr_fold" (stemmer + Türkçe karakter katlama: ı→i, ş→s ...) (rag.tokenize)
     rrf_k: int                 # Reciprocal Rank Fusion sabiti (yalnız hybrid)
     reranker_model: Optional[str]  # None -> reranker yok
     reranker_max_length: int   # reranker'ın okuduğu en fazla token
@@ -152,6 +154,8 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
         if cfg.doc_titles not in (None, *TITLE_FILES):
             raise ValueError(f"Bilinmeyen doc_titles: {cfg.doc_titles}")
+        if cfg.bm25_tokenizer not in ("prefix5", "snowball_tr", "snowball_tr_fold"):
+            raise ValueError(f"Bilinmeyen bm25_tokenizer: {cfg.bm25_tokenizer}")
         if cfg.scope_search not in (None, "parallel_v1"):
             raise ValueError(f"Bilinmeyen scope_search: {cfg.scope_search}")
         if cfg.fixed_answers not in (None, "summer_v1", "summer_staj_v1", "summer_staj_v2"):
