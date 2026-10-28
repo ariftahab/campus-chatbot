@@ -2,10 +2,29 @@
 
 **Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) mevzuatı üzerinden soru cevaplayan, kaynak gösteren bir RAG chatbot.**
 
+**Öne çıkanlar**
+- 131 belge (129 yönetmelik, yönerge ve akademik takvim PDF'i + bir bölümün ders programı ve personel verisi), ~3.800
+  chunk; mevzuat madde madde chunk'lanır.
+- Hybrid retrieval (bge-m3 vector search + BM25, RRF ile birleştirme) ve cross-encoder reranker; cevapta belge ve madde
+  atıfı, arayüzde tıklanınca açılan madde paneli.
+- 51 kayıtlı deney: her biri tek parametre değiştirir, hipotez koşmadan önce yazılır, sonuç commit hash'iyle saklanır,
+  değişim eşleştirilmiş testlerle (McNemar, Wilcoxon) sınanır.
+- Öğrenci diliyle yazılmış, sistem ayarlanırken kullanılmayan validation setinde anlamca cevap doğruluğu 0,88; yanlış
+  cevapların soru türüne ve hatanın oluştuğu katmana göre analizi ([Bilinen zayıflıklar](#bilinen-zayıflıklar)).
+
+*In English:* mevzuat-rag is a retrieval-augmented chatbot that answers students' questions about the regulations of
+Bolu Abant İzzet Baysal University (Turkey) and cites the exact document and article for every claim. It indexes 131
+documents (~3,800 article-level chunks) and combines bge-m3 dense retrieval, BM25, reciprocal rank fusion and a
+cross-encoder reranker before generating with Gemini; a FastAPI backend serves a web UI with clickable citations. Every
+design decision is a logged, single-variable experiment (51 so far) with paired significance tests, and the system scores
+0.88 semantic answer accuracy on a held-out validation set written in students' own words, with a published error
+analysis by question type.
+
 Öğrenciler "Yatay geçiş başvurusu için not ortalamam kaç olmalı?", "Kaç dersten devamsızlık hakkım var?" ya da
 "Bahar dönemi final sınavları ne zaman?" gibi sorular sorar. Chatbot cevabı üniversitenin yönetmelik, yönerge ve akademik
 takvim belgelerinden bulur ve her bilginin yanında belgeyi ve madde numarasını verir
-(ör. `[BAİBÜ Yatay Geçiş Yönergesi, Madde 8]`). Cevap belgelerde yoksa uydurmak yerine "Bu konuda bilgim yok." der.
+(ör. `[BAİBÜ Yatay Geçiş Yönergesi, Madde 8]`). Hedef davranış, cevap belgelerde yoksa uydurmak yerine "Bu konuda bilgim
+yok." demesi; ölçülen sonuçlar ve sistemin hata yaptığı yerler [Bilinen zayıflıklar](#bilinen-zayıflıklar) bölümünde.
 
 Sistemdeki her tasarım kararı, ölçülmüş ve tekrar üretilebilir bir **deney** olarak
 kayıtlıdır (bkz. [Deneyler](#deneyler)).
@@ -15,11 +34,13 @@ kayıtlıdır (bkz. [Deneyler](#deneyler)).
 ## Özellikler
 
 - **Kaynaklı cevap:** Her cevapta belge adı ve madde numarası yer alır. Arayüzde atıfa tıklayınca yan panelde ilgili madde açılır; oradan PDF'in ilgili sayfasına gidilebilir.
-- **Çekimser kalma:** Bağlamda cevap yoksa model tahmin yürütmez, "bilgim yok" der.
+- **Çekimser kalma (hedef):** Bağlamda cevap yoksa "bilgim yok" der. Belgede olmayan konularda ölçülen 15/15; ama birden
+  fazla şey soran sorularda bir kısmın maddesi context'e gelmeyince model o kısım için zaman zaman yanlış bilgi üretiyor.
 - **Takip soruları:** "Peki bunun son günü ne?" gibi sorular, sohbet geçmişine bakılarak bağımsız bir soruya dönüştürülür
-  ve öyle aranır.
-- **Kapsam farkındalığı:** Aynı konu farklı fakültelerde farklı düzenlenmişse (ör. Tıp Fakültesinin ayrı yönetmeliği)
-  genel kuralı verir ve öğrencinin fakültesini sorar.
+  ve öyle aranır (validation setinde 7/7).
+- **Kapsam farkındalığı (hedef):** Aynı konu farklı fakültelerde farklı düzenlenmişse (ör. Tıp Fakültesinin ayrı
+  yönetmeliği) genel kuralı verir ve öğrencinin fakültesini sorar. Validation setinde bu türde 9/12: genel kuralın maddesi
+  context'e gelmeyince başka bir fakültenin kuralı genel kural gibi sunuluyor.
 - **Web arayüzü:** sohbet ekranı, belge ve chunk tarayıcısı, cevapları etiketlemek için yönetici paneli.
 - **REST API:** FastAPI ile; Swagger dokümantasyonu `/docs` adresinde.
 - **Deney altyapısı:** retrieval ve cevap kalitesini ölçen değerlendirme koşucusu, istatistiksel testler
@@ -123,7 +144,7 @@ python chat.py          # 'yeni' geçmişi temizler, 'çık' ile çıkılır
 
 ### GPU olmadan çalıştırma
 
-Hangi parametrelerle çalışılacağını `config.PRODUCTION_EXPERIMENT` belirler (şu an `EXP-038`). CPU'da çalıştırmak için
+Hangi parametrelerle çalışılacağını `config.PRODUCTION_EXPERIMENT` belirler (şu an `EXP-044`). CPU'da çalıştırmak için
 bu config'i kopyalayıp `device` değerini `"cpu"`, `reranker_dtype` değerini `"fp32"` yapın ve `PRODUCTION_EXPERIMENT`'i
 yeni config'e çevirin. CPU'da retrieval saniyeler mertebesinde sürer.
 
@@ -168,12 +189,15 @@ büyüdüğü için satırlar arasında sayı karşılaştırılmaz):
 | EXP-021 | Reranker'a giden aday 8 → 30 | Doğru chunk'ın reranker'a ulaşma oranı 0,958 → 0,986 |
 | EXP-022 | Reranker fp32 → fp16 | Sıralama birebir aynı, latency 1372 → 363 ms |
 
-**Güncel sistem** (129 belge, 3753 chunk; 149 soruluk set 4.2: bulma, kapsam, çekimser kalma, takip ve birleştirme
-soruları):
+**Güncel sistem:**
 
-| MRR@10 | Hit@1 | Hit@5 | Cevap doğruluğu | Retrieval latency (GPU) |
+| Soru seti | MRR@10 | Hit@1 | Hit@5 | Cevap doğruluğu |
 |---|---|---|---|---|
-| 0.830 | 0.748 | 0.953 | 0.953 | ~410 ms |
+| Set 4.2 (149 soru): geliştirme sırasında kullanılan set; prompt ve eşik kararları buna göre verildi | 0.830 | 0.748 | 0.953 | 0.953 |
+| Validation 2.0 (111 soru): öğrenci diliyle yazıldı, sistem bu sete göre ayarlanmadan önce ölçüldü | 0.749 | 0.659 | 0.898 | **0.88** (anlamca) |
+
+Gerçek kullanıma yakın sayı validation satırıdır. Kilitli test seti (115 soru) bütün ayarlar bitince bir kez koşulacak ve
+üçüncü satır olarak eklenecek. Retrieval latency GPU'da ~410 ms.
 
 Bütün deneyler (reddedilenler dahil), hipotezler ve yorumlar: [`experiments/experiment_log.md`](experiments/experiment_log.md).
 
@@ -190,7 +214,9 @@ doldurun, kodu commit'leyin, sonra deneyi koşun.
 ## Belgeler
 
 `data/` klasöründeki PDF'ler üniversitenin kamuya açık mevzuatıdır (yönetmelikler, yönergeler, akademik takvim).
-Hangi belgelerin index'e girdiğini belge kümesi belirler (`config.CORPORA`; güncel küme `data/corpus_v4.txt`).
+Güncel belge kümesi (`config.CORPORA`, `data/corpus_v5.txt`) 129 PDF'e ek olarak Bilgisayar Mühendisliği'nin 2026-2027
+güz ders programını ve akademik personel listesini (JSON, her ders ve her kişi bir chunk) içerir.
+Hangi belgelerin index'e girdiğini belge kümesi belirler.
 Yeni bir belge eklemek için PDF'i `data/`'ya koyup yeni bir belge kümesi tanımlayın; index kendiliğinden yeniden kurulur.
 Eski deneyler eski belge kümesiyle ölçüldüğü için yeni kümeyle yapılan ölçümlerle karşılaştırılamaz.
 
@@ -231,7 +257,8 @@ modelin çıkarımında. Soru soru ayrıntı: [`experiments/hata_analizi_2026-10
 
 ## Sınırlamalar
 
-- Chatbot yalnız index'teki belgeleri bilir; duyurular, ders programları ve birim web sayfaları kapsam dışıdır.
+- Chatbot yalnız index'teki belgeleri bilir; duyurular ve birim web sayfaları kapsam dışıdır. Ders programı ve akademik
+  personel verisi yalnız Bilgisayar Mühendisliği (2026-2027 güz) için var; diğer bölümlerin ders programları yok.
 - Belgeler güncellendiğinde cevaplar da ancak PDF'ler yenilenip index yeniden kurulunca güncellenir.
 - Cevaplar resmî görüş değildir; kesin bilgi için ilgili birime başvurulmalıdır.
 
