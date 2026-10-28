@@ -227,4 +227,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-042:** Resmi başlıklar chunk metninde retrieval'ı biraz düşürdü (MRR@10 0,830 -> 0,814, anlamlı değil; bağlam isabeti 0,953 -> 0,921); production değişmedi.
 - **EXP-043:** Baseline (v4, set 4.5, yalnız retrieval): eski 127 soru EXP-041 ile aynı; yeni 12 ders programı/personel sorusu bulunamıyor.
 - **EXP-044:** Corpus v5 (ders programı + personel JSON): yeni 12 soru 12/12 doğru, 6 çekimser soru doğru; eski 127 sorunun context'i hiç değişmedi. Production EXP-041 -> EXP-044.
-- **EXP-045:** Production val-1.0'da anlamca 0,96 (anahtar 0,84); intörnlük düzeldi. En zayıf tür birden fazla madde gerektiren sorular (9/12).
+- **EXP-045:** Production val-1.0'da anlamca 0,93 (anahtar 0,84); intörnlük düzeldi. En zayıf tür birden fazla madde gerektiren sorular (9/12); EXP-040 incelemesinden kaçan 3 hata bulundu.

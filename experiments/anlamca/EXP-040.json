@@ -134,7 +134,8 @@
   },
   "V33": {
    "anahtar": 1,
-   "anlamca": 1
+   "anlamca": 0,
+   "gerekce": "Yanlış: yalnız Diş Hekimliği kuralı (DC geçmez) verildi; genel yönetmelikte DC 2,50 katsayılı not, genel kural söylenmedi (2026-10-28 yeniden inceleme)."
   },
   "V34": {
    "anahtar": 1,
@@ -219,7 +220,8 @@
   },
   "V54": {
    "anahtar": 1,
-   "anlamca": 1
+   "anlamca": 0,
+   "gerekce": "Yanlış: 'kesilmez' dendi; kınama uyarı dışında bir disiplin cezası, yönerge (Madde 10/5) uyarı hariç disiplin cezası alanın bursunun kesileceğini söylüyor. Anahtar kelime 'kesil' 'kesilmez' içinde eşleşti (2026-10-28 yeniden inceleme)."
   },
   "V55": {
    "anahtar": 1,
@@ -344,7 +346,8 @@
   },
   "V84": {
    "anahtar": 1,
-   "anlamca": 1
+   "anlamca": 0,
+   "gerekce": "Yanlış: lisansüstü (30 AKTS) ve yandal (15 AKTS) kuralları verildi; genel yönetmeliğin ders yükü kuralı (dönem yükü, şartla en fazla 15 AKTS artırılabilir) söylenmedi; '15' tesadüfen eşleşti (2026-10-28 yeniden inceleme)."
   },
   "V85": {
    "anahtar": 1,
