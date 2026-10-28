@@ -32,5 +32,7 @@
   "fixed_answers": "summer_staj_v2",
   "clarify_prompt": "v7_netlestirme",
   "bm25_tokenizer": "prefix5_fold"
- }
+ },
+ "notlar": "Hipotez kısmen tuttu (2026-10-28): BM25 MRR@10 0,506 -> 0,521 arttı, ama final sıralama değişmedi: MRR@10 0,808 (0,8083 -> 0,8078), bağlam isabeti 0,925; yazım hatalı türünde final MRR@10 0,778 ve Hit@5 0,833 aynı. Final sırası yalnız bir takip sorusunda değişti (3 -> 4). Katlama BM25'in kendi listesini iyileştiriyor ama doğru chunk zaten RRF'den reranker'a ulaşıyordu (rerank_input_recall 0,957 aynı); yazım hatalı sorulardaki kayıp reranker'da ya da vector aramasında. Production değişmedi: retrieval'a etkisi yok.",
+ "kisa_not": "Karakter katlama BM25 MRR'ı artırdı (0,506 -> 0,521) ama final sıralama aynı; production değişmedi."
 }
