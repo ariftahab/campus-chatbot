@@ -33,7 +33,9 @@ kayıtlıdır (bkz. [Deneyler](#deneyler)).
 
 ## Özellikler
 
-- **Kaynaklı cevap:** Her cevapta belge adı ve madde numarası yer alır. Arayüzde atıfa tıklayınca yan panelde ilgili madde açılır; oradan PDF'in ilgili sayfasına gidilebilir.
+- **Kaynaklı cevap:** Her bilginin yanında belge adı ve madde numarası verilir. Arayüzde atıflar metinde küçük
+  numaralar olarak durur, cevabın sonunda numaralı bir "Kaynaklar" listesi çıkar; bir kaynağa tıklayınca yan panelde
+  ilgili madde (atıf fıkra numarası taşıyorsa o fıkra vurgulu) açılır, oradan PDF'in ilgili sayfasına gidilebilir.
 - **Çekimser kalma (hedef):** Bağlamda cevap yoksa "bilgim yok" der. Belgede olmayan konularda ölçülen 15/15; ama birden
   fazla şey soran sorularda bir kısmın maddesi context'e gelmeyince model o kısım için zaman zaman yanlış bilgi üretiyor.
 - **Takip soruları:** "Peki bunun son günü ne?" gibi sorular, sohbet geçmişine bakılarak bağımsız bir soruya dönüştürülür
