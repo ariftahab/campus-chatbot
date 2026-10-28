@@ -151,15 +151,28 @@ yeni config'e çevirin. CPU'da retrieval saniyeler mertebesinde sürer.
 ## Proje yapısı
 
 ```
-config.py            yollar, belge kümeleri (CORPORA), RagConfig (bütün RAG parametreleri), PRODUCTION_EXPERIMENT
-ingest.py            PDF okuma, chunking, embedding, FAISS index + belge bazında cache
-rag.py               Retriever (vector / BM25 / hybrid + reranker), prompt sürümleri, RagBot
-chat.py              terminal sohbeti
-app/                 FastAPI (api.py), iş mantığı ve log'lar (service.py), arayüz (static/)
-data/                PDF'ler, belge kümesi listeleri (corpus_v*.txt), belge kapsam etiketleri
-eval/                soru setleri (soru, beklenen kaynak madde, kanıt cümlesi, beklenen cevap)
-experiments/         configs/ (deney tanımları), results/ (sonuçlar), run.py, evaluation.py, report.py,
-                     experiment_log.md (otomatik üretilir)
+config.py                 yollar, belge kümeleri (CORPORA), RagConfig (bütün RAG parametreleri), PRODUCTION_EXPERIMENT
+ingest.py                 PDF ve JSON okuma, chunking, embedding, FAISS index + belge bazında cache
+rag.py                    Retriever (vector / BM25 / hybrid + reranker), prompt sürümleri, sabit cevaplar, RagBot
+chat.py                   terminal sohbeti
+app/                      FastAPI (api.py), iş mantığı ve log'lar (service.py), main.py (tek sunucu)
+  static/                 vanilla JS arayüz: sohbet, belge tarayıcısı, yönetici paneli
+data/                     PDF'ler, ders programı ve personel JSON'u, belge kümesi listeleri (corpus_v*.txt),
+                          belge kapsam etiketleri, belge kataloğu
+eval/                     soru setleri: dev (sorular_v*.json), validation (sorular_val_v*.json)
+  test/                   kilitli test seti (en sonda bir kez koşulur)
+experiments/
+  configs/                deney tanımları (EXP-XXX.json: parametreler, neden, hipotez, notlar)
+  results/                deney sonuçları (metrikler, soru başına değerler, commit hash, ortam)
+  anlamca/                cevapların anlamca değerlendirmesi: soru başına karar ve gerekçe
+  run.py                  deney koşucusu (retrieval; --llm ile cevaplar)
+  evaluation.py           metrikler, kanıt doğrulama, istatistik testleri (McNemar, Wilcoxon)
+  report.py               experiment_log.md'yi üretir
+  kategori_raporu.py      soru türü başına cevap doğruluğu tablosu
+  teshis_*.py             alt küme teşhisleri (bir değişikliği yalnız sorunlu sorularda denemek için)
+  hata_analizi_*.md       yanlış cevapların soru türü ve hatanın oluştuğu katmana göre analizi
+  experiment_log.md       bütün deneylerin özeti (otomatik üretilir)
+tools/                    belge kataloğu taslağı ve denetimi
 ```
 
 ## Deneyler
@@ -172,9 +185,29 @@ olarak yapılır:
 - Sonuç dosyası, deneyin koşulduğu **commit hash**'ini kaydeder; böylece her sonuç tekrar üretilebilir.
 - Aynı sorular üzerinde eşleştirilmiş testler (McNemar, Wilcoxon) ile değişimin anlamlı olup olmadığına bakılır.
 
-**Değerlendirme.** Bir chunk, beklenen kaynak belgeye aitse ve o belgede birebir geçen kanıt cümlesini içeriyorsa ilgili
-(relevant) sayılır. Retrieval için MRR@10, Hit@k ve bağlam isabeti; cevaplar için anlamca değerlendirilen cevap doğruluğu,
-netleştirme isabeti ve atıf metrikleri ölçülür.
+### Değerlendirme yöntemi
+
+**Üç ayrı soru seti** (`eval/`), makine öğrenmesindeki train / validation / test ayrımı gibi:
+
+| Set | Ne için | Boyut |
+|---|---|---|
+| Geliştirme (dev) | Prompt, eşik ve retrieval kararları burada denenir | Set 4.2: 149 soru; güncel sürüm 4.8 |
+| Validation | Geliştirmede kullanılmaz; yalnız production adayını doğrulamak için koşulur | val-2.0: 111 soru, öğrenci diliyle |
+| Kilitli test | Dosya hash'i sabit; bütün ayarlar bitince bir kez koşulur, sonucuna bakarak hiçbir şey değiştirilmez | 115 soru |
+
+Soru seti dosyaları değiştirilmez (hash değişir, karşılaştırma geçersiz olur); yeni sorular yeni sürümle eklenir.
+Her soru bir **soru türü** taşır: belgenin terimleriyle sorulan, öğrencinin durumunu anlatan farklı ifade, tek belgede
+birden fazla madde, birden fazla belge, belgede yok, konu dışı, yazım hatalı, fakülteye göre değişen kural (netleştirme),
+takip sorusu ve yanlış öncül. Sonuçlar tür tür raporlanır (`experiments/kategori_raporu.py`).
+
+**Retrieval.** Bir chunk, beklenen kaynak belgeye aitse ve o belgede birebir geçen kanıt cümlesini içeriyorsa ilgili
+(relevant) sayılır. MRR@10, Hit@k, bağlam isabeti (ilk 5 chunk'ta ilgili chunk var mı) ve aşama aşama sıra (doğru chunk
+vector, BM25, RRF ve reranker aşamalarında kaçıncı) ölçülür.
+
+**Cevap doğruluğu** iki şekilde ölçülür. Anahtar kelime eşleşmesi otomatik bir ön taramadır. Ana ölçü **anlamca
+doğruluk**tur: cevaplar soru soru okunur, her kararın gerekçesi `experiments/anlamca/` altında saklanır. Anahtar kelime
+tek başına yanıltıcıdır: "karşılanmamaktadır" cevabı "karşılanmaz" beklentisini kaçırır, "kesilmez" cevabı "kesil"
+beklentisiyle yanlışlıkla eşleşir. Netleştirme isabeti ve atıf metrikleri ayrıca ölçülür.
 
 **Yapıyı değiştiren ana deneyler** (her satır, üst deneyine göre ölçülen etki; soru seti ve corpus deneyler boyunca
 büyüdüğü için satırlar arasında sayı karşılaştırılmaz):
@@ -210,6 +243,32 @@ python -m experiments.report               # deney günlüğünü yeniden üret
 **Yeni deney eklemek için:** bir config'i kopyalayıp yeni kimlik verin, `ust_deney` alanını karşılaştırılacak deney yapın
 ve `params` içinde yalnız bir parametreyi değiştirin. `neden`, `hipotez`, `birincil_metrik` ve `beklenen_yon` alanlarını
 doldurun, kodu commit'leyin, sonra deneyi koşun.
+
+## Tasarım kararları
+
+- **Madde madde chunking.** Mevzuatın doğal birimi madde; sabit boyutlu bölme bir maddeyi iki chunk'a ayırıyordu. Yapısal
+  chunking'e geçince doğru chunk her soruda LLM'e ulaştı (EXP-002: bağlam isabeti 0,78 → 1,00). Uzun maddeler fıkra
+  sınırından bölünür, akademik takvimde her tablo bir chunk'tır.
+- **Hybrid retrieval + reranker.** BM25'in tek başına anlamlı katkısı gösterilemedi (EXP-007, EXP-031) ama madde
+  numarası, "AKTS", "GNO" gibi terimler için tutuldu. Corpus 3 belgeden 139'a çıkınca düşüşü asıl sınırlayan reranker oldu
+  (EXP-015: RRF MRR@10 0,59, reranker sonrası 0,86).
+- **Fakülteyi sorma kararı LLM'e bırakılmadı.** LLM'e bırakılınca soruların %45'inde gereksiz yere fakülte soruyordu
+  (EXP-025); karar belge kapsam etiketlerine bağlandı (EXP-027: 0,45 → 0,26), prompt v8 ile 0,28'e indi (EXP-037).
+- **Yürürlükten kalkan konular için sabit cevap.** Yaz öğretimi yönetmeliği kalktığı hâlde başka belgelerde atıfları
+  duruyordu ve model eskimiş bilgi veriyordu. Bu sorulara retrieval yapılmadan sabit cevap döner (EXP-028).
+- **Denenip alınmayanlar** (her biri ölçüldü, gerekçesi deney günlüğünde):
+
+  | Deney | Denenen | Neden alınmadı |
+  |---|---|---|
+  | EXP-026 | Context'te eksik kalan fakülte yönetmeliklerini ayrıca arayıp ekleme | Soruların %43'ünde tetiklendi, context %21 uzadı, yalnız 2 soru iyileşti |
+  | EXP-030 | Reranker'a 30 yerine 60 aday | Recall aynı, latency 562 → 892 ms |
+  | EXP-035 | LLM: gemini-3.1-flash-lite → 3.5-flash-lite | Doğruluk aynı, LLM latency 4,0 → 14,5 sn |
+  | EXP-042 | Chunk başlığında dosya adı yerine resmi belge adı | MRR@10 0,830 → 0,814 |
+  | EXP-049 | BM25'te Snowball Türkçe stemmer | BM25 MRR@10 0,506 → 0,456: soru kelimelerini fazla kısaltıyor ("yüzde" → "yüz") |
+  | EXP-050 | BM25'te Türkçe karakter katlama | BM25 iyileşti (0,506 → 0,521) ama final sıralama değişmedi; darboğaz reranker |
+
+Aynı mevzuat üzerinde araç çağıran (agentic) bir sürüm ayrı bir projede geliştiriliyor:
+[agentic-rag](https://github.com/ariftahab/agentic-rag).
 
 ## Belgeler
 
@@ -266,6 +325,10 @@ modelin çıkarımında. Soru soru ayrıntı: [`experiments/hata_analizi_2026-10
 
 Python 3.11 · LangChain · FAISS · sentence-transformers (bge-m3, bge-reranker-v2-m3) · rank-bm25 · pdfplumber ·
 Google Gemini · FastAPI · vanilla JavaScript
+
+## Geliştiren
+
+Arif Taha Bülbül · [LinkedIn](https://www.linkedin.com/in/arif-taha-b%C3%BClb%C3%BCl-824a451b4/)
 
 ## Lisans
 
