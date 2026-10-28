@@ -32,6 +32,8 @@ def tokenize(text, mode="prefix5"):
     """BM25 için kelime kökleri (her iki tarafa, soru ve chunk'a aynı işlem uygulanır).
 
     prefix5: kelimenin ilk 5 harfi; basit ama kaba ("kitabı" -> "kitab", "kitap" -> "kitap" eşleşmez).
+    prefix5_fold: önce Türkçe karakterler ASCII'ye katlanır, sonra ilk 5 harf ("yüzde" ve "yuzde" -> "yuzde");
+      Türkçe karakter kullanmadan yazılmış sorular için (EXP-049'da stemmer BM25'i kötüleştirdi).
     snowball_tr: Snowball Türkçe stemmer isim eklerini atar ("kitabı", "kitaplar" -> "kitap"; "derslerin" -> "ders").
     snowball_tr_fold: stemmer'dan sonra Türkçe karakterler ASCII'ye katlanır ("yüzde" ve "yuzde" -> aynı token);
       stemmer doğru Türkçe karakter beklediği için katlama sonra yapılır (2026-10-28).
@@ -39,6 +41,8 @@ def tokenize(text, mode="prefix5"):
     words = re.findall(r"\w+", tr_lower(text))
     if mode == "prefix5":
         return [w[:5] for w in words]
+    if mode == "prefix5_fold":
+        return [w.translate(_FOLD)[:5] for w in words]
     stems = _STEMMER.stemWords(words)
     return [s.translate(_FOLD) for s in stems] if mode == "snowball_tr_fold" else stems
 

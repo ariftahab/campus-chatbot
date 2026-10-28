@@ -107,8 +107,8 @@ class RagConfig:
     retrieval: str             # "vector" | "bm25" | "hybrid"
     vector_k: int              # vektör aramasından alınan aday sayısı
     bm25_k: int                # BM25'ten alınan aday sayısı
-    bm25_tokenizer: str        # "prefix5" (kelimenin ilk 5 harfi) | "snowball_tr" (Snowball Türkçe stemmer) |
-                               # "snowball_tr_fold" (stemmer + Türkçe karakter katlama: ı→i, ş→s ...) (rag.tokenize)
+    bm25_tokenizer: str        # "prefix5" (kelimenin ilk 5 harfi) | "prefix5_fold" (Türkçe karakter katlama + ilk 5 harf) |
+                               # "snowball_tr" (Snowball Türkçe stemmer) | "snowball_tr_fold" (stemmer + katlama) (rag.tokenize)
     rrf_k: int                 # Reciprocal Rank Fusion sabiti (yalnız hybrid)
     reranker_model: Optional[str]  # None -> reranker yok
     reranker_max_length: int   # reranker'ın okuduğu en fazla token
@@ -154,7 +154,7 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen corpus: {cfg.corpus} (seçenekler: {sorted(CORPORA)})")
         if cfg.doc_titles not in (None, *TITLE_FILES):
             raise ValueError(f"Bilinmeyen doc_titles: {cfg.doc_titles}")
-        if cfg.bm25_tokenizer not in ("prefix5", "snowball_tr", "snowball_tr_fold"):
+        if cfg.bm25_tokenizer not in ("prefix5", "prefix5_fold", "snowball_tr", "snowball_tr_fold"):
             raise ValueError(f"Bilinmeyen bm25_tokenizer: {cfg.bm25_tokenizer}")
         if cfg.scope_search not in (None, "parallel_v1"):
             raise ValueError(f"Bilinmeyen scope_search: {cfg.scope_search}")
