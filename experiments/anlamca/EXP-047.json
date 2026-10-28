@@ -1,0 +1,615 @@
+{
+ "deney": "EXP-047",
+ "aciklama": "Anlamca değerlendirme (2026-10-28): koşu kotaya takıldığı için 200 sorudan cevaplanan 150'si; eksik 50 soru (P02..S45) tamamlanınca eklenecek.",
+ "kararlar": {
+  "T01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "T10": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "K01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "K02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "K03": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: 'iade edilmemektedir'."
+  },
+  "K04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "K05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "K06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "K07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "K08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "K09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Y01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Y02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Y03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Y04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Y05": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: 'kabul edilmemektedir'."
+  },
+  "Y06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Y07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Y08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "C01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "C02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "C03": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok: Tıp takvimi corpus'ta yok, tarih uydurulmadı."
+  },
+  "N01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N04": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: finale mazeret sınavı yapılmaz; ama 'genel kural' diye Hukuk yönetmeliği gösterildi (atıf hatası)."
+  },
+  "N05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N06": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: azami süre sonu sınavları (ek sınav) anlatıldı."
+  },
+  "N07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N10": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N11": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N12": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N13": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N14": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N15": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N16": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N17": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N18": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N19": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N20": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N21": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N22": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N23": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N24": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N25": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N26": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N27": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N28": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N29": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N30": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N31": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N32": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N33": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N34": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N35": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N36": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N37": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N38": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N39": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N40": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N46": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N47": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N41": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N42": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N43": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N44": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "N45": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok: hoca bilgisinin olmadığı söylendi."
+  },
+  "G01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "G02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "G03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "G04": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "'Bilgim yok' doğru (kullanıcı kararı 2026-10-16: corpus'ta gün sayısı yok; etiket sonraki set sürümünde düzelecek)."
+  },
+  "G05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "G06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "G07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "G08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B08": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: 'yapılmamaktadır'."
+  },
+  "B09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B10": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B11": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B12": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B13": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B14": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B15": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Yanlış: yandal başvurusu için 65 yerine yandala devam şartı (60) verildi; 65'in geçtiği madde context'te yok (reranker sonrası 16. sıra)."
+  },
+  "B16": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B17": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "B18": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "Z09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D10": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D11": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D12": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D13": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D14": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "D15": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A10": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A11": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "A12": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E01": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E02": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E03": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E04": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E05": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E06": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E07": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E08": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E09": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "E10": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "P01": {
+   "anahtar": 1,
+   "anlamca": 1
+  }
+ }
+}
