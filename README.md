@@ -210,6 +210,11 @@ sunuyor.
 
 **Yazım hatalı ya da Türkçe karakter kullanılmadan yazılmış sorular (8/10).** "hazirlikta derslerin yuzde kacina"
 gibi sorularda doğru chunk aday listesine hiç girmiyor; model "bilgim yok" diyor ya da yanlış belgeden cevap veriyor.
+BM25'te Türkçe karakter katlama (ı→i, ü→u ...) bu sorunu kısmen çözüyor: "yuzde" ile "yüzde" eşleşince doğru chunk
+RRF'de 47. sıradan 8.'ye çıkıyor, ama reranker onu 11. sıraya itiyor ve context'e yine giremiyor (EXP-050: final sıralama
+değişmedi). Yanlış cevaplanan diğer yazım hatalı soruda ("hazırlıkta güz dönemi dersler ne zmn bitiyo") sorun yazım
+değil kelime farkı: öğrenci "bitiyor" diyor, akademik takvim "sona ermesi" diyor; soruda "güz" ve "dersler" geçtiği için
+context'i Bilgisayar Mühendisliği'nin güz ders programı dolduruyor.
 
 **Birden fazla belge gerektiren sorular (2/3).** İki ayrı yönetmeliği birleştirmesi gereken sorularda belgelerden biri
 context'e gelmiyor.
