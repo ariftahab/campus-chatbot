@@ -1,4 +1,4 @@
-# campus-chatbot
+# mevzuat-rag
 
 **Bolu Abant İzzet Baysal Üniversitesi (BAİBÜ) mevzuatı üzerinden soru cevaplayan, kaynak gösteren bir RAG chatbot.**
 
@@ -68,8 +68,8 @@ Gereksinimler: Python 3.11, bir [Gemini API anahtarı](https://aistudio.google.c
 NVIDIA GPU (CUDA) kullanır; GPU yoksa aşağıdaki [CPU notu](#gpu-olmadan-çalıştırma)na bakın.
 
 ```bash
-git clone https://github.com/ariftahab/campus-chatbot.git
-cd campus-chatbot
+git clone https://github.com/ariftahab/mevzuat-rag.git
+cd mevzuat-rag
 python -m venv venv
 venv\Scripts\activate                    # Windows  (Linux/macOS: source venv/bin/activate)
 
