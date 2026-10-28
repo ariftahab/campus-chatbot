@@ -155,16 +155,22 @@ olarak yapılır:
 (relevant) sayılır. Retrieval için MRR@10, Hit@k ve bağlam isabeti; cevaplar için anlamca değerlendirilen cevap doğruluğu,
 netleştirme isabeti ve atıf metrikleri ölçülür.
 
-**Retrieval hattının kurulduğu ilk deneyler** (3 belge, 30 soruluk set 2.0):
+**Yapıyı değiştiren ana deneyler** (her satır, üst deneyine göre ölçülen etki; soru seti ve corpus deneyler boyunca
+büyüdüğü için satırlar arasında sayı karşılaştırılmaz):
 
-| Değişiklik | MRR@10 | Hit@1 |
+| Deney | Değişiklik | Etkisi |
 |---|---|---|
-| Prototip: sabit boyutlu chunking, MiniLM, yalnız vector search | 0.564 | 0.444 |
-| Yapısal (madde madde) chunking | 0.716 | 0.556 |
-| Embedding: MiniLM → bge-m3 | 0.920 | 0.852 |
-| Chunk boyutu 1000 → 1500 karakter | 0.938 | 0.889 |
-| Hybrid retrieval (BM25 + RRF) | 0.938 | 0.889 |
-| Reranker (bge-reranker-v2-m3) | **1.000** | **1.000** |
+| EXP-002 | Sabit boyutlu chunking → madde madde (yapısal) chunking | Bağlam isabeti 0,78 → 1,00: doğru chunk her soruda LLM'e ulaştı |
+| EXP-004 | Embedding: MiniLM → bge-m3 | En büyük kazanç: MRR@10 +0,27 |
+| EXP-007 / EXP-008 | Hybrid retrieval (BM25 + RRF) ve reranker (bge-reranker-v2-m3) | 3 belgede doğru chunk her soruda 1. sırada |
+| EXP-014 | Donanım: CPU → GPU | Retrieval latency 5,4 sn → 0,37 sn, sıralama aynı |
+| EXP-015 | Corpus: 3 belge → 139 belge (bütün mevzuat) | MRR@10 1,00 → 0,86; reranker düşüşü sınırladı (RRF 0,59 → 0,86) |
+| EXP-021 | Reranker'a giden aday 8 → 30 | Doğru chunk'ın reranker'a ulaşma oranı 0,958 → 0,986 |
+| EXP-022 | Reranker fp32 → fp16 | Sıralama birebir aynı, latency 1372 → 363 ms |
+| EXP-027 | Fakülteyi sorma kararı LLM yerine belge kapsam etiketlerinden | Gereksiz netleştirme 0,45 → 0,26 |
+| EXP-028 | Yürürlükten kalkan yaz öğretimi için sabit cevap | 9 yaz sorusunda eskimiş bilgi yerine doğru cevap |
+| EXP-037 | Prompt v8: fakülteyi sorma kararı "cevap iki ayrı belgede mi?" testine bağlandı | Gereksiz netleştirme 0,62 → 0,28, doğruluk 0,953 |
+| EXP-044 | Corpus v5: ders programı ve akademik personel verisi (JSON, kayıt başına bir chunk) | Yeni 12 soru 12/12 doğru, eski soruların context'i değişmedi |
 
 **Güncel sistem** (129 belge, 3753 chunk; 149 soruluk set 4.2: bulma, kapsam, çekimser kalma, takip ve birleştirme
 soruları):
@@ -173,8 +179,7 @@ soruları):
 |---|---|---|---|---|
 | 0.830 | 0.748 | 0.953 | 0.953 | ~410 ms |
 
-Belge sayısı 3'ten 129'a çıkınca görev zorlaştığı için iki tablo birbiriyle karşılaştırılmaz. Bütün deneyler, hipotezler
-ve yorumlar: [`experiments/experiment_log.md`](experiments/experiment_log.md).
+Bütün deneyler (reddedilenler dahil), hipotezler ve yorumlar: [`experiments/experiment_log.md`](experiments/experiment_log.md).
 
 ```bash
 python -m experiments.run EXP-037          # retrieval metrikleri (API çağrısı yok)
@@ -195,23 +200,33 @@ Eski deneyler eski belge kümesiyle ölçüldüğü için yeni kümeyle yapılan
 
 ## Bilinen zayıflıklar
 
-Öğrenci diliyle yazılmış validation setinde (111 soru) anlamca cevap doğruluğu soru türüne göre:
+Öğrenci diliyle yazılmış validation setinde (111 soru) anlamca doğruluk 0,88. Sistemin hata yaptığı soru türleri:
 
-| Soru türü | Doğruluk | Zayıflığın kaynağı |
-|---|---|---|
-| Belgede var, belgenin terimleriyle sorulmuş | 12/12 | — |
-| Belgede var, öğrencinin durumunu anlatan farklı ifade | 26/28 | Örtük çıkarım ("kınama, uyarı dışında bir disiplin cezası mı?"); öğrencinin kelimesi belgedekinden farklı |
-| Tek belgede birden fazla madde gerektiren | **7/12** | İkinci maddenin chunk'ı context'e girmiyor; model o kısma "belirtilmemiş" diyor ya da uyduruyor |
-| Birden fazla belge gerektiren | 2/3 | Aynı sorun: soru tek bir embedding'e çevrilince iki konudan biri kayboluyor |
-| Belgede yok (konu yakın) | 15/15 | — |
-| Konu dışı | 8/8 | Reddediliyor ama asistanın kapsamı söylenmiyor |
-| Yazım hatalı / Türkçe karakter kullanılmamış | **8/10** | Doğru chunk aday listesine hiç girmiyor |
-| Fakülteye göre değişen kural (netleştirme) | **9/12** | Genel yönetmeliğin maddesi reranker'da aşağı itiliyor; model başka bir fakültenin kuralını genel kural gibi sunuyor |
-| Takip sorusu | 7/7 | — |
-| Yanlış öncül | 4/4 | — |
+**Tek belgede birden fazla madde gerektiren sorular (7/12).** Öğrenci tek mesajda iki şey soruyor ve cevaplar aynı
+belgenin farklı maddelerinde ("staj yerimi değiştirirsem kaç gün önce söylemeliyim, raporu ne zaman teslim edeceğim?").
+Soru tek bir embedding'e çevrildiği için ikinci maddenin chunk'ı context'e girmiyor; model o kısma "belgede
+belirtilmemiş" diyor, bazen de yanlış bilgi uyduruyor.
 
-Yanlış cevapların 21'inden 19'unda sorun retrieval'da: doğru chunk ya reranker sonrası ilk 5'in dışında kalıyor ya da
-aday listesine hiç girmiyor. Soru soru ayrıntı: [`experiments/hata_analizi_2026-10-28.md`](experiments/hata_analizi_2026-10-28.md).
+**Fakülteye göre değişen kurallar (9/12).** Fakülte belirtilmeyen soruda genel kuralı verip fakülteyi sorması gerekiyor
+("DC alırsam geçer miyim?"). Genel yönetmelik kuralı tabloyla ya da başka bir terimle (ders yerine AKTS) yazdığı için
+reranker onu, kuralı cümleyle yazan fakülte yönetmeliğinin altına itiyor; model o fakültenin kuralını genel kural gibi
+sunuyor.
+
+**Yazım hatalı ya da Türkçe karakter kullanılmadan yazılmış sorular (8/10).** "hazirlikta derslerin yuzde kacina"
+gibi sorularda doğru chunk aday listesine hiç girmiyor; model "bilgim yok" diyor ya da yanlış belgeden cevap veriyor.
+
+**Birden fazla belge gerektiren sorular (2/3).** İki ayrı yönetmeliği birleştirmesi gereken sorularda belgelerden biri
+context'e gelmiyor.
+
+**Örtük çıkarım gerektiren sorular.** Doğru madde context'te olsa da model iki bilgiyi birleştiremiyor: yönerge "uyarı
+cezası hariç disiplin cezası alanın bursu kesilir" diyor, öğrenci "kınama aldım, bursum kesilir mi?" diye soruyor; model
+kınamanın bu kapsama girdiğini çıkaramayıp "kesilmez" diyor.
+
+**Konu dışı sorular.** Reddediliyor, ama yalnız "Bu konuda bilgim yok." deniyor; asistanın BAİBÜ mevzuatı için olduğu
+söylenmiyor.
+
+Yanlış cevapların 21'inden 19'unda sorun retrieval'da (doğru chunk ilk 5'in dışında ya da aday listesinde yok), 2'sinde
+modelin çıkarımında. Soru soru ayrıntı: [`experiments/hata_analizi_2026-10-28.md`](experiments/hata_analizi_2026-10-28.md).
 
 ## Sınırlamalar
 
