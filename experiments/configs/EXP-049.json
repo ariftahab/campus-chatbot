@@ -32,5 +32,7 @@
   "fixed_answers": "summer_staj_v2",
   "clarify_prompt": "v7_netlestirme",
   "bm25_tokenizer": "snowball_tr"
- }
+ },
+ "notlar": "Hipotez doğrulanmadı (2026-10-28). BM25 MRR@10 0,506 -> 0,456; rerank_input_recall 0,957 -> 0,952; final MRR@10 0,808 -> 0,802, bağlam isabeti 0,925 (aynı). BM25 sırası 50 soruda iyileşti, 57'sinde kötüleşti. Context'e giren tek soru 'Bölümümün yanında başka bir bölümden birkaç ders alıp belge almak istiyorum, en erken ne zaman başvurabilirim?', çıkan tek soru 'kulup uye sayisi kac kisinin altina duserse kapatiliyo'. Türlere göre MRR@10: farklı ifade 0,722 -> 0,711, yazım hatalı 0,778 -> 0,722, diğerleri neredeyse aynı. Olası nedenler: Snowball soru kelimelerini fazla kısaltıyor ('yüzde' -> 'yüz', 'kaçına' -> 'kaç', 'zorundayım' -> 'zor') ve ayrı anlamlı kelimeleri birleştiriyor; Türkçe karakter kullanmadan yazılmış kelimeler kök bulunamadan kalıyor ('yuzde', 'hazirlik') ama belge tarafı köke indirildiği için eşleşme prefix5'ten de zayıflıyor; fiil türevleri ('uzatabilir'/'uzatma') hiç birleşmiyor. Production değişmedi.",
+ "kisa_not": "Snowball stemmer BM25'i kötüleştirdi (MRR 0,506 -> 0,456); bağlam isabeti aynı. Production değişmedi."
 }
