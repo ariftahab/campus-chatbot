@@ -1,0 +1,473 @@
+{
+ "deney": "EXP-046",
+ "aciklama": "Anlamca değerlendirme (2026-10-28, 111 cevabın hepsi okundu). Konu dışı sorularda doğru: soru cevaplanmadan reddedildi (8 cevabın hepsi 'Bu konuda bilgim yok.'; hiçbiri asistanın BAİBÜ mevzuatı için olduğunu söylemiyor). Belgede yok sorularında doğru: uydurma yok (ilgili kuralı verip tutarın/listenin olmadığını söylemek de doğru). Netleştirme sorularında doğru: genel kural verildi ve fakülte/program soruldu.",
+ "kararlar": {
+  "W001": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W002": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W003": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W004": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W005": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W006": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W007": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W008": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W009": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W010": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W011": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W012": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W013": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W014": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W015": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W016": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W017": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: dilekçeyle dönülebileceği söylendi; 'dönebilir' kelimesi yerine 'devam edebilirsiniz'."
+  },
+  "W018": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W019": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W020": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W021": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W022": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W023": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W024": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W025": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: 'kayıtlanmaları mümkün değildir'."
+  },
+  "W026": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W027": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W028": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W029": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W030": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W031": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W032": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W033": {
+   "anahtar": 1,
+   "anlamca": 0,
+   "gerekce": "Yanlış: 'kesilmez' dendi; kınama uyarı dışında disiplin cezası, burs kesilir (Madde 10/5)."
+  },
+  "W034": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W035": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Yanlış: ayırtılmış kitabın uzatılamayacağı söylenmedi, 'özel hüküm yok' dendi ve 2 uzatma hakkı verildi."
+  },
+  "W036": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W037": {
+   "anahtar": 1,
+   "anlamca": 1,
+   "gerekce": "Doğru: faaliyetlerin durdurulabileceği söylendi."
+  },
+  "W038": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W039": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W040": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W041": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W042": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Çok maddeli: değişiklik süresi (14 gün) doğru; Mühendislik için rapor teslimi (15 gün) yerine 'belirtilmemiş' dendi ve başka birimin kuralı verildi."
+  },
+  "W043": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W044": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W045": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Çok maddeli: ücret doğru; ikinci alt soruda yanlış bilgi: 'bir dersten kalmak engel değil' dendi, yönerge yararlanamayacağını söylüyor."
+  },
+  "W046": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: intibakı yapılan dersleri tekrar almaya gerek olmadığı (muafiyet) ve ortalama hesabı verildi."
+  },
+  "W047": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W048": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W049": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Çok maddeli: sigorta doğru; tekrar zamanı ('takip eden ilk staj dönemi') için 'belirtilmemiş' dendi."
+  },
+  "W050": {
+   "anahtar": 1,
+   "anlamca": 0,
+   "gerekce": "Çok maddeli: danışman zorunluluğu doğru; yılda en az 3 etkinlik için 'alt sınır belirtilmemiş' dendi."
+  },
+  "W051": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W052": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Çok maddeli: 'bilgim yok' dendi; geçme puanları ve 3 günlük itiraz süresi verilmedi."
+  },
+  "W053": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W054": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok: tutar olmadığı söylendi, uydurma yok."
+  },
+  "W055": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W056": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W057": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok: şifre bilgisi olmadığı söylendi, uydurma yok (ilgisiz VPN bilgisi eklendi)."
+  },
+  "W058": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W059": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W060": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok: kontenjanın ilanla duyurulduğu söylendi, sayı uydurulmadı."
+  },
+  "W061": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W062": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W063": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W064": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W065": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Belgede yok: listenin fakülte sitelerinde duyurulduğu söylendi, uydurma yok."
+  },
+  "W066": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W067": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W068": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Yanlış: hazırlık yerine Bilgisayar Mühendisliği ders programının bitişi (25 Aralık) verildi; doğrusu 31 Aralık."
+  },
+  "W069": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W070": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W071": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "Yanlış: 'bilgim yok' dendi; hazırlıkta %80 devam zorunluluğu belgede var."
+  },
+  "W072": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W073": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W074": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W075": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W076": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W077": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W078": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W079": {
+   "anahtar": 1,
+   "anlamca": 0,
+   "gerekce": "Netleştirme: yalnız diş hekimliği ve lisansüstü kuralı verildi; genel kural (DC 2,50 katsayılı not) söylenmedi."
+  },
+  "W080": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W081": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W082": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W083": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W084": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W085": {
+   "anahtar": 1,
+   "anlamca": 0,
+   "gerekce": "Netleştirme: devamsızlık yerine ders kaydı yapmayanın kuralı verildi; devamsızlıkta final ve bütünlemeye girilemeyeceği söylenmedi."
+  },
+  "W086": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W087": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W088": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W089": {
+   "anahtar": 1,
+   "anlamca": 0,
+   "gerekce": "Netleştirme: yalnız yandal kuralı (15 AKTS) verildi; genel ders yükü kuralı söylenmedi, '15' tesadüfen eşleşti."
+  },
+  "W090": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W091": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W092": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W093": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W094": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W095": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W096": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W097": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W098": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W099": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W100": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "Doğru: yurt dışı stajda primlerin karşılanmadığı söylendi ('karşılanmamaktadır' kelime alternatiflerinde yok)."
+  },
+  "W101": {
+   "anahtar": 0,
+   "anlamca": 0,
+   "gerekce": "İki belge: indirim kısmı doğru; hazırlıkta %80 devam için 'bilgi yok' dendi."
+  },
+  "W102": {
+   "anahtar": 0,
+   "anlamca": 1,
+   "gerekce": "İki belge: iki alt soru da doğru (çalışamaz, dilekçeyle dönülebilir)."
+  },
+  "W103": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W104": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W105": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W106": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W107": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W108": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W109": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W110": {
+   "anahtar": 1,
+   "anlamca": 1
+  },
+  "W111": {
+   "anahtar": 1,
+   "anlamca": 1
+  }
+ }
+}

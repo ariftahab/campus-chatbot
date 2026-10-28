@@ -2,7 +2,7 @@
 
 > Otomatik üretilir (`python -m experiments.report`). Production: **EXP-044**. Ayrıntılar: `experiments/results/EXP-*.json`.
 
-**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v42.json` v4.2 (127 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v45.json` v4.5 (139 cevaplı + 26 cevapsız/kapsam dışı) · `eval/sorular_val_v1.json` vval-1.0 (85 cevaplı + 15 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
+**Dataset:** `eval/sorular.json` v2.0 (27 cevaplı + 3 cevapsız/kapsam dışı) · `eval/sorular_v3.json` v3.0 (71 cevaplı + 6 cevapsız/kapsam dışı) · `eval/sorular_v4.json` v4.0 (116 cevaplı + 23 cevapsız/kapsam dışı) · `eval/sorular_v41.json` v4.1 (117 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v42.json` v4.2 (127 cevaplı + 22 cevapsız/kapsam dışı) · `eval/sorular_v45.json` v4.5 (139 cevaplı + 26 cevapsız/kapsam dışı) · `eval/sorular_v46.json` v4.6 (168 cevaplı + 32 cevapsız/kapsam dışı) · `eval/sorular_val_v1.json` vval-1.0 (85 cevaplı + 15 cevapsız/kapsam dışı) · `eval/sorular_val_v2.json` vval-2.0 (88 cevaplı + 23 cevapsız/kapsam dışı). Bir chunk, doğru kaynak belgelerden birine aitse ve o belgede birebir geçen evidence cümlesini içeriyorsa relevant sayılır. Farklı setlerle koşulan deneyler birbiriyle karşılaştırılmaz.  
 **Kural:** Her deney parent'ından tek bir parametre farklı. Hypothesis deneyden önce yazılır. p < 0,05 = anlamlı (McNemar / Wilcoxon, aynı sorular üzerinde).  
 **Sabit parametreler:** `citation_style=madde`, `rrf_k=60`, `reranker_max_length=512`, `llm_temperature=0.3`
 
@@ -58,6 +58,8 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-043 | EXP-041 | v4 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3753 |
 | EXP-044 | EXP-043 | **v5** | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
 | EXP-045 | EXP-044 | v5 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
+| EXP-046 | EXP-045 | v5 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
+| EXP-047 | EXP-044 | v5 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
 
 ## 2. Results
 
@@ -109,6 +111,8 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-043 | Baseline: production yapılandırması (corpus v4) set 4.5'te, yalnız retrieval | 4.5 | 0.758 | 0.683 | 0.871 | 0.871 | 5776 | 451 ms | referans (yeni soru seti, karşılaştırma yok) | – |
 | EXP-044 | Corpus v5: Bilgisayar Mühendisliği ders programı ve akademik personeli (JSON, kayıt bazında chunk) | 4.5 | 0.841 | 0.763 | 0.957 | 0.957 | 5462 | 479 ms | context_hit ↑ iyileşti (p<0.01, anlamlı) | ✓ |
 | EXP-045 | Production (EXP-044) validation setinde (val-1.0): soru türü başına cevap doğruluğu | val-1.0 | 0.840 | 0.753 | 0.953 | 0.953 | 5227 | 412 ms | referans (yeni soru seti, karşılaştırma yok) | – |
+| EXP-046 | Production (EXP-044) validation seti 2.0'da: öğrenci dili ve soru türü başına cevap doğruluğu | val-2.0 | 0.749 | 0.659 | 0.898 | 0.898 | 5272 | 420 ms | referans (yeni soru seti, karşılaştırma yok) | – |
+| EXP-047 | Production (EXP-044) dev seti 4.6'da: soru türü başına baseline | 4.6 | 0.817 | 0.738 | 0.929 | 0.929 | 5467 | 456 ms | referans (yeni soru seti, karşılaştırma yok) | – |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -147,6 +151,8 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-043 | 0.590 | 0.478 | 0.584 | 0.892 | 0.758 |
 | EXP-044 | 0.672 | 0.560 | 0.666 | 0.978 | 0.841 |
 | EXP-045 | 0.698 | 0.604 | 0.700 | 0.965 | 0.840 |
+| EXP-046 | 0.579 | 0.423 | 0.567 | 0.943 | 0.749 |
+| EXP-047 | 0.643 | 0.514 | 0.625 | 0.958 | 0.817 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -180,6 +186,8 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-043 | 0.933 (26) | 0.718 (113) | 0.892 (47) | 0.689 (92) | 0.814 (17) | 0.820 (24) |
 | EXP-044 | 0.933 (26) | 0.819 (113) | 0.913 (47) | 0.803 (92) | 0.814 (17) | 0.820 (24) |
 | EXP-045 | – | 0.840 (85) | 1.000 (1) | 0.838 (84) | 1.000 (4) | 0.491 (12) |
+| EXP-046 | – | 0.749 (88) | 0.958 (12) | 0.715 (76) | 0.833 (4) | 0.417 (12) |
+| EXP-047 | 0.933 (26) | 0.795 (142) | 0.913 (47) | 0.779 (121) | 0.814 (17) | 0.820 (24) |
 
 ## 5. Notes
 
@@ -228,3 +236,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-043:** Baseline (v4, set 4.5, yalnız retrieval): eski 127 soru EXP-041 ile aynı; yeni 12 ders programı/personel sorusu bulunamıyor.
 - **EXP-044:** Corpus v5 (ders programı + personel JSON): yeni 12 soru 12/12 doğru, 6 çekimser soru doğru; eski 127 sorunun context'i hiç değişmedi. Production EXP-041 -> EXP-044.
 - **EXP-045:** Production val-1.0'da anlamca 0,93 (anahtar 0,84); intörnlük düzeldi. En zayıf tür birden fazla madde gerektiren sorular (9/12); EXP-040 incelemesinden kaçan 3 hata bulundu.
+- **EXP-046:** Öğrenci dilinde production: anlamca 0,88, MRR@10 0,749. En zayıf: birden fazla madde/belge 9/15, netleştirme 9/12, yazım hatalı 8/10.
