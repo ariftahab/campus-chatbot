@@ -64,6 +64,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-049 | EXP-048 | v5 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
 | EXP-050 | EXP-048 | v5 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
 | EXP-051 | EXP-047 | v5 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
+| EXP-052 | EXP-051 | v5 | cuda | pdfplumber | structural_v2 | 1500 | 150 | bge-m3 | ✓ | hybrid | bge-reranker | 5 | v8_kapsamsiz | 3.1-flash-lite | 3802 |
 
 ## 2. Results
 
@@ -121,6 +122,7 @@ Kalın hücre = parent'a göre değişen parametre.
 | EXP-049 | BM25 tokenizer: ilk 5 harf -> Snowball Türkçe stemmer | 4.7 | 0.802 | 0.711 | 0.925 | 0.925 | 5417 | 428 ms | rerank_input_recall ↓ kötüleşti (p=1.00, anlamlı değil) | ✗ |
 | EXP-050 | BM25 tokenizer: ilk 5 harf -> Türkçe karakter katlama + ilk 5 harf | 4.7 | 0.808 | 0.722 | 0.925 | 0.925 | 5443 | 437 ms | MRR@10 ↓ kötüleşti (p=0.32, anlamlı değil) | ✗ |
 | EXP-051 | Production (EXP-044) dev seti 4.8'de: prompt teşhisi için LLM baseline'ı | 4.8 | 0.739 | 0.645 | 0.871 | 0.871 | 5051 | 422 ms | referans (yeni soru seti, karşılaştırma yok) | – |
+| EXP-052 | Query decomposition: soru alt sorulara bölünüp her biri ayrı aranır | 4.8 | 0.751 | 0.634 | 0.903 | 0.903 | 5080 | 645 ms | answer acc. ↓ kötüleşti (p=1.00, anlamlı değil) | ✗ |
 
 Hyp.: ✓ doğrulandı · ✗ doğrulanmadı · ~ yön doğru ama anlamlı değil
 
@@ -165,6 +167,7 @@ Her ara listede MRR@10. Rerank input recall: ilgili chunk reranker'a giden adayl
 | EXP-049 | 0.651 | 0.456 | 0.647 | 0.952 | 0.802 |
 | EXP-050 | 0.651 | 0.521 | 0.628 | 0.957 | 0.808 |
 | EXP-051 | 0.631 | 0.434 | 0.559 | 0.925 | 0.739 |
+| EXP-052 | 0.624 | 0.448 | 0.563 | 0.946 | 0.751 |
 
 ## 4. Soru grupları (MRR@10)
 
@@ -204,6 +207,7 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 | EXP-049 | 0.936 (26) | 0.780 (161) | 0.915 (47) | 0.764 (140) | 0.814 (17) | 0.820 (24) |
 | EXP-050 | 0.933 (26) | 0.788 (161) | 0.913 (47) | 0.772 (140) | 0.814 (17) | 0.820 (24) |
 | EXP-051 | 1.000 (4) | 0.727 (89) | 0.889 (6) | 0.729 (87) | 0.667 (3) | 0.770 (10) |
+| EXP-052 | 0.875 (4) | 0.745 (89) | 0.806 (6) | 0.747 (87) | 0.667 (3) | 0.817 (10) |
 
 ## 5. Notes
 
@@ -257,3 +261,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-049:** Snowball stemmer BM25'i kötüleştirdi (MRR 0,506 -> 0,456); bağlam isabeti aynı. Production değişmedi.
 - **EXP-050:** Karakter katlama BM25 MRR'ı artırdı (0,506 -> 0,521) ama final sıralama aynı; production değişmedi.
 - **EXP-051:** Production dev 4.8'de anlamca 0,94 (106/113); 7 yanlışın 5'i retrieval, 2'si generation.
+- **EXP-052:** Query decomposition: bağlam isabeti 0,871 -> 0,903 ama anlamca 0,94 -> 0,92; soruların yarısı gereksiz bölündü.

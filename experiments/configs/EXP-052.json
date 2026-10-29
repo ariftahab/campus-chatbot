@@ -32,5 +32,7 @@
   "fixed_answers": "summer_staj_v2",
   "clarify_prompt": "v7_netlestirme",
   "query_decomposition": "llm_v1"
- }
+ },
+ "notlar": "Hipotez doğrulanmadı (2026-10-29). Anlamca 104/113 (0,92), EXP-051 106/113 (0,94); anahtar kelime 0,85. Retrieval iyileşti: bağlam isabeti 0,871 -> 0,903, MRR@10 0,739 -> 0,751 (5 soruda context değişti: 4 kazanç, 1 kayıp). Model 93 sorunun 44'ünü böldü; tek parçalı soruların da yarısı bölündü (düz 6, farklı ifade 14, yazım hatalı 6), alt sorular çoğu zaman soruda olmayan yönler uyduruyor ('Ders kaydımda seçtiğim dersleri kim onaylıyor?' -> 'danışman mı', 'bölüm başkanlığı mı'). Kazanılan 3 soru: çift anadal/yandal ortalaması (65'li madde geldi), yandala en erken başvuru (üçüncü yarıyıl), kısmi zamanlı işi bırakma (dilekçe). Kaybedilen 5: ilk yılda yatay geçiş (alt sorular soruyu 'şartlar'a çevirdi, ilk iki yarıyıl maddesi düştü), kulüp raporu teslim tarihi (başka madde), yandal sertifikası 'diploma yerine geçen' dendi; ikisi bölünmeyen sorularda üretim gürültüsü (bölüm başkanı, İngilizce cevap isteyen talimat). Çok parçalı türler (tek belgede birden fazla madde + birden fazla belge) 11/12 -> 9/12: bitti tanımı karşılanmadı. Retrieval latency ölçümü bölme çağrısını içermez (koşucu bölmeyi zamanlamadan önce yapar); production'da soru başına +1 istek, ~1 sn. Production değişmedi. Sonraki deneme önerisi: orijinal sorgunun sıralaması da birleştirmeye katılsın (kötü bölme doğru maddeyi düşürmesin) ve bölme yalnız açıkça iki şey soran sorularda yapılsın.",
+ "kisa_not": "Query decomposition: bağlam isabeti 0,871 -> 0,903 ama anlamca 0,94 -> 0,92; soruların yarısı gereksiz bölündü."
 }
