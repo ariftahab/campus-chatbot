@@ -77,14 +77,48 @@ SCOPE_RERANK = 5        # kapsam içinde reranker'a giden aday sayısı
 SCOPE_MIN_SCORE = 0.0   # eklenmek için en düşük reranker puanı (kalibrasyonla belirlenecek)
 SCOPE_EXTRA_MAX = 4     # context'e eklenebilecek en fazla chunk
 
+# --- Query decomposition (query_decomposition) ---
+# Birden fazla şey soran soruda tek sorgu embedding'i iki konuyu ortalıyor, reranker baskın konunun chunk'larını öne
+# alıyor; ikinci konunun maddesi context'e girmiyor (hata analizi 2026-10-28; val-2.0'da tek belgede birden fazla madde
+# 7/12). "llm_v1": LLM soruyu en fazla DECOMPOSE_MAX bağımsız alt soruya böler, her alt soru ayrı aranır, sonuçlar
+# sırayla (her listeden birer chunk) birleştirilir. Context boyutu final_k'da kalır: tek fark bölme.
+DECOMPOSE_MAX = 3
+DECOMPOSE_SYSTEM = (
+    "Sana bir üniversite öğrencisinin sorusu verilecek. Sorunun cevaplanması için gereken her ayrı bilgiyi, tek başına "
+    "anlaşılabilen kısa bir soru olarak ayrı bir satıra yaz (en fazla 3 satır). Soru tek bir bilgi istiyorsa soruyu "
+    "aynen tek satır olarak döndür. Karşılaştırma sorularında karşılaştırılan her şey için ayrı bir soru yaz (ör. "
+    "'Çift anadal ve yandal için ortalama şartı aynı mı?' -> 'Çift anadal için not ortalaması şartı nedir?' ve "
+    "'Yandal için not ortalaması şartı nedir?'). Fakülte, bölüm ve öğretim düzeyi gibi bilgileri her alt soruda koru. "
+    "Yalnızca soruları yaz; numara, açıklama veya cevap ekleme."
+)
+_LIST_MARK = re.compile(r"^\s*(?:[-*•]|\d+[.)])\s*")
+
+
+def interleave(lists, limit):
+    """Listelerden sırayla birer eleman alır (tekrarları atlayarak); ilk `limit` eleman her listeyi temsil eder."""
+    out, seen = [], set()
+    for i in range(max((len(x) for x in lists), default=0)):
+        for x in lists:
+            if i < len(x) and x[i] not in seen:
+                seen.add(x[i])
+                out.append(x[i])
+    return out[:limit] if limit else out
+
 
 class Retriever:
     """cfg.retrieval'a göre vektör, BM25 ya da ikisinin RRF birleşimi; varsa reranker ile yeniden sıralar."""
 
-    def __init__(self, cfg, store, chunks):
+    def __init__(self, cfg, store, chunks, llm=None):
         self.cfg = cfg
         self.store = store
         self.chunks = chunks
+        self.decomposer = None
+        self.sub_queries = {}  # sorgu -> alt sorgular (aynı sorgu için bölme çağrısı bir kez yapılır)
+        if cfg.query_decomposition:
+            # Sıcaklık 0: aynı soru her seferinde aynı alt sorulara bölünsün (retrieval tekrar üretilebilir kalsın).
+            llm = llm or ChatGoogleGenerativeAI(model=cfg.llm_model, temperature=0, max_retries=2)
+            self.decomposer = ChatPromptTemplate.from_messages([
+                ("system", DECOMPOSE_SYSTEM), ("human", "{question}")]) | llm
         self.bm25 = BM25Okapi([tokenize(c.page_content, cfg.bm25_tokenizer) for c in chunks])
         self.reranker = None
         if cfg.reranker_model:
@@ -109,15 +143,41 @@ class Retriever:
         ranked = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
         return [i for i in ranked[:k] if scores[i] > 0]
 
+    def decompose(self, query):
+        """Sorguyu alt sorgulara böler (query_decomposition kapalıysa ya da soru tek parçalıysa [query])."""
+        if not self.decomposer:
+            return [query]
+        if query not in self.sub_queries:
+            text = self.decomposer.invoke({"question": query}).text
+            subs = [_LIST_MARK.sub("", line).strip() for line in text.splitlines()]
+            subs = [s for s in subs if s][:DECOMPOSE_MAX]
+            self.sub_queries[query] = subs if len(subs) > 1 else [query]
+        return self.sub_queries[query]
+
     def rank(self, query, depth=10, trace=None):
         """Parçaların sıralı listesini döndürür (en az `depth` uzunluğunda, mümkünse).
 
         LLM'e bunun ilk final_k elemanı gider; değerlendirme ise sıralamanın tamamına bakar.
         `trace` bir sözlük verilirse ara aşamaların chunk_id listeleri içine yazılır
         ("vector", "bm25", "rrf", "rerank_input", "final"); sonuç bundan etkilenmez.
+        Soru alt sorulara bölündüyse her alt sorgu ayrı sıralanır, listeler (ve aşama listeleri) sırayla birleştirilir.
         """
-        cfg = self.cfg
         trace = {} if trace is None else trace
+        subs = self.decompose(query)
+        if len(subs) == 1:
+            return self._rank_one(query, depth, trace)
+        traces = [{} for _ in subs]
+        for sub, t in zip(subs, traces):
+            self._rank_one(sub, depth, t)
+        for stage in ("vector", "bm25", "rrf", "rerank_input", "final"):
+            if any(stage in t for t in traces):
+                trace[stage] = interleave([t.get(stage, []) for t in traces], None)
+        trace["sub_queries"] = subs
+        trace["context_n"] = self.cfg.final_k
+        return [self.chunks[i] for i in trace["final"]]
+
+    def _rank_one(self, query, depth, trace):
+        cfg = self.cfg
         if cfg.retrieval == "vector":
             ids = trace["vector"] = self._vector_ids(query, max(cfg.vector_k, depth))
         elif cfg.retrieval == "bm25":

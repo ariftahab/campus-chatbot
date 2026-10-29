@@ -118,6 +118,9 @@ def evaluate_retrieval(cfg, retriever, items, rewrite=None):
     for item in items:
         # Sohbet geçmişli (takip) sorularda retrieval, production'daki gibi rewrite edilmiş sorguyla yapılır.
         query = rewrite(item) if item.get("gecmis") else item["soru"]
+        if retriever.decomposer and query not in retriever.sub_queries:
+            time.sleep(4.0)  # bölme bir LLM çağrısı: dakikada 15 istek sınırı (latency'ye katılmaz)
+            retriever.decompose(query)
         trace = {}
         started = time.perf_counter()
         ranking = retriever.rank(query, depth=ev.EVAL_DEPTH, trace=trace)
@@ -140,6 +143,8 @@ def evaluate_retrieval(cfg, retriever, items, rewrite=None):
             row[f"hit@{k}"] = int(bool(first and first <= k))
         if query != item["soru"]:
             row["query"] = query
+        if trace.get("sub_queries"):
+            row["alt_sorgular"] = trace["sub_queries"]
         if trace.get("scope_added"):
             row["scope_added"] = trace["scope_added"]
         row["asamalar"] = stage_ranks(item, retriever.chunks, trace)

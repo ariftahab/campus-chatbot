@@ -76,7 +76,8 @@ def corpus_paths(name):
 # Sonradan eklenen parametreler. Eski config dosyaları değiştirilmediği için bu alanlar onlarda yoktur;
 # eksikse buradaki değer kullanılır (eski deneyler bu değerle koşulmuştu).
 PARAM_DEFAULTS = {"corpus": "v1", "doc_titles": None, "device": "cpu", "reranker_dtype": "fp32", "scope_search": None, "clarify_trigger": None, "fixed_answers": None,
-                  "clarify_prompt": "v4_netlestirme", "citation_style": "madde", "bm25_tokenizer": "prefix5"}
+                  "clarify_prompt": "v4_netlestirme", "citation_style": "madde", "bm25_tokenizer": "prefix5",
+                  "query_decomposition": None}
 
 
 def full_params(params):
@@ -130,6 +131,8 @@ class RagConfig:
     citation_style: str           # "madde": [Belge, Madde N] | "fikra": [Belge, Madde N/F] (cevap ve netleştirme prompt'unda)
     scope_search: Optional[str]  # None | "parallel_v1": context'te temsil edilmeyen paralel kapsamları (genel, tıp,
                                  # diş, hukuk, lisansüstü) kendi belgelerinde ayrıca arayıp ekler (rag.Retriever)
+    query_decomposition: Optional[str]  # None | "llm_v1": soru LLM ile en fazla 3 alt soruya bölünür, her biri ayrı
+                                        # aranır, sonuçlar sırayla birleştirilir; context yine final_k (rag.Retriever)
     # Üretim
     llm_model: str
     llm_temperature: float
@@ -156,6 +159,8 @@ class RagConfig:
             raise ValueError(f"Bilinmeyen doc_titles: {cfg.doc_titles}")
         if cfg.bm25_tokenizer not in ("prefix5", "prefix5_fold", "snowball_tr", "snowball_tr_fold"):
             raise ValueError(f"Bilinmeyen bm25_tokenizer: {cfg.bm25_tokenizer}")
+        if cfg.query_decomposition not in (None, "llm_v1"):
+            raise ValueError(f"Bilinmeyen query_decomposition: {cfg.query_decomposition}")
         if cfg.scope_search not in (None, "parallel_v1"):
             raise ValueError(f"Bilinmeyen scope_search: {cfg.scope_search}")
         if cfg.fixed_answers not in (None, "summer_v1", "summer_staj_v1", "summer_staj_v2"):
