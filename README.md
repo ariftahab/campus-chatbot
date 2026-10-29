@@ -26,6 +26,8 @@ takvim belgelerinden bulur ve her bilginin yanında belgeyi ve madde numarasın�
 (ör. `[BAİBÜ Yatay Geçiş Yönergesi, Madde 8]`). Hedef davranış, cevap belgelerde yoksa uydurmak yerine "Bu konuda bilgim
 yok." demesi; ölçülen sonuçlar ve sistemin hata yaptığı yerler [Bilinen zayıflıklar](#bilinen-zayıflıklar) bölümünde.
 
+![Sohbet ekranı: cevaptaki numaralı atıflar ve tıklanınca açılan madde paneli](docs/img/sohbet.png)
+
 Sistemdeki her tasarım kararı, ölçülmüş ve tekrar üretilebilir bir **deney** olarak
 kayıtlıdır (bkz. [Deneyler](#deneyler)).
 
