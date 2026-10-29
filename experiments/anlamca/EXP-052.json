@@ -402,8 +402,8 @@
   },
   "H02": {
    "anahtar": 0,
-   "anlamca": 0,
-   "gerekce": "Yanlış: rapor teslimi Haziran'ın son iş günü yerine 'akademik yılın başından itibaren 5 hafta' (başka madde)."
+   "anlamca": 1,
+   "gerekce": "Doğru (kullanıcı kararı 2026-10-29): Öğrenci Toplulukları Yönergesi Madde 18/8 (Senato 04.12.2025 değişikliği) yıl sonu faaliyet raporu formunu akademik yılın başından itibaren 5 hafta içinde istiyor; Madde 21'deki Haziran'la çelişiyor, değişen fıkraya dayanan cevap doğru sayılır."
   },
   "H03": {
    "anahtar": 1,

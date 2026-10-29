@@ -261,4 +261,4 @@ Set 3.0'dan itibaren. Parantez içi soru sayısı; küçük gruplarda ortalama g
 - **EXP-049:** Snowball stemmer BM25'i kötüleştirdi (MRR 0,506 -> 0,456); bağlam isabeti aynı. Production değişmedi.
 - **EXP-050:** Karakter katlama BM25 MRR'ı artırdı (0,506 -> 0,521) ama final sıralama aynı; production değişmedi.
 - **EXP-051:** Production dev 4.8'de anlamca 0,94 (106/113); 7 yanlışın 5'i retrieval, 2'si generation.
-- **EXP-052:** Query decomposition: bağlam isabeti 0,871 -> 0,903 ama anlamca 0,94 -> 0,92; soruların yarısı gereksiz bölündü.
+- **EXP-052:** Query decomposition: bağlam isabeti 0,871 -> 0,903 ama anlamca 0,94 -> 0,93; soruların yarısı gereksiz bölündü.
