@@ -31,5 +31,7 @@
   "clarify_trigger": "scope_labels_v1",
   "fixed_answers": "summer_staj_v2",
   "clarify_prompt": "v7_netlestirme"
- }
+ },
+ "notlar": "Baseline (2026-10-29): 113/113 cevap, kota yetti. Anlamca 106/113 (0,94), anahtar kelime 97/113 (0,86); MRR@10 0,739, bağlam isabeti 0,871. Türler: düz 17/17, farklı ifade 25/27, tek belgede birden fazla madde 4/4, birden fazla belge 7/8, belgede yok 10/10, konu dışı 10/10, yazım hatalı 15/18, netleştirme 9/10, takip 6/6, yanlış öncül 3/3. Hipotez tuttu: 7 yanlışın hepsi set 4.7'de eklenen sorularda ya da eski hatalarda. 7 yanlışın 5'i retrieval (doğru madde context'te yok): yandala en erken başvuru (6. sıra), güz final bitişi ve bahar ekle-bırak tarihi (yazım hatalı, akademik takvim ilk 30 adayda yok), kısmi zamanlı işi bırakma (yazım hatalı, dilekçe maddesi yok), özel klinik raporu (8. sıra). Generation adayı 2: açıktan örgüne geçişte yönergedeki 80 verildi, yönetmelikteki güncel 90 seçilmedi (öncelik); çift anadal/yandal karşılaştırmasında yandal başvuru şartı 65 yerine devam şartı 60. Prompt teşhisi (v9_kapsamsiz, v8_netlestirme) yalnız generation'a dokunabilir; bu sette hedefleyebileceği soru en fazla 2.",
+ "kisa_not": "Production dev 4.8'de anlamca 0,94 (106/113); 7 yanlışın 5'i retrieval, 2'si generation."
 }

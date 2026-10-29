@@ -1,0 +1,4411 @@
+{
+ "id": "EXP-051",
+ "calisma_zamani": "2026-10-29T13:55:29",
+ "dataset": {
+  "dosya": "eval/sorular_v48.json",
+  "surum": "4.8",
+  "hash": "9bbc67aae7151b7d",
+  "n_getirme": 93,
+  "n_toplam": 113
+ },
+ "params": {
+  "corpus": "v5",
+  "device": "cuda",
+  "pdf_parser": "pdfplumber",
+  "chunking": "structural_v2",
+  "chunk_size": 1500,
+  "chunk_overlap": 150,
+  "embedding_model": "BAAI/bge-m3",
+  "normalize_embeddings": true,
+  "retrieval": "hybrid",
+  "vector_k": 30,
+  "bm25_k": 30,
+  "rrf_k": 60,
+  "reranker_model": "BAAI/bge-reranker-v2-m3",
+  "reranker_max_length": 512,
+  "rerank_candidates": 30,
+  "final_k": 5,
+  "llm_model": "gemini-3.1-flash-lite",
+  "llm_temperature": 0.3,
+  "prompt_version": "v8_kapsamsiz",
+  "reranker_dtype": "fp16",
+  "clarify_trigger": "scope_labels_v1",
+  "fixed_answers": "summer_staj_v2",
+  "clarify_prompt": "v7_netlestirme"
+ },
+ "degisen_parametreler": {
+  "veri_seti": [
+   "sorular_v46",
+   "sorular_v48"
+  ]
+ },
+ "index": {
+  "fingerprint": "625520e52aa55841",
+  "index_params": {
+   "corpus": "v5",
+   "device": "cuda",
+   "pdf_parser": "pdfplumber",
+   "chunking": "structural_v2",
+   "chunk_size": 1500,
+   "chunk_overlap": 150,
+   "doc_titles": null,
+   "embedding_model": "BAAI/bge-m3",
+   "normalize_embeddings": true
+  },
+  "chunks": 3802,
+  "avg_chunk_chars": 828.5,
+  "build_seconds": 393.1,
+  "cache_hit": 0,
+  "cache_miss": 131,
+  "created": "2026-10-25T15:38:02"
+ },
+ "environment": {
+  "git_commit": "f1292d0c0a0e493262a38a0c75a45b46aa37c4fd",
+  "git_dirty": false,
+  "python": "3.11.9",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "cpu": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "cpu_count": 20,
+  "torch_device": "cuda",
+  "torch_version": "2.9.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "packages": {
+   "torch": "2.9.0+cu128",
+   "sentence-transformers": "5.1.2",
+   "transformers": "4.57.1",
+   "faiss-cpu": "1.12.0",
+   "rank-bm25": "0.2.2",
+   "pdfplumber": "0.11.9",
+   "pypdf": "6.1.3",
+   "langchain-core": "1.0.4",
+   "langchain-community": "0.4.1",
+   "langchain-text-splitters": "1.0.0",
+   "langchain-huggingface": "1.0.1",
+   "langchain-google-genai": "3.0.1",
+   "scipy": "1.16.3"
+  },
+  "model_revisions": {
+   "embedding": "5617a9f61b028005a4858fdac845db406aefb181",
+   "reranker": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+  }
+ },
+ "retrieval": {
+  "metrics": {
+   "mrr@10": 0.7389,
+   "hit@1": 0.6452,
+   "hit@3": 0.828,
+   "hit@5": 0.871,
+   "hit@10": 0.914,
+   "context_hit": 0.871,
+   "context_chars": 5050.8,
+   "latency_ms": 422.3,
+   "latency_ms_median": 426.4
+  },
+  "asamalar": {
+   "vector_mrr@10": 0.631,
+   "bm25_mrr@10": 0.4342,
+   "rrf_mrr@10": 0.5589,
+   "rerank_input_recall": 0.9247,
+   "final_mrr@10": 0.7389
+  },
+  "per_question": [
+   {
+    "id": "T01",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6020,
+    "latency_ms": 410.6,
+    "top5": [
+     "akademik-takvim-2026-2027.pdf s.1",
+     "önlisans lisans eğitim öğretim.pdf s.5 m.20",
+     "önlisans lisans eğitim öğretim.pdf s.2 m.10",
+     "akademik-takvim-2026-2027.pdf s.2",
+     "önlisans lisans eğitim öğretim.pdf s.4 m.17"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 5,
+     "bm25": null,
+     "rrf": 12,
+     "rerank_input": 12,
+     "final": 1
+    }
+   },
+   {
+    "id": "K01",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5688,
+    "latency_ms": 385.4,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "çift anadal program yönergesi.pdf s.3 m.9",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.27",
+     "bolu bağışçıları vakfı kreşi.pdf s.6 m.37"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 2,
+     "bm25": 1,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "K09",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4007,
+    "latency_ms": 447.1,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.5 m.25",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.26",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "rektörlük hizmet içi.pdf s.9 m.24",
+     "öğrenci sağlık işleri ve sağlık raporları.pdf s.2 m.8"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "Y02",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6079,
+    "latency_ms": 408.3,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.5 m.14",
+     "yatay-gecis-yonergesi.pdf s.5 m.14",
+     "yatay-gecis-yonergesi.pdf s.3 m.9",
+     "kurumlar arası kredi transferi.pdf s.5 m.12",
+     "kurumlar arası kredi transferi.pdf s.6 m.14"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 3,
+     "bm25": 9,
+     "rrf": 4,
+     "rerank_input": 4,
+     "final": 1
+    }
+   },
+   {
+    "id": "N01",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5144,
+    "latency_ms": 394.0,
+    "top5": [
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.6 m.22",
+     "diş hekimliği eğitim.pdf s.8 m.22",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.24",
+     "tık fakültesi seçmeli ders.pdf s.2 m.8"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "N06",
+    "rank": 10,
+    "rr": 0.1,
+    "context_hit": 0,
+    "context_chars": 6052,
+    "latency_ms": 406.7,
+    "top5": [
+     "lisansüstü eğitim öğretim.pdf s.6 m.18",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "lisansüstü eğitim enst müdürlüğü lisansüstü tez benzerlik.pdf s.4 m.8",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "lisansüstü eğitim yönetmeliği.pdf s.8 m.17"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 5,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 10
+    }
+   },
+   {
+    "id": "N08",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 4537,
+    "latency_ms": 441.1,
+    "top5": [
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "diş hekimliği eğitim.pdf s.11 m.27",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.21",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.27",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.9 m.33"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 3,
+     "bm25": 5,
+     "rrf": 4,
+     "rerank_input": 4,
+     "final": 3
+    }
+   },
+   {
+    "id": "N12",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5627,
+    "latency_ms": 371.5,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.6 m.25",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.19",
+     "lisansüstü eğitim öğretim.pdf s.5 m.16",
+     "kurumlar arası kredi transferi.pdf s.6 m.14",
+     "kurumlar arası kredi transferi.pdf s.9 m.22"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 2,
+     "bm25": 2,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "N26",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5571,
+    "latency_ms": 481.7,
+    "top5": [
+     "dumansız üniversite uygulama.pdf s.2 m.6",
+     "binaların yangından korunması.pdf s.5 m.7",
+     "dumansız üniversite uygulama.pdf s.2 m.7",
+     "kütüphane ve dökümantasyon daire başkanlığı.pdf s.7 m.7",
+     "dumansız üniversite uygulama.pdf s.2 m.8"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "N27",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6861,
+    "latency_ms": 424.1,
+    "top5": [
+     "engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi.pdf s.3 m.8",
+     "engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi.pdf s.3 m.8",
+     "sağlık bilimleri fakültesi sınav uygulama yönergesi.pdf s.5 m.13",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "önlisans lisans eğitim öğretim.pdf s.4 m.18"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "N36",
+    "rank": null,
+    "rr": 0.0,
+    "context_hit": 0,
+    "context_chars": 6109,
+    "latency_ms": 411.3,
+    "top5": [
+     "lisansüstü eğitim yönetmeliği.pdf s.20 m.36",
+     "önlisans lisans eğitim öğretim.pdf s.2 m.10",
+     "lisansüstü eğitim yönetmeliği.pdf s.20 m.36",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.2 m.10",
+     "alan dışı seçmeli ders yönergesi.pdf s.3 m.7"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 0,
+    "asamalar": {
+     "vector": null,
+     "bm25": null,
+     "rrf": null,
+     "rerank_input": null,
+     "final": null
+    }
+   },
+   {
+    "id": "N46",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5102,
+    "latency_ms": 413.4,
+    "top5": [
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.6 m.22",
+     "diş hekimliği eğitim.pdf s.8 m.22",
+     "diş hekimliği eğitim.pdf s.8 m.23",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.24"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "G04",
+    "rank": null,
+    "rr": 0.0,
+    "context_hit": 0,
+    "context_chars": 4415,
+    "latency_ms": 439.5,
+    "top5": [
+     "tıp fak klinik araştırma etik.pdf s.7 m.16",
+     "öğrenci sağlık işleri ve sağlık raporları.pdf s.2 m.9",
+     "bilimsel araştırma projeleri.pdf s.9 m.25",
+     "mühendislik fakültesi staj yönergesi.pdf s.5 m.19",
+     "tıp fak klinik araştırma etik.pdf s.7 m.15"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 0,
+    "asamalar": {
+     "vector": null,
+     "bm25": null,
+     "rrf": null,
+     "rerank_input": null,
+     "final": null
+    }
+   },
+   {
+    "id": "B04",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4708,
+    "latency_ms": 426.9,
+    "top5": [
+     "lisansüstü eğitim yönetmeliği.pdf s.8 m.17",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.37",
+     "lisansüstü eğitim yönetmeliği.pdf s.3 m.7",
+     "lisansüstü eğitim yönetmeliği.pdf s.7 m.16",
+     "lisansüstü eğitim yönetmeliği.pdf s.6 m.12"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "B09",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4970,
+    "latency_ms": 465.9,
+    "top5": [
+     "diş hekimliği eğitim.pdf s.12 m.31",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8",
+     "lisansüstü eğitim yönetmeliği.pdf s.7 m.16",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8",
+     "diş hekimliği eğitim.pdf s.12 m.29"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "B14",
+    "rank": null,
+    "rr": 0.0,
+    "context_hit": 0,
+    "context_chars": 3989,
+    "latency_ms": 461.0,
+    "top5": [
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.6 m.22",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.6 m.22",
+     "tıp fakültesi makale çalışma modülü.pdf s.3 m.14",
+     "tıp fakültesi özel çalışma modülü.pdf s.4 m.9",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.6 m.23"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 0,
+    "asamalar": {
+     "vector": 12,
+     "bm25": null,
+     "rrf": 23,
+     "rerank_input": 23,
+     "final": 15
+    }
+   },
+   {
+    "id": "B15",
+    "rank": 5,
+    "rr": 0.2,
+    "context_hit": 1,
+    "context_chars": 6457,
+    "latency_ms": 396.8,
+    "top5": [
+     "kurumlar arası kredi transferi.pdf s.8 m.17",
+     "kurumlar arası kredi transferi.pdf s.8 m.17",
+     "kurumlar arası kredi transferi.pdf s.7 m.16",
+     "kurumlar arası kredi transferi.pdf s.9 m.20",
+     "çift anadal program yönergesi.pdf s.2 m.6"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 7,
+     "bm25": 9,
+     "rrf": 7,
+     "rerank_input": 7,
+     "final": 5
+    }
+   },
+   {
+    "id": "Z03",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6420,
+    "latency_ms": 359.8,
+    "top5": [
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.4 m.11",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.2 m.6",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.4 m.11",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.3 m.10",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.2 m.7"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 5,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "Z07",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 6441,
+    "latency_ms": 391.1,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "sağlık bilimleri fakültesi sınav uygulama yönergesi.pdf s.2 m.6",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 11,
+     "bm25": 13,
+     "rrf": 8,
+     "rerank_input": 8,
+     "final": 3
+    }
+   },
+   {
+    "id": "Z08",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6669,
+    "latency_ms": 433.9,
+    "top5": [
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "önlisans lisans eğitim öğretim.pdf s.10 m.33",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "diş hekimliği eğitim.pdf s.8 m.23"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 3,
+     "bm25": 2,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "Z09",
+    "rank": 5,
+    "rr": 0.2,
+    "context_hit": 1,
+    "context_chars": 5054,
+    "latency_ms": 433.5,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.10 m.35",
+     "önlisans lisans eğitim öğretim.pdf s.5 m.22",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.28",
+     "lisansüstü eğitim yönetmeliği.pdf s.6 m.15",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.3 m.14"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 8,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 5
+    }
+   },
+   {
+    "id": "D01",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 7539,
+    "latency_ms": 366.6,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "kurumlar arası kredi transferi.pdf s.2 m.6",
+     "lisansüstü eğitim yönetmeliği.pdf s.19 m.35",
+     "kurumlar arası kredi transferi.pdf s.5 m.11",
+     "yatay-gecis-yonergesi.pdf s.3 m.8"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "query": "Yüksek lisans programlarında hangi yarıyıllara yatay geçiş yapılamaz?",
+    "asamalar": {
+     "vector": 9,
+     "bm25": 7,
+     "rrf": 6,
+     "rerank_input": 6,
+     "final": 3
+    }
+   },
+   {
+    "id": "D03",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6768,
+    "latency_ms": 465.9,
+    "top5": [
+     "diş hekimliği eğitim.pdf s.4 m.14",
+     "diş hekimliği eğitim.pdf s.3 m.13",
+     "önlisans lisans eğitim öğretim.pdf s.10 m.35",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "query": "Diş Hekimliği Fakültesinden mezun olmak için toplam kaç AKTS tamamlanması gerekiyor?",
+    "asamalar": {
+     "vector": 2,
+     "bm25": 20,
+     "rrf": 4,
+     "rerank_input": 4,
+     "final": 1
+    }
+   },
+   {
+    "id": "D06",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 4316,
+    "latency_ms": 426.4,
+    "top5": [
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "hemşirelik beceri uygulamları ve intörn.pdf s.5 m.9",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.24",
+     "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf s.3 m.10",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.18"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "query": "Bir dersten alınan sağlık raporlu günler devamsızlık süresine dahil ediliyor mu?",
+    "asamalar": {
+     "vector": 8,
+     "bm25": null,
+     "rrf": 20,
+     "rerank_input": 20,
+     "final": 3
+    }
+   },
+   {
+    "id": "D08",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5957,
+    "latency_ms": 415.3,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.4 m.18",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.3 m.14",
+     "Ogrenci_disiplin_Isleri.pdf s.1 m.54",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.6 m.23",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "query": "Uzaklaştırma cezası aldığım süre, azami öğrenim süresinden sayılır mı?",
+    "asamalar": {
+     "vector": 16,
+     "bm25": 10,
+     "rrf": 7,
+     "rerank_input": 7,
+     "final": 1
+    }
+   },
+   {
+    "id": "D11",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 6128,
+    "latency_ms": 445.9,
+    "top5": [
+     "kurumlar arası kredi transferi.pdf s.9 m.19",
+     "kurumlar arası kredi transferi.pdf s.9 m.20",
+     "yandal programı.pdf s.2 m.6",
+     "yandal programı.pdf s.3 m.7",
+     "kurumlar arası kredi transferi.pdf s.8 m.17"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "query": "Yandal programına başvurabilmek için gereken minimum genel not ortalaması kaçtır?",
+    "asamalar": {
+     "vector": 4,
+     "bm25": 15,
+     "rrf": 6,
+     "rerank_input": 6,
+     "final": 3
+    }
+   },
+   {
+    "id": "D13",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4124,
+    "latency_ms": 429.0,
+    "top5": [
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.6 m.23",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.8 m.29",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.2 m.7",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.6 m.23"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "query": "Tıp fakültesi ders kurulu mazeret sınavı başvurumu en geç ne zamana kadar yapmalıyım?",
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "A01",
+    "rank": 4,
+    "rr": 0.25,
+    "context_hit": 1,
+    "context_chars": 4406,
+    "latency_ms": 400.3,
+    "top5": [
+     "Sosyal Transkript Yönergesi.pdf s.3 m.11",
+     "Sosyal Transkript Yönergesi.pdf s.1 m.4",
+     "Sosyal Transkript Yönergesi.pdf s.4 m.14",
+     "Sosyal Transkript Yönergesi.pdf s.1 m.1",
+     "Sosyal Transkript Yönergesi.pdf s.2 m.5"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 6,
+     "bm25": 4,
+     "rrf": 5,
+     "rerank_input": 5,
+     "final": 4
+    }
+   },
+   {
+    "id": "E01",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 4927,
+    "latency_ms": 454.6,
+    "top5": [
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.28",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.2 m.10",
+     "önlisans lisans eğitim öğretim.pdf s.10 m.35",
+     "önlisans lisans eğitim öğretim.pdf s.5 m.22",
+     "lisansüstü eğitim yönetmeliği.pdf s.6 m.15"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 5,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 2
+    }
+   },
+   {
+    "id": "E02",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5381,
+    "latency_ms": 461.4,
+    "top5": [
+     "diş hekimliği eğitim.pdf s.8 m.22",
+     "diş hekimliği eğitim.pdf s.8 m.23",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.24",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 6,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "E04",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 3947,
+    "latency_ms": 458.7,
+    "top5": [
+     "diş hekimliği eğitim.pdf s.12 m.29",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8",
+     "diş hekimliği eğitim.pdf s.12 m.31",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.28",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.28"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 3,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "E06",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4771,
+    "latency_ms": 479.5,
+    "top5": [
+     "diş hekimliği eğitim.pdf s.4 m.14",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.2 m.10",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.3 m.14",
+     "uygulamali-egitimler-yonergesi.pdf s.6 m.13",
+     "lisansüstü eğitim yönetmeliği.pdf s.6 m.15"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "E07",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6677,
+    "latency_ms": 482.5,
+    "top5": [
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": null,
+     "rrf": 11,
+     "rerank_input": 11,
+     "final": 1
+    }
+   },
+   {
+    "id": "E09",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4823,
+    "latency_ms": 488.8,
+    "top5": [
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.21",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.25",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.27"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 3,
+     "bm25": 5,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "P02",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 1666,
+    "latency_ms": 402.0,
+    "top5": [
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "P03",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 2188,
+    "latency_ms": 253.8,
+    "top5": [
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "P04",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 1637,
+    "latency_ms": 383.6,
+    "top5": [
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "P05",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 1294,
+    "latency_ms": 364.3,
+    "top5": [
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "P06",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 2136,
+    "latency_ms": 313.5,
+    "top5": [
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "R01",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 1658,
+    "latency_ms": 303.0,
+    "top5": [
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "R02",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 1658,
+    "latency_ms": 350.0,
+    "top5": [
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "R03",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6247,
+    "latency_ms": 494.9,
+    "top5": [
+     "personel_bilgisayar.json",
+     "sosyal bilimlerde insan araştırmaları etik kurulu.pdf s.4 m.23",
+     "makale destek ofisi.pdf s.10 m.25",
+     "ziraat fak staj usul ve esas.pdf s.9 m.28",
+     "iktisadi ve idari bilimler isteğe bağlı staj yönergesi.pdf s.4 m.15"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "R04",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 1629,
+    "latency_ms": 349.9,
+    "top5": [
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "R05",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 1407,
+    "latency_ms": 456.1,
+    "top5": [
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "R06",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 4376,
+    "latency_ms": 443.5,
+    "top5": [
+     "uzaktan eğitim.pdf s.3 m.6",
+     "personel_bilgisayar.json",
+     "personel_bilgisayar.json",
+     "hemşirelik beceri uygulamları ve intörn.pdf s.2 m.5",
+     "fizik tedavi rehabilitasyon staj.pdf s.1 m.4"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 2,
+     "bm25": 5,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 2
+    }
+   },
+   {
+    "id": "S01",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6261,
+    "latency_ms": 445.7,
+    "top5": [
+     "akademik-takvim-2026-2027.pdf s.1",
+     "alan dışı seçmeli ders yönergesi.pdf s.2 m.6",
+     "akademik-takvim-2026-2027.pdf s.1",
+     "uzaktan-ogretime-iliskin-usul-esas.pdf s.2 m.6",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.18"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 3,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "S02",
+    "rank": null,
+    "rr": 0.0,
+    "context_hit": 0,
+    "context_chars": 5018,
+    "latency_ms": 451.1,
+    "top5": [
+     "tıpta uzmanlık eğitim ve sınav.pdf s.1 m.6",
+     "önlisans lisans eğitim öğretim.pdf s.4 m.18",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.3 m.13",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.3 m.14",
+     "makine müh bitirme projesi 1ve2 usul ve esaslar.pdf s.5 m.12"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 0,
+    "asamalar": {
+     "vector": null,
+     "bm25": null,
+     "rrf": null,
+     "rerank_input": null,
+     "final": null
+    }
+   },
+   {
+    "id": "S03",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 4472,
+    "latency_ms": 412.5,
+    "top5": [
+     "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf s.3 m.14",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.13",
+     "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf s.2 m.6",
+     "önlisans lisans eğitim öğretim.pdf s.4 m.18",
+     "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf s.2 m.7"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 2
+    }
+   },
+   {
+    "id": "S04",
+    "rank": null,
+    "rr": 0.0,
+    "context_hit": 0,
+    "context_chars": 5304,
+    "latency_ms": 442.0,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.10 m.35",
+     "lisansüstü eğitim yönetmeliği.pdf s.6 m.14",
+     "kurumlar arası kredi transferi.pdf s.11 m.25",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.25",
+     "kurumlar arası kredi transferi.pdf s.9 m.22"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 0,
+    "asamalar": {
+     "vector": null,
+     "bm25": null,
+     "rrf": null,
+     "rerank_input": null,
+     "final": null
+    }
+   },
+   {
+    "id": "S05",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5861,
+    "latency_ms": 478.0,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "kurumlar arası kredi transferi.pdf s.5 m.11",
+     "kurumlar arası kredi transferi.pdf s.4 m.9",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8",
+     "kurumlar arası kredi transferi.pdf s.6 m.14"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": null,
+     "rrf": 8,
+     "rerank_input": 8,
+     "final": 1
+    }
+   },
+   {
+    "id": "S06",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 5646,
+    "latency_ms": 435.7,
+    "top5": [
+     "kurumlar arası kredi transferi.pdf s.11 m.25",
+     "kurumlar arası kredi transferi.pdf s.2 m.6",
+     "kurumlar arası kredi transferi.pdf s.6 m.13",
+     "kurumlar arası kredi transferi.pdf s.2 m.5",
+     "yatay-gecis-yonergesi.pdf s.4 m.10"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 3,
+     "bm25": null,
+     "rrf": 7,
+     "rerank_input": 7,
+     "final": 2
+    }
+   },
+   {
+    "id": "S07",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6307,
+    "latency_ms": 480.0,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "diş hekimliği eğitim.pdf s.12 m.32",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": null,
+     "bm25": 3,
+     "rrf": 11,
+     "rerank_input": 11,
+     "final": 1
+    }
+   },
+   {
+    "id": "S08",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 4471,
+    "latency_ms": 451.1,
+    "top5": [
+     "lisansüstü eğitim öğretim.pdf s.6 m.18",
+     "lisansüstü eğitim öğretim.pdf s.6 m.18",
+     "önlisans lisans eğitim öğretim.pdf s.4 m.18",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.3 m.14",
+     "lisansüstü eğitim yönetmeliği.pdf s.3 m.7"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 8,
+     "bm25": null,
+     "rrf": 16,
+     "rerank_input": 16,
+     "final": 3
+    }
+   },
+   {
+    "id": "S09",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 7211,
+    "latency_ms": 447.9,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.6 m.27",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.21",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "kurumsal etik ilkeleri ve kurumsal etik kurulu.pdf s.10 m.15"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 20,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "S10",
+    "rank": 7,
+    "rr": 0.14285714285714285,
+    "context_hit": 0,
+    "context_chars": 5587,
+    "latency_ms": 481.3,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "kurumlar arası kredi transferi.pdf s.8 m.17",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8",
+     "çift anadal program yönergesi.pdf s.3 m.9",
+     "önlisans lisans eğitim öğretim.pdf s.9 m.31"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 23,
+     "bm25": 3,
+     "rrf": 3,
+     "rerank_input": 3,
+     "final": 7
+    }
+   },
+   {
+    "id": "S11",
+    "rank": 6,
+    "rr": 0.16666666666666666,
+    "context_hit": 0,
+    "context_chars": 3736,
+    "latency_ms": 435.8,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.6 m.25",
+     "intibak yönergesi.pdf s.2 m.6",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.26",
+     "önlisans lisans eğitim öğretim.pdf s.2 m.9",
+     "kurumlar arası kredi transferi.pdf s.8 m.17"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 27,
+     "bm25": 20,
+     "rrf": 8,
+     "rerank_input": 8,
+     "final": 6
+    }
+   },
+   {
+    "id": "S12",
+    "rank": 5,
+    "rr": 0.2,
+    "context_hit": 1,
+    "context_chars": 6853,
+    "latency_ms": 412.3,
+    "top5": [
+     "tıp fak sınav uygulama ve sonuçlandırma usul ve esasları.pdf s.2 m.5",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.25",
+     "Ogrenci_disiplin_Isleri.pdf s.1 m.54",
+     "sağlık bilimleri fakültesi sınav uygulama yönergesi.pdf s.5 m.13",
+     "Ogrenci_disiplin_Isleri.pdf s.1 m.54"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 9,
+     "bm25": null,
+     "rrf": 17,
+     "rerank_input": 17,
+     "final": 5
+    }
+   },
+   {
+    "id": "S13",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6156,
+    "latency_ms": 461.1,
+    "top5": [
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.3 m.11",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.8 m.29",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.4 m.15",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.4 m.12",
+     "girişimsel olmayan klinik araştırmalar etik kurul.pdf s.3 m.7"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 8,
+     "bm25": null,
+     "rrf": 15,
+     "rerank_input": 15,
+     "final": 1
+    }
+   },
+   {
+    "id": "S14",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6735,
+    "latency_ms": 531.9,
+    "top5": [
+     "mühendislik fakültesi staj yönergesi.pdf s.3 m.10",
+     "mühendislik fakültesi staj yönergesi.pdf s.6 m.23",
+     "mühendislik fakültesi staj yönergesi.pdf s.3 m.10",
+     "mühendislik fakültesi staj yönergesi.pdf s.6 m.23",
+     "mühendislik fakültesi staj yönergesi.pdf s.5 m.19"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 18,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "S15",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5242,
+    "latency_ms": 435.0,
+    "top5": [
+     "lisansüstü eğitim yönetmeliği.pdf s.3 m.7",
+     "lisansüstü eğitim yönetmeliği.pdf s.6 m.12",
+     "lisansüstü eğitim öğretim.pdf s.6 m.18",
+     "lisansüstü eğitim yönetmeliği.pdf s.8 m.17",
+     "lisansüstü eğitim öğretim.pdf s.6 m.18"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 13,
+     "rrf": 5,
+     "rerank_input": 5,
+     "final": 1
+    }
+   },
+   {
+    "id": "S16",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5487,
+    "latency_ms": 399.0,
+    "top5": [
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "yatay-gecis-yonergesi.pdf s.3 m.8",
+     "kurumlar arası kredi transferi.pdf s.5 m.11",
+     "önlisans lisans eğitim öğretim.pdf s.9 m.31",
+     "uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi.pdf s.5 m.8"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 13,
+     "bm25": null,
+     "rrf": 26,
+     "rerank_input": 26,
+     "final": 1
+    }
+   },
+   {
+    "id": "S17",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6590,
+    "latency_ms": 436.9,
+    "top5": [
+     "akademik-takvim-2026-2027.pdf s.2",
+     "yatay-gecis-yonergesi.pdf s.2 m.5",
+     "kurumlar arası kredi transferi.pdf s.6 m.13",
+     "kurumlar arası kredi transferi.pdf s.5 m.11",
+     "kurumlar arası kredi transferi.pdf s.5 m.11"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 22,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "S20",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5562,
+    "latency_ms": 471.0,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.4 m.23",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "çift anadal program yönergesi.pdf s.3 m.9",
+     "ogrenci-kayıt-yonerge.pdf s.5 m.27",
+     "yabanci diller yuksekokulu dil sınav yonetmeligi.pdf s.4 m.15"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 2,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "S21",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5435,
+    "latency_ms": 463.9,
+    "top5": [
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "diş hekimliği eğitim.pdf s.11 m.27",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.27",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.21",
+     "önlisans lisans eğitim öğretim.pdf s.5 m.20"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 2,
+     "bm25": 2,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "S22",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6577,
+    "latency_ms": 416.4,
+    "top5": [
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "sağlık bilimleri fakültesi sınav uygulama yönergesi.pdf s.2 m.6",
+     "diş hekimliği eğitim.pdf s.8 m.22",
+     "diş hekimliği eğitim.pdf s.8 m.23"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 6,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "S23",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5457,
+    "latency_ms": 408.7,
+    "top5": [
+     "yandal programı.pdf s.1 m.5",
+     "lisansüstü eğitim öğretim.pdf s.4 m.12",
+     "önlisans lisans eğitim öğretim.pdf s.5 m.23",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.2 m.10",
+     "yandal programı.pdf s.2 m.6"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 2,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "S24",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 6028,
+    "latency_ms": 466.0,
+    "top5": [
+     "kütüphane ve dökümantasyon daire başkanlığı.pdf s.6 m.2",
+     "kütüphane ve dökümantasyon daire başkanlığı.pdf s.4 m.19",
+     "kütüphane ve dökümantasyon daire başkanlığı.pdf s.7 m.7",
+     "kütüphane ve dökümantasyon daire başkanlığı.pdf s.6 m.2",
+     "kütüphane ve dökümantasyon daire başkanlığı.pdf s.6 m.1"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 6,
+     "bm25": 2,
+     "rrf": 3,
+     "rerank_input": 3,
+     "final": 1
+    }
+   },
+   {
+    "id": "S25",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 2662,
+    "latency_ms": 384.9,
+    "top5": [
+     "öğrenci yemek bursu.pdf s.3 m.10",
+     "öğrenci yemek bursu.pdf s.2 m.8",
+     "öğrenci yemek bursu.pdf s.1 m.1",
+     "öğrenci yemek bursu.pdf s.1 m.5",
+     "öğrenci yemek bursu.pdf s.3 m.14"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "S26",
+    "rank": null,
+    "rr": 0.0,
+    "context_hit": 0,
+    "context_chars": 6424,
+    "latency_ms": 427.8,
+    "top5": [
+     "diş hekimliği eğitim.pdf s.8 m.23",
+     "hemşirelik lisans tamamlama.pdf s.1 m.3",
+     "turizm_uygulamali_egitimler_yonergesi.pdf s.2 m.6",
+     "makine müh bitirme projesi 1ve2 usul ve esaslar.pdf s.3 m.8",
+     "diş hekimliği eğitim.pdf s.8 m.23"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 0,
+    "asamalar": {
+     "vector": null,
+     "bm25": null,
+     "rrf": null,
+     "rerank_input": null,
+     "final": null
+    }
+   },
+   {
+    "id": "S27",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5649,
+    "latency_ms": 414.8,
+    "top5": [
+     "engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi.pdf s.3 m.8",
+     "engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi.pdf s.3 m.8",
+     "engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi.pdf s.1 m.4",
+     "önlisans lisans eğitim öğretim.pdf s.4 m.18",
+     "bilimsel araştırma projeleri.pdf s.8 m.17"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "S28",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 6361,
+    "latency_ms": 405.0,
+    "top5": [
+     "lisansüstü eğitim enst müdürlüğü lisansüstü tez benzerlik.pdf s.2 m.6",
+     "lisansüstü eğitim enst müdürlüğü lisansüstü tez benzerlik.pdf s.2 m.6",
+     "lisansüstü eğitim enst müdürlüğü lisansüstü tez benzerlik.pdf s.3 m.7",
+     "lisansüstü eğitim enst müdürlüğü lisansüstü tez benzerlik.pdf s.1 m.4",
+     "lisansüstü eğitim enst müdürlüğü lisansüstü tez benzerlik.pdf s.4 m.8"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 2,
+     "bm25": 13,
+     "rrf": 5,
+     "rerank_input": 5,
+     "final": 2
+    }
+   },
+   {
+    "id": "S29",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5308,
+    "latency_ms": 391.0,
+    "top5": [
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.4 m.17",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.3 m.16",
+     "ogrenci-kayıt-yonerge.pdf s.3 m.18",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.4 m.17",
+     "lisansüstü eğitim yönetmeliği.pdf s.12 m.23"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "S30",
+    "rank": null,
+    "rr": 0.0,
+    "context_hit": 0,
+    "context_chars": 5514,
+    "latency_ms": 400.6,
+    "top5": [
+     "turizm işletmeciliği otel staj.pdf s.3 m.9",
+     "turizm işletmeciliği ve otelcilik staj.pdf s.3 m.9",
+     "çift anadal program yönergesi.pdf s.2 m.6",
+     "bolu bağışçıları vakfı kreşi.pdf s.7 m.45",
+     "hemşirelik lisans tamamlama.pdf s.1 m.3"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 0,
+    "asamalar": {
+     "vector": null,
+     "bm25": null,
+     "rrf": null,
+     "rerank_input": null,
+     "final": null
+    }
+   },
+   {
+    "id": "S31",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 1387,
+    "latency_ms": 317.0,
+    "top5": [
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json",
+     "bilgisayar_2026-2027_guz.json"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 4,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "H01",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 4133,
+    "latency_ms": 433.4,
+    "top5": [
+     "kurumlar arası kredi transferi.pdf s.9 m.21",
+     "yandal programı.pdf s.3 m.7",
+     "kurumlar arası kredi transferi.pdf s.9 m.18",
+     "kurumlar arası kredi transferi.pdf s.9 m.20",
+     "önlisans lisans eğitim öğretim.pdf s.3 m.13"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 9,
+     "rrf": 3,
+     "rerank_input": 3,
+     "final": 2
+    }
+   },
+   {
+    "id": "H02",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4789,
+    "latency_ms": 495.7,
+    "top5": [
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.6 m.21",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.8 m.29",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.5 m.18",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.5 m.17",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.2 m.6"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "H03",
+    "rank": 3,
+    "rr": 0.3333333333333333,
+    "context_hit": 1,
+    "context_chars": 5437,
+    "latency_ms": 421.7,
+    "top5": [
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.5 m.12",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.3 m.10",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.3 m.9",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.5 m.13",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.1 m.4"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 8,
+     "bm25": 11,
+     "rrf": 10,
+     "rerank_input": 10,
+     "final": 3
+    }
+   },
+   {
+    "id": "H04",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5325,
+    "latency_ms": 453.0,
+    "top5": [
+     "ogrenci-kayıt-yonerge.pdf s.4 m.21",
+     "lisansüstü eğitim yönetmeliği.pdf s.20 m.36",
+     "ogrenci-kayıt-yonerge.pdf s.2 m.12",
+     "önlisans lisans eğitim öğretim.pdf s.10 m.34",
+     "yandal programı.pdf s.3 m.7"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "H05",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5767,
+    "latency_ms": 396.7,
+    "top5": [
+     "kimlik kartı yönergesi.pdf s.5 m.15",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.3 m.16",
+     "lisansüstü eğitim yönetmeliği.pdf s.5 m.10",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.3 m.12",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.2 m.9"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "H06",
+    "rank": 8,
+    "rr": 0.125,
+    "context_hit": 0,
+    "context_chars": 6100,
+    "latency_ms": 435.5,
+    "top5": [
+     "diş hekimliği eğitim.pdf s.12 m.32",
+     "öğrenci sağlık işleri ve sağlık raporları.pdf s.2 m.8",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.29",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.5 m.23",
+     "diş hekimliği eğitim.pdf s.8 m.23"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 5,
+     "bm25": 17,
+     "rrf": 7,
+     "rerank_input": 7,
+     "final": 8
+    }
+   },
+   {
+    "id": "H07",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 5938,
+    "latency_ms": 424.9,
+    "top5": [
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.20",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.26",
+     "diş hekimliği eğitim.pdf s.10 m.26",
+     "diş hekimliği eğitim.pdf s.8 m.23",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.25"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 7,
+     "rrf": 4,
+     "rerank_input": 4,
+     "final": 2
+    }
+   },
+   {
+    "id": "H08",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 4954,
+    "latency_ms": 361.4,
+    "top5": [
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "önlisans lisans eğitim öğretim.pdf s.7 m.28",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.9 m.31",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.8 m.30",
+     "tıp fakultesi egitim ve sinav yonetmeligi.pdf s.11 m.37"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 3,
+     "bm25": 1,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 2
+    }
+   },
+   {
+    "id": "H09",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 6222,
+    "latency_ms": 453.4,
+    "top5": [
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.26",
+     "önlisans lisans eğitim öğretim.pdf s.9 m.32",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "lisansüstü eğitim öğretim.pdf s.4 m.12",
+     "intibak yönergesi.pdf s.3 m.8"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 2,
+     "bm25": 3,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 2
+    }
+   },
+   {
+    "id": "H10",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4341,
+    "latency_ms": 425.0,
+    "top5": [
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.6 m.21",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.5 m.18",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.8 m.29",
+     "TEKNİK BİLİMLER MESLEK YÜKSEKOKULU iş yeri eğitimi ve uygulaması dersleri.pdf s.7 m.16",
+     "TEKNİK BİLİMLER MESLEK YÜKSEKOKULU iş yeri eğitimi ve uygulaması dersleri.pdf s.7 m.17"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 1,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "H11",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4658,
+    "latency_ms": 396.3,
+    "top5": [
+     "yandal programı.pdf s.3 m.7",
+     "yandal programı.pdf s.3 m.7",
+     "kurumlar arası kredi transferi.pdf s.9 m.21",
+     "kurumlar arası kredi transferi.pdf s.9 m.20",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.3 m.13"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 3,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "H12",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4658,
+    "latency_ms": 374.4,
+    "top5": [
+     "yandal programı.pdf s.3 m.7",
+     "kurumlar arası kredi transferi.pdf s.9 m.20",
+     "yandal programı.pdf s.3 m.7",
+     "kurumlar arası kredi transferi.pdf s.9 m.21",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.3 m.13"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 2,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "H13",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5811,
+    "latency_ms": 419.8,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.10 m.34",
+     "lisansüstü eğitim öğretim.pdf s.3 m.11",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.2 m.10",
+     "alan dışı seçmeli ders yönergesi.pdf s.3 m.7",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.7 m.27"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": null,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "H14",
+    "rank": 2,
+    "rr": 0.5,
+    "context_hit": 1,
+    "context_chars": 5638,
+    "latency_ms": 371.7,
+    "top5": [
+     "kurumlar arası kredi transferi.pdf s.9 m.21",
+     "yandal programı.pdf s.3 m.7",
+     "yandal programı.pdf s.3 m.7",
+     "kurumlar arası kredi transferi.pdf s.9 m.20",
+     "kurumlar arası kredi transferi.pdf s.7 m.16"
+    ],
+    "hit@1": 0,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 2,
+     "bm25": 27,
+     "rrf": 6,
+     "rerank_input": 6,
+     "final": 2
+    }
+   },
+   {
+    "id": "H15",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 3365,
+    "latency_ms": 478.5,
+    "top5": [
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.8 m.29",
+     "öğretim üyeliğine yükseltilme ve atanma ölçütleri yönergesi.pdf s.13 m.21",
+     "bilimsel yayın ve dergiler.pdf s.9 m.20",
+     "binaların yangından korunması.pdf s.33 m.69",
+     "öğrenci toplulukları kuruluş ve işleyiş.pdf s.2 m.6"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": null,
+     "bm25": 1,
+     "rrf": 2,
+     "rerank_input": 2,
+     "final": 1
+    }
+   },
+   {
+    "id": "H16",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5623,
+    "latency_ms": 417.5,
+    "top5": [
+     "önlisans lisans eğitim öğretim.pdf s.6 m.26",
+     "hukuk fakultesi egitim ve sinav yonetmeligi.pdf s.4 m.20",
+     "diş hekimliği eğitim.pdf s.10 m.26",
+     "lisansüstü eğitim yönetmeliği.pdf s.21 m.38",
+     "önlisans lisans eğitim öğretim.pdf s.6 m.27"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 3,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   },
+   {
+    "id": "H17",
+    "rank": null,
+    "rr": 0.0,
+    "context_hit": 0,
+    "context_chars": 5683,
+    "latency_ms": 430.3,
+    "top5": [
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.2 m.7",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.2 m.5",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.5 m.12",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.3 m.10",
+     "kısmı zamanlı öğrenci çalıştırma.pdf s.2 m.6"
+    ],
+    "hit@1": 0,
+    "hit@3": 0,
+    "hit@5": 0,
+    "hit@10": 0,
+    "asamalar": {
+     "vector": null,
+     "bm25": null,
+     "rrf": null,
+     "rerank_input": null,
+     "final": null
+    }
+   },
+   {
+    "id": "H18",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 5741,
+    "latency_ms": 391.2,
+    "top5": [
+     "kimlik kartı yönergesi.pdf s.5 m.15",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.3 m.16",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.2 m.9",
+     "kimlik kartı yönergesi.pdf s.3 m.9",
+     "kimlik kartı yönergesi.pdf s.2 m.7"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 26,
+     "rrf": 3,
+     "rerank_input": 3,
+     "final": 1
+    }
+   },
+   {
+    "id": "H19",
+    "rank": 1,
+    "rr": 1.0,
+    "context_hit": 1,
+    "context_chars": 4658,
+    "latency_ms": 393.9,
+    "top5": [
+     "yandal programı.pdf s.3 m.7",
+     "kurumlar arası kredi transferi.pdf s.9 m.20",
+     "kurumlar arası kredi transferi.pdf s.9 m.21",
+     "yandal programı.pdf s.3 m.7",
+     "mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi.pdf s.3 m.13"
+    ],
+    "hit@1": 1,
+    "hit@3": 1,
+    "hit@5": 1,
+    "hit@10": 1,
+    "asamalar": {
+     "vector": 1,
+     "bm25": 2,
+     "rrf": 1,
+     "rerank_input": 1,
+     "final": 1
+    }
+   }
+  ],
+  "alt_kirilimlar": {
+   "grup:A": {
+    "n": 68,
+    "mrr@10": 0.7645,
+    "hit@5": 0.8529,
+    "answer_acc": 0.8529,
+    "netlestirme": 0.3382
+   },
+   "grup:B": {
+    "n": 10,
+    "mrr@10": 0.57,
+    "hit@5": 0.8,
+    "answer_acc": 0.7,
+    "netlestirme": 0.6
+   },
+   "grup:C": {
+    "n": 3,
+    "mrr@10": 0.5111,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0
+   },
+   "grup:D": {
+    "n": 6,
+    "mrr@10": 0.6667,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0.1667
+   },
+   "grup:E": {
+    "n": 6,
+    "mrr@10": 0.9167,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0
+   },
+   "kategori:coklu_kapsam": {
+    "n": 10,
+    "mrr@10": 0.77,
+    "hit@5": 0.9,
+    "answer_acc": 0.8,
+    "netlestirme": 0.3
+   },
+   "kategori:ders_programi": {
+    "n": 6,
+    "mrr@10": 1.0,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0
+   },
+   "kategori:fakulteye_ozel": {
+    "n": 3,
+    "mrr@10": 0.6667,
+    "hit@5": 0.6667,
+    "answer_acc": 0.6667,
+    "netlestirme": 0
+   },
+   "kategori:kural": {
+    "n": 33,
+    "mrr@10": 0.7281,
+    "hit@5": 0.8485,
+    "answer_acc": 0.8182,
+    "netlestirme": 0.3939
+   },
+   "kategori:personel": {
+    "n": 6,
+    "mrr@10": 0.9167,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0.1667
+   },
+   "kategori:surec": {
+    "n": 2,
+    "mrr@10": 0.5,
+    "hit@5": 0.5,
+    "answer_acc": 1,
+    "netlestirme": 0.5
+   },
+   "kategori:takip_sorusu": {
+    "n": 6,
+    "mrr@10": 0.6667,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0.1667
+   },
+   "kategori:tarih": {
+    "n": 5,
+    "mrr@10": 0.6,
+    "hit@5": 0.6,
+    "answer_acc": 0.6,
+    "netlestirme": 0.6
+   },
+   "kategori:yanlis_varsayim": {
+    "n": 3,
+    "mrr@10": 0.5111,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0
+   },
+   "kategori:yeni_v47": {
+    "n": 19,
+    "mrr@10": 0.7346,
+    "hit@5": 0.8947,
+    "answer_acc": 0.8947,
+    "netlestirme": 0.4211
+   },
+   "set:eski": {
+    "n": 4,
+    "mrr@10": 1.0,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0
+   },
+   "set:yeni": {
+    "n": 89,
+    "mrr@10": 0.7272,
+    "hit@5": 0.8652,
+    "answer_acc": 0.8539,
+    "netlestirme": 0.3371
+   },
+   "soru_turu:coklu_belge": {
+    "n": 12,
+    "mrr@10": 0.7882,
+    "hit@5": 0.9167,
+    "answer_acc": 0.9167,
+    "netlestirme": 0.25
+   },
+   "soru_turu:duz": {
+    "n": 17,
+    "mrr@10": 0.8873,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0.1176
+   },
+   "soru_turu:farkli_ifade": {
+    "n": 27,
+    "mrr@10": 0.7016,
+    "hit@5": 0.7778,
+    "answer_acc": 0.8148,
+    "netlestirme": 0.4444
+   },
+   "soru_turu:netlestirme": {
+    "n": 10,
+    "mrr@10": 0.57,
+    "hit@5": 0.8,
+    "answer_acc": 0.7,
+    "netlestirme": 0.6
+   },
+   "soru_turu:takip": {
+    "n": 6,
+    "mrr@10": 0.6667,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0.1667
+   },
+   "soru_turu:yanlis_oncul": {
+    "n": 3,
+    "mrr@10": 0.5111,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0
+   },
+   "soru_turu:yazim_hatali": {
+    "n": 18,
+    "mrr@10": 0.7778,
+    "hit@5": 0.8333,
+    "answer_acc": 0.7778,
+    "netlestirme": 0.3333
+   },
+   "stil:belge": {
+    "n": 6,
+    "mrr@10": 0.8889,
+    "hit@5": 1,
+    "answer_acc": 1,
+    "netlestirme": 0.3333
+   },
+   "stil:ogrenci": {
+    "n": 87,
+    "mrr@10": 0.7286,
+    "hit@5": 0.8621,
+    "answer_acc": 0.8506,
+    "netlestirme": 0.3218
+   }
+  }
+ },
+ "llm": {
+  "tamamlandi": true,
+  "metrics": {
+   "answer_acc": 0.8584,
+   "n": 113,
+   "netlestirme_isabeti": 1,
+   "netlestirme_n": 5,
+   "gereksiz_netlestirme": 0.2407,
+   "cevap_uzunlugu": 296.0,
+   "token_input": 2332.0,
+   "token_output": 89.9,
+   "token_reasoning": 0,
+   "token_per_sn": 33.4,
+   "netlestirme_uzunlugu": 428.5,
+   "netlestirme_uzunlugu_n": 25,
+   "birlestirme_isabeti": 0.5,
+   "birlestirme_isabeti_n": 6,
+   "fikra_atif_orani": 0,
+   "fikra_atif_orani_n": 80,
+   "llm_ms": 6814.8,
+   "llm_ms_median": 2365.5
+  },
+  "per_question": [
+   {
+    "id": "T01",
+    "answer": "Güz yarıyılında dersler 21 Eylül 2026 tarihinde başlamaktadır [BAİBÜ 2026-2027 Akademik Takvimi, s. 1].\n\nBu kural Tıp, Diş Hekimliği, Hukuk, Turizm Fakülteleri ile Mengen MYO ve Lisansüstü Eğitim Enstitüsü öğrencileri için geçerli değildir; bu birimlerde farklı tarihler uygulanabilir. Öğrenim gördüğünüz fakülte veya program nedir?",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1456.3,
+    "uzunluk": 332,
+    "tokens": {
+     "input": 2790,
+     "output": 110,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "T05",
+    "answer": "Bu konuda bilgim yok. Yaz öğretimi (yaz okulu) yönetmeliği yürürlükten kaldırıldığı için yaz okulu hakkında güncel bir bilgi veremiyorum. Güncel durum için Öğrenci İşleri Daire Başkanlığına başvurabilirsiniz.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 0.0,
+    "uzunluk": 208,
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "K01",
+    "answer": "Ön lisans ve lisans öğrencileri, haklı ve geçerli bir mazerete dayanarak bir defada en çok iki yarıyıl ve öğrenim süresi boyunca toplamda en çok dört yarıyıl kayıt dondurabilir; ancak askere alınma, rahatsızlık veya hükümlülük gibi özel durumlarda bu süreler aşılabilir [BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği, Madde 23]. Lisansüstü programlarda ise azami kayıt dondurma süreleri; bilimsel/sanatsal hazırlık ve tezsiz yüksek lisansta bir yarıyıl, tezli yüksek lisansta iki yarıyıl, doktora/sanatta yeterlikte ise dört yarıyıldır [lisansüstü eğitim yönetmeliği, Madde 38].\n\nKayıt dondurma kuralları öğrenim düzeyinize göre farklılık göstermektedir; lisansüstü mü yoksa ön lisans/lisans öğrencisi misiniz?",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 20345.1,
+    "uzunluk": 709,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2452,
+     "output": 217,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "K09",
+    "answer": "Hastalık nedeniyle izin alabilmek için dönem izni verilmesini gerektirecek süreyi kapsayan bir sağlık raporu ile belgelendirme yapılması gerekmektedir [BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği, Madde 25]. İzin başvurularının gerekçeli bir dilekçe ve belgelerle birlikte ilgili bölüm başkanlığına, dönem başında ve ders alma süreleri bitmeden yapılması esastır; ancak ani hastalık hallerinde bu süreler dışında da başvuru yapılabilir [BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği, Madde 26].\n\nBu kural genel olup, lisansüstü öğrenciler için kayıt dondurma süreçlerinde farklı düzenlemeler bulunabilmektedir. Hangi öğretim düzeyinde (ön lisans, lisans veya lisansüstü) öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1723.7,
+    "uzunluk": 692,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1968,
+     "output": 190,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "Y02",
+    "answer": "Kurumlar arası yatay geçiş başvurularında değerlendirme puanı; öğrencinin 100’lük sistemdeki genel not ortalaması ile kayıtlı olduğu diploma programına yerleştiği yılda, başvuru yaptığı programın puan türünde aldığı ÖSYS/YKS yerleştirme puanının yüzde sekseni (%80) toplanarak hesaplanır (Değerlendirme Puanı = 100’lük not ortalaması + ÖSYS/YKS Puanı x 0,8) [BAİBÜ Yatay Geçiş Yönergesi, Madde 14, s. 5].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1365.2,
+    "uzunluk": 404,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2480,
+     "output": 136,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "C02",
+    "answer": "Kütüphanenin çalışma saatleri, Daire Başkanlığının önerisi üzerine Rektörlük tarafından belirlenmektedir [kütüphane ve dökümantasyon daire başkanlığı, Madde 20, s. 5]. Bu konuda daha spesifik bir saat bilgisi bulunmamaktadır.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 4847.8,
+    "uzunluk": 225,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2431,
+     "output": 64,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "N01",
+    "answer": "Genel kurala göre teorik derslerde devam zorunluluğu %70'tir [önlisans lisans eğitim öğretim, Madde 24; lisansüstü eğitim yönetmeliği, Madde 38]. Bazı fakülte veya programlarda bu oran farklılık gösterebilmektedir. Hangi fakülte veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 2888.2,
+    "uzunluk": 265,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2130,
+     "output": 82,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "N06",
+    "answer": "Azami öğrenim süresini dolduran öğrenciler, başarısız oldukları dersler için dönem sonunda açılan azami öğrenim sonu sınavlarına girebilirler; bu sınavlara girmeyen veya giremeyen öğrencilerin ise programla ilişiği kesilir [önlisans lisans eğitim öğretim, Madde 29, s. 7]. Lisansüstü öğrenciler için ise azami süresi dolan öğrencinin kayıtlı olduğu program ile ilişiği kesilir [lisansüstü eğitim öğretim, Madde 18, s. 6].\n\nBazı fakülte veya programlarda bu kurallar farklılık gösterebilir. Hangi fakültede veya programda okuyorsunuz?",
+    "answer_ok": 0,
+    "netlestirme": 1,
+    "llm_ms": 10223.9,
+    "uzunluk": 533,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2422,
+     "output": 150,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "N08",
+    "answer": "Üniversitedeki genel kurala göre CC harf notunun katsayısı 3,00'tür [önlisans lisans eğitim öğretim, Madde 27; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 21]. Ancak lisansüstü eğitimde bu katsayı 2,0, Diş Hekimliği Fakültesinde 2,0 ve Tıp Fakültesinde ise CC notu \"Orta\" derecesine karşılık gelmektedir [lisansüstü eğitim yönetmeliği, Madde 38; diş hekimliği eğitim, Madde 27; tıp fakultesi egitim ve sinav yonetmeligi, Madde 33]. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 3020.5,
+    "uzunluk": 491,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2460,
+     "output": 175,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "N12",
+    "answer": "Diğer üniversitelerden ders almak isteyen ön lisans ve lisans öğrencileri, yarıyıl başlamadan önce eşdeğerlik talebiyle bölümlerine başvurmalıdır [önlisans lisans eğitim öğretim, Madde 25]. Bazı fakülte veya programlarda bu kural farklılık gösterebilir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 4998.3,
+    "uzunluk": 306,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2257,
+     "output": 82,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "N18",
+    "answer": "Bu konuda bilgim yok. Yaz öğretimi (yaz okulu) yönetmeliği yürürlükten kaldırıldığı için yaz okulu hakkında güncel bir bilgi veremiyorum. Güncel durum için Öğrenci İşleri Daire Başkanlığına başvurabilirsiniz.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 0.0,
+    "uzunluk": 208,
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "N21",
+    "answer": "Bu konuda bilgim yok. Yaz öğretimi (yaz okulu) yönetmeliği yürürlükten kaldırıldığı için yaz okulu hakkında güncel bir bilgi veremiyorum. Güncel durum için Öğrenci İşleri Daire Başkanlığına başvurabilirsiniz.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 0.0,
+    "uzunluk": 208,
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "N26",
+    "answer": "Evet, kütüphane binalarının açık alanlarında ve spor sahalarının açık alanlarında tütün ürünleri kullanmak yasaktır [dumansız üniversite uygulama, Madde 6].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 4347.8,
+    "uzunluk": 156,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2328,
+     "output": 42,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "N27",
+    "answer": "Evet, görme engelli öğrencilere sınav süresinin yarısı kadar ek süre verilmektedir. Ayrıca engelinize göre ek sınav süresi de tanınabilmektedir [engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi, Madde 8, s. 3].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1378.4,
+    "uzunluk": 225,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2710,
+     "output": 59,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "N36",
+    "answer": "Ders kayıtlarınızın kesin onay işlemi danışmanınız tarafından gerçekleştirilir [önlisans lisans eğitim öğretim, Madde 10; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 10; lisansüstü eğitim yönetmeliği, Madde 36]. Lisansüstü programlarda danışman atanmamışsa bu görev enstitü ana bilim/ana sanat dalı başkanı veya program koordinatörü tarafından yürütülür [lisansüstü eğitim yönetmeliği, Madde 36].\n\nBazı fakülte veya programlarda bu kural farklılık gösterebilir; öğrenim gördüğünüz fakülte veya program nedir?",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1532.6,
+    "uzunluk": 515,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2412,
+     "output": 146,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "N46",
+    "answer": "Genel kural olarak, ön lisans ve lisans öğrencileri için teorik derslere devam zorunluluğu %70'tir [önlisans lisans eğitim öğretim, Madde 24]. Bu oran bazı fakülte veya programlarda farklılık gösterebilmektedir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 1028.2,
+    "uzunluk": 264,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2081,
+     "output": 75,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "N44",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 863.7,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 2318,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "G04",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 0,
+    "netlestirme": 0,
+    "llm_ms": 1210.4,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 1928,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "G07",
+    "answer": "Üzgünüm, bu konuda bilgim yok. Ben yalnızca BAİBÜ öğrencilerine üniversite ile ilgili yönetmelikler, ders programları ve yönergeler konusunda yardımcı olmakla görevli bir asistanım.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 23886.1,
+    "uzunluk": 181,
+    "tokens": {
+     "input": 2374,
+     "output": 45,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "G08",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 3234.3,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 2755,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "B04",
+    "answer": "Lisans derecesi ile doktora programına kabul edilen öğrencilerin programı tamamlama süresi on yarıyıl olup, azami tamamlama süresi on dört yarıyıldır [lisansüstü eğitim yönetmeliği, Madde 17, s. 8].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1410.8,
+    "uzunluk": 198,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2182,
+     "output": 61,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "B09",
+    "answer": "Diş hekimliği diploması alabilmek için öğrencinin alması gereken dersleri başarıyla tamamlamış olması ve en az 2,00 genel not ortalamasını sağlamış olması gerekir [diş hekimliği eğitim, Madde 31, s. 12].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 7037.5,
+    "uzunluk": 203,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2420,
+     "output": 62,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "B14",
+    "answer": "Tıp Fakültesi öğrencileri için devam zorunluluğu, Bolu Abant İzzet Baysal Üniversitesi Tıp Fakültesi Eğitim ve Sınav Yönetmeliği'nin 22. maddesinde düzenlenmiştir [tıp fakultesi egitim ve sinav yonetmeligi, Madde 22]. Bu yönetmeliğe göre teorik derslerin en az %75'ine, uygulamaların ise en az %80'ine katılmanız zorunludur [tıp fakultesi egitim ve sinav yonetmeligi, Madde 22]. Ayrıca, Makale Çalışma Modülü ve Özel Çalışma Modülü için de aynı yönetmelikteki devamsızlık hükümleri geçerlidir [tıp fakültesi makale çalışma modülü, Madde 14; tıp fakültesi özel çalışma modülü, Madde 9].",
+    "answer_ok": 0,
+    "netlestirme": 0,
+    "llm_ms": 7666.2,
+    "uzunluk": 585,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1953,
+     "output": 187,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "B15",
+    "answer": "Hayır, çift anadal ve yandal programları için not ortalaması şartları farklıdır.\n\nÇift anadal programına başvurabilmek için anadal diploma programındaki genel not ortalamasının 100 üzerinden en az 70 olması gerekir [kurumlar arası kredi transferi, Madde 17; çift anadal program yönergesi, Madde 6]. Yandal programına devam edebilmek için ise anadal programındaki not ortalamasının 100 üzerinden en az 60 olması şarttır [kurumlar arası kredi transferi, Madde 20].\n\nBu kurallar genel düzenlemelerdir; öğrenim gördüğünüz fakülte veya programda farklı bir uygulama olup olmadığını öğrenmek için hangi fakültede veya programda okuduğunuzu belirtebilir misiniz?",
+    "answer_ok": 0,
+    "netlestirme": 1,
+    "llm_ms": 1466.7,
+    "uzunluk": 655,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2605,
+     "output": 173,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "Z01",
+    "answer": "Öğrenciler, 2547 sayılı Kanunun 46. maddesi ve ilgili mevzuat uyarınca belirlenen katkı payı veya öğrenim ücretini akademik takvimde belirtilen süre içerisinde ödemekle yükümlüdür [önlisans lisans eğitim öğretim, Madde 11; tıp fakultesi egitim ve sinav yonetmeligi, Madde 12; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 11]. Uluslararası öğrencilerin ödeyeceği miktarlar ise Cumhurbaşkanı kararı çerçevesinde Üniversite Yönetim Kurulu tarafından belirlenmektedir [uluslararası öğrenci ön lisans-lisans-lisansüstü başvuru kabul kayıt yönergesi, Madde 10].\n\nBu ücretler fakülte, program veya öğrenci statüsüne göre farklılık gösterebilmektedir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 34214.7,
+    "uzunluk": 702,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1915,
+     "output": 206,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "Z03",
+    "answer": "Kısmi zamanlı çalışan öğrencilerin bir saatlik çalışma karşılığında alacakları ücret, 4857 sayılı İş Kanunu uyarınca 16 yaşından büyük işçiler için belirlenen günlük brüt asgari ücretin dörtte birini geçmeyecek şekilde, Sağlık Kültür ve Spor Daire Başkanlığı'nın önerisi üzerine Üniversite Yönetim Kurulu tarafından kararlaştırılır [kısmı zamanlı öğrenci çalıştırma, Madde 11, s. 4].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 4538.6,
+    "uzunluk": 383,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 5305,
+     "output": 112,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "Z05",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1034.2,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 2456,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "Z06",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1379.5,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 2276,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "Z07",
+    "answer": "Lisansüstü eğitimde bütünleme sınavı yapılmamaktadır [lisansüstü eğitim yönetmeliği, Madde 38].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2208.8,
+    "uzunluk": 95,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2557,
+     "output": 29,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "Z08",
+    "answer": "Hukuk Fakültesi yönetmeliğine göre, mezuniyet için devam koşulunu yerine getirerek başarısız olduğunuz en fazla bir dersiniz kaldığında tek ders sınavına girebilirsiniz [hukuk fakultesi egitim ve sinav yonetmeligi, Madde 23, s. 5]. Bu nedenle, iki dersiniz kaldığı durumlarda tek ders sınavına girmeniz mümkün değildir.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2068.8,
+    "uzunluk": 319,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2628,
+     "output": 89,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "Z09",
+    "answer": "Tıp Fakültesi öğrencilerinin mezun olabilmesi için 6 yıllık eğitim süresince toplam 360 AKTS krediyi tamamlamaları zorunludur [tıp fakultesi egitim ve sinav yonetmeligi, Madde 14].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 852.0,
+    "uzunluk": 180,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2228,
+     "output": 58,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "D01",
+    "answer": "Yüksek lisans programlarına yatay geçiş yapabilmek için öğrencinin kayıtlı olduğu programda en az bir yarıyılı başarıyla tamamlamış olması ve en geç üçüncü döneme başlamamış olması gerekir [lisansüstü eğitim yönetmeliği, Madde 35, s. 19].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 4145.2,
+    "uzunluk": 238,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2870,
+     "output": 67,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "D03",
+    "answer": "Diş Hekimliği Fakültesinde beş yıllık eğitim-öğretim süresince toplam en az 300 AKTS tamamlanması gerekmektedir [diş hekimliği eğitim, Madde 14, s. 4].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2476.8,
+    "uzunluk": 151,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 3083,
+     "output": 54,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "D06",
+    "answer": "Evet, sağlık raporu alarak geçirdiğiniz süreler devamsızlık süresine dâhildir [lisansüstü eğitim yönetmeliği, Madde 38; yabanci diller yuksekokulu dil sınav yonetmeligi, Madde 10]. Bazı fakülte veya programlarda bu kural farklılık gösterebilir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 4132.1,
+    "uzunluk": 297,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2200,
+     "output": 89,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "D08",
+    "answer": "Üniversiteden uzaklaştırma cezası aldığınız durumlarda, bu süre eğitim süresine dâhil edilir [önlisans lisans eğitim öğretim, Madde 18; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 14]. Bazı fakülte veya programlarda bu kural farklılık gösterebileceği için öğrenim gördüğünüz fakülte veya programı öğrenebilir miyim?",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 7645.1,
+    "uzunluk": 322,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2334,
+     "output": 93,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "D11",
+    "answer": "Yandal programına başvurabilmek için anadal programındaki genel not ortalamanızın 100 üzerinden en az 65 olması gerekir [kurumlar arası kredi transferi, Madde 19, s. 9; yandal programı, Madde 6, s. 2]. Ayrıca, başvurduğunuz yarıyıla kadar anadal lisans programınızdaki tüm kredili dersleri başarıyla tamamlamış olmanız gerekmektedir [kurumlar arası kredi transferi, Madde 19, s. 9; yandal programı, Madde 6, s. 2].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 61093.9,
+    "uzunluk": 414,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2534,
+     "output": 133,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "D13",
+    "answer": "Mazeretinizle ilgili başvurunuzu, mazeretinizin tespit tarihinden itibaren en geç on gün içinde Dekanlığa yapmanız gerekmektedir; bu süreden sonra yapılan müracaatlar işleme konulmaz [tıp fakultesi egitim ve sinav yonetmeligi, Madde 23].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1544.5,
+    "uzunluk": 237,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2177,
+     "output": 69,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "A01",
+    "answer": "Sosyal Transkript, öğrencinin öğrenim süresi boyunca onaylanan sosyal, kültürel, sanatsal, sportif, bilimsel ve toplumsal faaliyetlerinin elektronik ortamda oluşturulan resmi kaydını ifade eder [Sosyal Transkript Yönergesi, Madde 1, Madde 11]. Akademik transkriptten bağımsız olarak düzenlenir ve öğrencinin akademik başarı durumu ile mezuniyet şartlarının belirlenmesinde esas alınmaz [Sosyal Transkript Yönergesi, Madde 11].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1138.6,
+    "uzunluk": 426,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1983,
+     "output": 115,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "E01",
+    "answer": "Hukuk Fakültesi öğrencileri için mezuniyet için en az 240 AKTS tamamlanması gerekmektedir [hukuk fakultesi egitim ve sinav yonetmeligi, Madde 10, Madde 28]. Diğer lisans programlarında da mezuniyet için en az 240 AKTS'nin tamamlanması zorunludur [önlisans lisans eğitim öğretim, Madde 22, Madde 35].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 9191.7,
+    "uzunluk": 299,
+    "birlestirme": 0,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2180,
+     "output": 106,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "E02",
+    "answer": "Üniversitemizde teorik dersler için devam zorunluluğu %70'tir [önlisans lisans eğitim öğretim, Madde 24; lisansüstü eğitim yönetmeliği, Madde 38]. Diş Hekimliği Fakültesi'nde de teorik derslere devam zorunluluğu %70 olarak uygulanmaktadır [diş hekimliği eğitim, Madde 22].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 3176.6,
+    "uzunluk": 272,
+    "birlestirme": 0,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2337,
+     "output": 93,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "E04",
+    "answer": "Hukuk ve Diş Hekimliği fakültelerinde mezuniyet için genel not ortalamasının en az 2,00 olması gerekmektedir [diş hekimliği eğitim, Madde 29; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 28].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1292.1,
+    "uzunluk": 197,
+    "birlestirme": 1,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1950,
+     "output": 67,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "E06",
+    "answer": "Bir eğitim-öğretim yılında alınması gereken ders kredisi; Diş Hekimliği Fakültesi'nde en az 60 AKTS [diş hekimliği eğitim, Madde 14], Hukuk Fakültesi'nde 60 AKTS [hukuk fakultesi egitim ve sinav yonetmeligi, Madde 10] ve Tıp Fakültesi'nde 60 AKTS'dir [tıp fakultesi egitim ve sinav yonetmeligi, Madde 14].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2365.5,
+    "uzunluk": 305,
+    "birlestirme": 0,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2163,
+     "output": 120,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "E07",
+    "answer": "Hukuk Fakültesi'nde ve ön lisans-lisans programlarında ara sınav, dönem sonu veya yıl sonu (final) sınavı, bütünleme sınavı, muafiyet sınavı, tek/çift ders sınavı, mazeret sınavı ve azami öğrenim sonu sınavı olmak üzere toplam yedi tür sınav vardır [hukuk fakultesi egitim ve sinav yonetmeligi, Madde 23; önlisans lisans eğitim öğretim, Madde 29].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 942.7,
+    "uzunluk": 347,
+    "birlestirme": 1,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2705,
+     "output": 112,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "E09",
+    "answer": "Hukuk Fakültesi'nde ve diğer lisans programlarında DD harf notunun katsayısı 2,00'dır [hukuk fakultesi egitim ve sinav yonetmeligi, Madde 21, s. 4; önlisans lisans eğitim öğretim, Madde 27, s. 6].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1390.8,
+    "uzunluk": 196,
+    "birlestirme": 1,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2555,
+     "output": 78,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "P02",
+    "answer": "Bilgisayar Mühendisliği Bölümü'nde Yapay Zeka dersi Çarşamba günleri 327 numaralı derslikte yapılmaktadır [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1297.2,
+    "uzunluk": 180,
+    "tokens": {
+     "input": 1581,
+     "output": 64,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "P03",
+    "answer": "Bilgisayar Mühendisliği Bölümü'nde Mikroişlemciler dersinin B şubesi Perşembe günleri yapılmaktadır [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 791.5,
+    "uzunluk": 174,
+    "tokens": {
+     "input": 2078,
+     "output": 59,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "P04",
+    "answer": "Nesne Tabanlı Programlama dersi, Bilgisayar (Yazılım) Laboratuvarı'nda (B.L.) yapılmaktadır [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 974.8,
+    "uzunluk": 166,
+    "tokens": {
+     "input": 1601,
+     "output": 61,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "P05",
+    "answer": "Kablosuz Algılayıcı Ağlar dersi, Seç III seçmeli ders grubunda yer almaktadır [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 721.8,
+    "uzunluk": 152,
+    "tokens": {
+     "input": 1407,
+     "output": 53,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "P06",
+    "answer": "Bilgisayar Mühendisliği Bölümü Algoritma Analizi dersi A şubesi Pazartesi günü saat 08:30'da başlamaktadır [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 609.5,
+    "uzunluk": 181,
+    "tokens": {
+     "input": 2054,
+     "output": 65,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "R01",
+    "answer": "Bilgisayar Mühendisliği Bölüm Başkanı Prof. Dr. Hünkar Kayhan'dır [BAİBÜ Bilgisayar Mühendisliği Bölümü Akademik Personeli].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 930.2,
+    "uzunluk": 124,
+    "tokens": {
+     "input": 1234,
+     "output": 38,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "R02",
+    "answer": "Bilgisayar Mühendisliği Bölümü'nün Bölüm Başkan Yardımcısı Doç. Dr. Ali Çalım'dır [BAİBÜ Bilgisayar Mühendisliği Bölümü Akademik Personeli].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 978.8,
+    "uzunluk": 140,
+    "tokens": {
+     "input": 1236,
+     "output": 44,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "R03",
+    "answer": "Doç. Dr. Ali Yılmaz'ın e-posta adresi ali.yilmaz@ibu.edu.tr'dir [BAİBÜ Bilgisayar Mühendisliği Bölümü Akademik Personeli].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2035.1,
+    "uzunluk": 122,
+    "tokens": {
+     "input": 3142,
+     "output": 45,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "R04",
+    "answer": "Bilgisayar Donanımı Ana Bilim Dalı Başkanı Doç. Dr. Mehmet Dinçer Erbaş'tır [BAİBÜ Bilgisayar Mühendisliği Bölümü Akademik Personeli].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 859.7,
+    "uzunluk": 134,
+    "tokens": {
+     "input": 1233,
+     "output": 43,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "R05",
+    "answer": "Doç. Dr. Önder Eyecioğlu'nun dahili telefon numarası 5826'dır [BAİBÜ Bilgisayar Mühendisliği Bölümü Akademik Personeli].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2635.7,
+    "uzunluk": 120,
+    "tokens": {
+     "input": 1178,
+     "output": 43,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "R06",
+    "answer": "Bölüm başkanının kim olduğu, bağlı bulunduğunuz bölüme göre değişiklik göstermektedir. Örneğin, Bilgisayar Mühendisliği Bölümü Başkanı Prof. Dr. Hünkar Kayhan'dır [BAİBÜ Bilgisayar Mühendisliği Bölümü Akademik Personeli]. \n\nHangi fakülte veya bölümde öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 3263.8,
+    "uzunluk": 272,
+    "tokens": {
+     "input": 1945,
+     "output": 76,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "X01",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2067.7,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 2539,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "X02",
+    "answer": "Paylaştığınız ders programı belgesinde Veri Madenciliği dersinin hangi öğretim elemanı tarafından verildiğine dair bir bilgi bulunmamaktadır [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı].",
+    "answer_ok": 0,
+    "netlestirme": 0,
+    "llm_ms": 2997.9,
+    "uzunluk": 215,
+    "tokens": {
+     "input": 2161,
+     "output": 61,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "X03",
+    "answer": "Veri Yapıları dersi 2026-2027 Güz döneminde Cuma günü yapılmaktadır [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı]. Bahar dönemi ders programına ilişkin bir bilgi bulunmamaktadır.",
+    "answer_ok": 0,
+    "netlestirme": 0,
+    "llm_ms": 1502.7,
+    "uzunluk": 206,
+    "tokens": {
+     "input": 1582,
+     "output": 70,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "X04",
+    "answer": "Veri Madenciliği dersinin yapılacağı derslik bilgisi, BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı'nda belirtilmemiştir [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı].",
+    "answer_ok": 0,
+    "netlestirme": 0,
+    "llm_ms": 6092.5,
+    "uzunluk": 221,
+    "tokens": {
+     "input": 1512,
+     "output": 81,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S01",
+    "answer": "Genel kurala göre, Tıp, Diş Hekimliği, Hukuk, Turizm Fakülteleri ile Mengen MYO ve Lisansüstü Eğitim Enstitüsü hariç olmak üzere, 2026-2027 Güz yarıyılı dersleri 21 Eylül 2026 tarihinde başlamaktadır [BAİBÜ 2026-2027 Akademik Takvimi, EĞİTİM-ÖĞRETİM - GÜZ YARIYILI, s. 1]. Bazı fakülte veya programlarda akademik takvim farklılık gösterebilmektedir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 4417.4,
+    "uzunluk": 402,
+    "tokens": {
+     "input": 2786,
+     "output": 149,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S02",
+    "answer": "Genel kurala göre, öğrencilerin Üniversiteden izinli sayılması nedeniyle geçirmiş olduğu süreler eğitim süresine dâhil edilmez [önlisans lisans eğitim öğretim, Madde 18]. Bazı fakülte veya programlarda bu kural farklılık gösterebilir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 0,
+    "netlestirme": 1,
+    "llm_ms": 1190.3,
+    "uzunluk": 287,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2261,
+     "output": 77,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S03",
+    "answer": "Hazırlık sınıflarındaki eğitim süresi en çok iki yıldır [BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği, Madde 13].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 41040.1,
+    "uzunluk": 113,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2012,
+     "output": 37,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S04",
+    "answer": "Ön lisans ve lisans düzeyindeki öğrenciler için başka bir üniversiteden gelerek özel öğrenci statüsünde ders almak, diploma almaya hak kazandırmaz; diploma, kayıtlı olduğunuz asıl üniversiteniz tarafından verilir [önlisans lisans eğitim öğretim, Madde 35]. Bazı fakülte veya programlarda bu kurala ilişkin farklı düzenlemeler bulunabilir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 0,
+    "netlestirme": 1,
+    "llm_ms": 2747.0,
+    "uzunluk": 391,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2106,
+     "output": 99,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S05",
+    "answer": "Kurumlar arası yatay geçiş yapabilmeniz için genel not ortalamanızın 100 üzerinden en az 60 olması şarttır [BAİBÜ Yatay Geçiş Yönergesi, Madde 8, s. 3; kurumlar arası kredi transferi, Madde 11, s. 5]. Bu başarı şartını sağlayamayan ancak merkezi yerleştirme puanı geçiş yapmak istediğiniz programın taban puanına eşit veya yüksek olan adaylar da başvuru yapabilir [BAİBÜ Yatay Geçiş Yönergesi, Madde 8, s. 3; kurumlar arası kredi transferi, Madde 11, s. 5].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 7786.6,
+    "uzunluk": 457,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2442,
+     "output": 150,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S06",
+    "answer": "Önlisans diploma programlarının ilk yarıyılına veya lisans diploma programlarının ilk iki yarıyılına yatay geçiş yapılamaz [kurumlar arası kredi transferi, Madde 6, s. 2]. Hangi fakültede veya programda okuyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 1057.9,
+    "uzunluk": 215,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2391,
+     "output": 62,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S07",
+    "answer": "Ara sınava mazeretiniz nedeniyle giremediyseniz, mazeretinizin bitiminden itibaren 3 iş günü içerisinde başvuruda bulunmanız gerekmektedir [önlisans lisans eğitim öğretim, Madde 29; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 23; diş hekimliği eğitim, Madde 32].\n\nBazı fakülte veya programlarda bu süreç ve başvuru mercileri farklılık gösterebileceği için, hangi fakültede veya programda okuyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 1020.7,
+    "uzunluk": 407,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2433,
+     "output": 116,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S08",
+    "answer": "Genel kurala göre, dört yıl süreli lisans programlarındaki öğrencilerin eğitimlerini en fazla on dört dönem içinde tamamlamaları gerekmektedir [önlisans lisans eğitim öğretim, Madde 18, s. 4]. Ancak, Hukuk Fakültesi gibi bazı fakülte veya programlarda bu süre farklılık gösterebilmektedir [hukuk fakultesi egitim ve sinav yonetmeligi, Madde 14, s. 3]. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 3557.6,
+    "uzunluk": 404,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2028,
+     "output": 118,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S09",
+    "answer": "E/I notu aldığınızda, dönem için belirlenen son sınavın bitiminden itibaren 15 gün içinde eksiklerinizi tamamlayarak bir not almanız gerekmektedir [önlisans lisans eğitim öğretim, Madde 27; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 21]. Lisansüstü eğitim alıyorsanız, notların ilgili enstitüye teslim tarihinden itibaren 15 gün içinde eksiklerinizi tamamlamanız gerekmektedir [lisansüstü eğitim yönetmeliği, Madde 38].\n\nBazı fakülte veya programlarda bu kuralın uygulanışı farklılık gösterebilir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 7137.3,
+    "uzunluk": 558,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2840,
+     "output": 160,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S10",
+    "answer": "Çift anadal programına başvurabilmeniz için anadal diploma programındaki genel not ortalamanızın en az 100 üzerinden 70 olması gerekmektedir [kurumlar arası kredi transferi, Madde 17, s. 8]. \n\nBazı fakülte veya programlarda bu kuralın farklı olabileceği durumlar söz konusu olabilir; hangi fakültede veya programda okuyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 1416.2,
+    "uzunluk": 327,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2396,
+     "output": 90,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S11",
+    "answer": "Diğer üniversitelerden ders almak isteyen öğrenci, yarıyıl başlamadan önce eşdeğerlik talebiyle bölümüne başvurmalıdır [önlisans lisans eğitim öğretim, Madde 25, s. 6].",
+    "answer_ok": 0,
+    "netlestirme": 0,
+    "llm_ms": 1838.5,
+    "uzunluk": 168,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1828,
+     "output": 50,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S12",
+    "answer": "Sınavlarda kopya çekmek veya kopyaya teşebbüs etmek disiplin suçu teşkil etmektedir. Genel kural olarak, sınavlarda kopyaya teşebbüs etmek kınama cezasını gerektirirken [Ogrenci_disiplin_Isleri, Madde 54, s. 1], sınavda kopya çekmek veya çektirmek ise daha ağır disiplin cezalarını gerektiren eylemler arasında sayılmaktadır [Ogrenci_disiplin_Isleri, Madde 54, s. 1].\n\nBununla birlikte, Tıp Fakültesi öğrencileri için sınavda kopya çeken veya çekmeye teşebbüs edenlerin o sınavdan sıfır puan alacağı ve haklarında disiplin işlemleri başlatılacağı belirtilmiştir [tıp fak sınav uygulama ve sonuçlandırma usul ve esasları, Madde 5, s. 2; tıp fakultesi egitim ve sinav yonetmeligi, Madde 25, s. 7]. Sağlık Bilimleri Fakültesi'nde ise kopya çeken veya çekme girişiminde bulunan öğrencinin sınavı geçersiz sayılmakta ve disiplin hükümleri uygulanmaktadır [sağlık bilimleri fakültesi sınav uygulama yönergesi, Madde 13, s. 5].\n\nBazı fakültelerde bu kurallar farklılık gösterebildiği için hangi fakültede öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 4619.5,
+    "uzunluk": 1019,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2798,
+     "output": 312,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S13",
+    "answer": "Öğrenci topluluğu kurabilmek için en az 20 kurucu üyenin bulunması zorunludur [öğrenci toplulukları kuruluş ve işleyiş, Madde 11, s. 3].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1857.0,
+    "uzunluk": 136,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2672,
+     "output": 52,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S14",
+    "answer": "Mühendislik Fakültesi bölümlerinde zorunlu staj süresi toplam 40 iş günüdür [mühendislik fakültesi staj yönergesi, Madde 10, s. 3]. 7+1 İşyeri Uygulamalı Eğitim modeline tabi programlarda ise staj süresi ve gün sayısı ilgili bölüm tarafından belirlenmektedir [mühendislik fakültesi staj yönergesi, Madde 10, s. 3].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1252.6,
+    "uzunluk": 314,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2923,
+     "output": 104,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S15",
+    "answer": "Tezli yüksek lisans programını en çok altı yarıyılda tamamlamanız gerekmektedir [lisansüstü eğitim yönetmeliği, Madde 7, s. 3].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1169.4,
+    "uzunluk": 127,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2326,
+     "output": 42,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S16",
+    "answer": "Açık veya uzaktan öğretimden örgün öğretim programlarına geçiş yapabilmeniz için genel not ortalamanızın 100 üzerinden en az 80 olması veya kaydolduğunuz yıldaki merkezi yerleştirme puanınızın, geçmek istediğiniz diploma programının o yılki taban puanına eşit veya yüksek olması gerekmektedir [BAİBÜ Yatay Geçiş Yönergesi, Madde 5, s. 2].",
+    "answer_ok": 0,
+    "netlestirme": 0,
+    "llm_ms": 1322.6,
+    "uzunluk": 338,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2346,
+     "output": 97,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S17",
+    "answer": "Üniversitemizde kurumlar arası yatay geçiş başvuruları için genel kural, güz dönemi başvurularının akademik takvimde belirlenen süreler içerisinde yapılmasıdır [BAİBÜ Yatay Geçiş Yönergesi, Madde 5]. 2026-2027 akademik yılı güz dönemi için kurumlar arası yatay geçiş başvuruları 13 – 19 Temmuz 2026 tarihleri arasında gerçekleştirilmiştir [BAİBÜ 2026-2027 Akademik Takvimi, s. 2].\n\nBazı fakülte veya programlarda bu tarihler farklılık gösterebileceği için öğrenim gördüğünüz fakülte veya program hangisidir?",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 4153.3,
+    "uzunluk": 507,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2792,
+     "output": 153,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S20",
+    "answer": "Ön lisans ve lisans öğrencileri için kayıt dondurma süresi bir defada en çok iki yarıyıl, öğrenim süresi boyunca toplamda ise en çok dört yarıyıldır; ancak askere alınma, hastalık veya hükümlülük gibi özel durumlarda bu süreler farklılık gösterebilir [BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği, Madde 23]. Lisansüstü programlarda ise azami kayıt dondurma süreleri; bilimsel/sanatsal hazırlıkta ve tezsiz yüksek lisansta bir yarıyıl, tezli yüksek lisansta iki yarıyıl, doktora/sanatta yeterlikte dört yarıyıldır [lisansüstü eğitim yönetmeliği, Madde 38].\n\nKayıt dondurma kuralları öğrenim düzeyinize göre farklılık göstermektedir; lisans mı yoksa lisansüstü düzeyde mi öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 3107.2,
+    "uzunluk": 692,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2419,
+     "output": 210,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S21",
+    "answer": "Genel kurala göre, 100 üzerinden 87 puan aldığınızda harf notunuz \"BA\" olarak belirlenir [önlisans lisans eğitim öğretim, Madde 27; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 21]. Lisansüstü eğitimde de 87 puan \"BA\" harf notuna karşılık gelmektedir [lisansüstü eğitim yönetmeliği, Madde 38].\n\nAncak Diş Hekimliği Fakültesi gibi bazı birimlerde not aralıkları ve harf karşılıkları farklılık gösterebilmektedir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 2535.8,
+    "uzunluk": 470,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2667,
+     "output": 151,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S22",
+    "answer": "Dersinize devam koşulunu sağlamadığınız (DZ/NA) durumlarda, o dersin bütünleme sınavına girmeniz mümkün değildir [hukuk fakultesi egitim ve sinav yonetmeligi, Madde 23; önlisans lisans eğitim öğretim, Madde 29; sağlık bilimleri fakültesi sınav uygulama yönergesi, Madde 6; diş hekimliği eğitim, Madde 22].\n\nBazı fakülte veya programlarda bu kuralın uygulanışı farklılık gösterebilir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 0,
+    "netlestirme": 1,
+    "llm_ms": 12176.5,
+    "uzunluk": 436,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2396,
+     "output": 132,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S23",
+    "answer": "Yan dal programında öğrenim gören öğrenciler, bir dönemde diğer derslerle çakışmamak kaydıyla en fazla 15 AKTS ders alabilirler [yandal programı, Madde 5, s. 1]. Bazı fakülte veya programlarda bu kural farklılık gösterebilir. Hangi fakültede veya programda okuyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 868.7,
+    "uzunluk": 269,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2207,
+     "output": 78,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "S24",
+    "answer": "Lisans ve ön lisans öğrencileri kütüphaneden 15 gün süreyle 5 kitap ve 5 kitap dışı materyal ödünç alabilirler [kütüphane ve dökümantasyon daire başkanlığı, Madde 2, s. 6].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1144.8,
+    "uzunluk": 172,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2604,
+     "output": 61,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S25",
+    "answer": "Yemek bursu alan öğrenciler günde bir kez Sağlık, Kültür ve Spor Daire Başkanlığına bağlı yemekhanelerden faydalanabilir [öğrenci yemek bursu, Madde 10].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 37708.6,
+    "uzunluk": 153,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1530,
+     "output": 47,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S26",
+    "answer": "Güz dönemindeki dönemlik dersler için final ve bütünleme sınavları bahar dönemi başlamadan bitirilir [diş hekimliği eğitim, Madde 23].\n\nBazı fakülte veya programlarda bu kural farklı olabileceği için hangi fakültede veya programda okuduğunuzu öğrenebilir miyim?",
+    "answer_ok": 0,
+    "netlestirme": 1,
+    "llm_ms": 843.7,
+    "uzunluk": 261,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2595,
+     "output": 73,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S27",
+    "answer": "Okuyucu-İşaretleyici ya da büyük punto soru kâğıdı veya kitapçığı ile sınava giren görme engelli öğrencilere sınav süresinin yarısı kadar ek süre verilir; ayrıca engelli öğrencilere engel durumlarına göre ek sınav süresi tanınır [engelli öğrenciler için eğitim ve ölçme değerlendirme yönergesi, Madde 8, s. 3].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1212.5,
+    "uzunluk": 310,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2334,
+     "output": 85,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S28",
+    "answer": "Lisansüstü Eğitim Enstitüsü'ne kayıtlı öğrenciler için tez benzerlik oranının %30'u geçmemesi gerekmektedir. Ancak anabilim dalları, Anabilim Dalı Akademik Kurul (ADAK) kararı ile %30'un altında bir benzerlik oranı belirleyebilir [lisansüstü eğitim enst müdürlüğü lisansüstü tez benzerlik, Madde 6, s. 2].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2515.4,
+    "uzunluk": 305,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2632,
+     "output": 96,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S29",
+    "answer": "Diplomanızı kaybettiyseniz, gerekçeli başvuru dilekçesi, nüfus cüzdanı fotokopisi ve kayba ilişkin beyanınız ile Öğrenci İşleri Daire Başkanlığı’na başvurmanız gerekmektedir. Bu şartları yerine getirmeniz durumunda, diplomanız bir defaya mahsus olmak üzere \"İkinci Nüsha\" ibaresiyle yeniden hazırlanarak size verilir [mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi, Madde 17].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 5976.5,
+    "uzunluk": 387,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2259,
+     "output": 115,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S30",
+    "answer": "Staj uygulamaları için bahar dönemi ekle bırak (ders ekleme/çıkarma) süreciyle ilgili doğrudan bir bilgi bulunmamaktadır. Ancak staj dönemleri ile ilgili olarak; derslerini tamamlamış veya devam zorunluluğu olmayan öğrenciler için Bahar Dönemi stajları Mart ayı içerisinde başlamak şartıyla yapılabilmektedir [turizm işletmeciliği otel staj, Madde 9; turizm işletmeciliği ve otelcilik staj, Madde 9].\n\nBazı fakülte veya programlarda bu kurallar farklılık gösterebileceğinden, hangi fakültede veya programda okuduğunuzu öğrenebilir miyim?",
+    "answer_ok": 0,
+    "netlestirme": 1,
+    "llm_ms": 9497.9,
+    "uzunluk": 537,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2420,
+     "output": 143,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S31",
+    "answer": "Veri Yapıları dersi Cuma günü yapılmaktadır [BAİBÜ Bilgisayar Mühendisliği Bölümü 2026-2027 Güz Dönemi Ders Programı].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 4030.9,
+    "uzunluk": 118,
+    "tokens": {
+     "input": 1493,
+     "output": 42,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S40",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 5670.5,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 3811,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S41",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 44078.5,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 2752,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S42",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 4875.8,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 3424,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S43",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 7062.8,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 2947,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S44",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 2821.4,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 2558,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "S45",
+    "answer": "Bu konuda bilgim yok.",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 164140.2,
+    "uzunluk": 21,
+    "tokens": {
+     "input": 3026,
+     "output": 6,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H01",
+    "answer": "Yandal programını kendi isteğinizle bıraktığınız takdirde, aynı yandal programına tekrar kayıt yaptıramazsınız [kurumlar arası kredi transferi, Madde 21, madde 2]. Yandal programını başarıyla tamamladığınızda ise size diploma yerine geçmeyen bir yandal sertifikası verilir [yandal programı, Madde 7, madde 7; kurumlar arası kredi transferi, Madde 18, madde 2].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1396.0,
+    "uzunluk": 360,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1900,
+     "output": 101,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H02",
+    "answer": "Öğrenci toplulukları, yıl sonu faaliyet raporunu Mayıs ayından Haziran ayının son iş gününe kadar SKS Daire Başkanlığına teslim etmelidir [öğrenci toplulukları kuruluş ve işleyiş, Madde 21].\n\nTopluluğun üye sayısının 20 kurucu üye sayısının altına düşmesi durumunda topluluk kapatılabilir [öğrenci toplulukları kuruluş ve işleyiş, Madde 29].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1212.8,
+    "uzunluk": 341,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2250,
+     "output": 102,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H03",
+    "answer": "Kısmi zamanlı çalışmayı bırakmak isterseniz, dilekçe ile talepte bulunarak sözleşmenizi sona erdirebilirsiniz [kısmı zamanlı öğrenci çalıştırma, Madde 9, s. 3].\n\nBirim amiriniz de sözleşmenizi sona erdirme talebinde bulunabilir; bu durumda amirin, gerekçesini belirterek yazılı olarak Sağlık Kültür ve Spor Daire Başkanlığı’na başvurması gerekmektedir [kısmı zamanlı öğrenci çalıştırma, Madde 9, s. 3].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 4048.8,
+    "uzunluk": 402,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2365,
+     "output": 127,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H04",
+    "answer": "Öğrenciler, Öğrenci İşleri Daire Başkanlığı’na dilekçe vererek kayıtlarını sildirebilirler; ancak bu durumda ödenmiş olan harç ücretleri iade edilmez ve kayıt sildiren öğrenci üniversiteye dönmek isterse ilk başvuran veya geçiş yapan öğrencilerle aynı işleme tabi tutulur [BAİBÜ Öğrenci Kayıt Kabul İşleri Yönetmeliği, Madde 21]. Bazı fakülte veya programlarda bu kural farklılık gösterebilir. Hangi fakültede veya programda okuyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 4621.2,
+    "uzunluk": 437,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2203,
+     "output": 126,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "H05",
+    "answer": "Mezun olmaya hak kazanan öğrencilerin kimlik kartlarını, ilişik kesme işlemleri onaylanmadan önce Sağlık, Kültür ve Spor Daire Başkanlığına teslim etmeleri gerekmektedir [kimlik kartı yönergesi, Madde 15, s. 5].\n\nDiplomanızı alabilmek için ilişik kesme işlemlerini tamamlamanız gerekmektedir [mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi, Madde 16, s. 3]. Eğer daha önce almış olduğunuz bir geçici mezuniyet belgeniz varsa, diplomanızı teslim alabilmek için bu belgeyi iade etmeniz zorunludur [mezun ogrenci verilecek belgelerin duzenlenmesi yonergesi, Madde 12, s. 3]. Ayrıca, lisansüstü düzeyde bir eğitimden mezun olduysanız, diplomanızı alabilmek için tez veya sanat eseri raporunuzun ciltlenmiş kopyalarını ve elektronik kopyalarını ilgili enstitüye teslim etmiş ve şekil yönünden uygunluk almış olmanız gerekmektedir [lisansüstü eğitim yönetmeliği, Madde 10, s. 5].\n\nBazı fakülte veya programlarda bu kurallar farklılık gösterebileceği için hangi fakültede veya programda okuduğunuzu öğrenebilir miyim?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 2450.3,
+    "uzunluk": 1021,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2404,
+     "output": 297,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H06",
+    "answer": "Genel kural olarak, sağlık raporu alan öğrencilerin mazeret sınavı hakkı bulunmaktadır ve raporlu olunan süre içerisinde sınava girilmesi durumunda sınav geçersiz sayılır [öğrenci sağlık işleri ve sağlık raporları, Madde 8; önlisans lisans eğitim öğretim, Madde 29]. Ara sınava katılamayan öğrencilerin, mazeretlerini rapor bitim tarihinden sonraki üç iş günü içinde ilgili birime (Dekanlık veya Bölüm Başkanlığı) yazılı olarak bildirmeleri gerekmektedir [diş hekimliği eğitim, Madde 32; önlisans lisans eğitim öğretim, Madde 29; hukuk fakultesi egitim ve sinav yonetmeligi, Madde 23].\n\nBazı fakülte veya programlarda mazeret başvurusu yapılacak makam veya süreç farklılık gösterebilmektedir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 0,
+    "netlestirme": 1,
+    "llm_ms": 1907.0,
+    "uzunluk": 745,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2366,
+     "output": 206,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "H07",
+    "answer": "Genel kurala göre, dönem sonu (final) sınavının ders başarı notuna etkisi en az %40, en çok %70 olabilir [önlisans lisans eğitim öğretim, Madde 26, s. 6]. Bazı fakülte veya programlarda bu kural farklılık gösterebilmektedir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 2974.1,
+    "uzunluk": 277,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2351,
+     "output": 84,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "H08",
+    "answer": "Üniversitemizde dönem not ortalaması, öğrencinin ilgili dönemde aldığı her bir dersin AKTS kredisi ile o dersin başarı notu katsayısının çarpılması ve bu çarpımların toplamının toplam AKTS kredisine bölünmesiyle hesaplanır; sonuç virgülden sonra iki hane olarak gösterilir ve yuvarlama yapılmaz [lisansüstü eğitim yönetmeliği, Madde 38; önlisans lisans eğitim öğretim, Madde 28]. Bazı fakülte veya programlarda bu hesaplama yöntemi farklılık gösterebilir. Hangi fakültede veya programda okuyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 2854.7,
+    "uzunluk": 499,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2159,
+     "output": 134,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "H09",
+    "answer": "Evet, geçer not aldığınız dersleri, dersin öğretim planında yer alması ve ilgili dönemde açılması koşuluyla öğreniminiz süresince not yükseltmek amacıyla tekrar alabilirsiniz; tekrarlanan derste önceki notunuz dikkate alınmadan alınan son not geçerli sayılır [hukuk fakultesi egitim ve sinav yonetmeligi, Madde 26; önlisans lisans eğitim öğretim, Madde 32]. Lisansüstü eğitimde ise öğrenciler genel not ortalamalarını yükseltmek amacıyla başarılı oldukları dersleri tekrar alabilirler [lisansüstü eğitim yönetmeliği, Madde 38].\n\nBazı fakülte veya programlarda bu kurallar farklılık gösterebilir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 5533.3,
+    "uzunluk": 648,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2573,
+     "output": 172,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "H10",
+    "answer": "Yıl sonu faaliyet raporunu zamanında teslim etmemeniz durumunda, Yönetim Kurulu üyelerinin topluluktaki üyelikleri sona erer [öğrenci toplulukları kuruluş ve işleyiş, Madde 21]. Ayrıca, iki ders yılı boyunca bu raporun ve diğer gerekli evrakların teslim edilmemesi durumunda topluluğunuz Öğrenci Etkinlikleri Komisyonu önerisi ve Rektör onayıyla kapatılabilir [öğrenci toplulukları kuruluş ve işleyiş, Madde 29].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 8924.3,
+    "uzunluk": 412,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2129,
+     "output": 117,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H11",
+    "answer": "Hayır, yan dal programındaki başarı durumunuz ana dal programındaki mezuniyetinizi etkilemez [yandal programı, Madde 7, s. 3; kurumlar arası kredi transferi, Madde 21, s. 9].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 6552.3,
+    "uzunluk": 174,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2046,
+     "output": 55,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H12",
+    "answer": "Ana dal programından mezuniyet hakkını elde eden ancak yan dal programını henüz bitiremeyen öğrencilere, yan dal programını tamamlamaları için ilgili yönetim kurulu kararı ile en fazla iki yarıyıl (iki dönem) ek süre tanınır [yandal programı, Madde 7, s. 3; kurumlar arası kredi transferi, Madde 20, s. 9].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 37531.3,
+    "uzunluk": 306,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2044,
+     "output": 86,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H13",
+    "answer": "Üniversite genelinde, azami süreler içinde katkı payı/öğrenim ücretinin ödenmemesi veya ders kaydının yenilenmemesi nedeniyle öğrencilerin ilişiği kesilmez; ancak ilgili yönetim kurulunun teklifi, Üniversite Yönetim Kurulunun kararı ve YÖK’ün onayı ile dört yıl üst üste bu durumun devam etmesi halinde öğrencilerin ilişiği kesilebilir [önlisans lisans eğitim öğretim, Madde 34].\n\nBu kural fakültenize veya programınıza göre farklılık gösterebilir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 1930.1,
+    "uzunluk": 501,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2443,
+     "output": 137,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "H14",
+    "answer": "Yandal programından kendi isteğiyle kayıt sildiren öğrenci, aynı yandal programına tekrar kayıt yaptıramaz [kurumlar arası kredi transferi, Madde 21; yandal programı, Madde 7].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1089.6,
+    "uzunluk": 176,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2345,
+     "output": 50,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H15",
+    "answer": "Öğrenci topluluklarının üye sayısı 20 kurucu üye sayısının altına düşerse, Öğrenci Etkinlikleri Komisyonu'nun önerisi ve Rektörün onayıyla topluluk kapatılır [öğrenci toplulukları kuruluş ve işleyiş, Madde 29].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 1105.5,
+    "uzunluk": 210,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 1897,
+     "output": 70,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H16",
+    "answer": "Genel kurala göre, dönem sonu (final) sınavının ders başarı notuna etkisi en çok %70 olabilir [önlisans lisans eğitim öğretim, Madde 26]. Bazı fakülte veya programlarda bu oranlar ve hesaplama yöntemleri farklılık gösterebilmektedir. Hangi fakültede veya programda öğrenim görüyorsunuz?",
+    "answer_ok": 1,
+    "netlestirme": 1,
+    "llm_ms": 2144.5,
+    "uzunluk": 286,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2489,
+     "output": 78,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 1
+   },
+   {
+    "id": "H17",
+    "answer": "Kısmi zamanlı öğrenci olarak görevinden kendi isteğinle ayrılman durumunda, birim yöneticin bu durumu üç gün içinde SGK çıkış işlemlerinin yapılması için Sağlık Kültür ve Spor Daire Başkanlığı’na bildirmekle yükümlüdür [kısmı zamanlı öğrenci çalıştırma, Madde 10, s. 3].",
+    "answer_ok": 0,
+    "netlestirme": 0,
+    "llm_ms": 1141.0,
+    "uzunluk": 270,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2371,
+     "output": 82,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H18",
+    "answer": "Mezun olmaya hak kazanan öğrenciler, ilişik kesme işlemleri onaylanmadan önce öğrenci kimlik kartlarını Sağlık, Kültür ve Spor Daire Başkanlığına teslim etmelidir [kimlik kartı yönergesi, Madde 15, s. 5].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 857.5,
+    "uzunluk": 204,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2315,
+     "output": 61,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   },
+   {
+    "id": "H19",
+    "answer": "Ana dal programından mezuniyet hakkını elde eden ancak yan dal programını henüz bitiremeyen öğrencilere, bu programı tamamlamaları için ilgili yönetim kurulu kararı ile en fazla iki yarıyıl (iki dönem) ek süre tanınır [yandal programı, Madde 7, s. 3; kurumlar arası kredi transferi, Madde 20, s. 9].",
+    "answer_ok": 1,
+    "netlestirme": 0,
+    "llm_ms": 3428.0,
+    "uzunluk": 299,
+    "fikra_atif": 0,
+    "tokens": {
+     "input": 2039,
+     "output": 85,
+     "reasoning": 0
+    },
+    "netlestirme_tetik": 0
+   }
+  ]
+ },
+ "sure": {
+  "getirme_sn": 40.2,
+  "llm_sn": 770.1,
+  "toplam_sn": 810.3
+ },
+ "karsilastirma": {
+  "ust_deney": "EXP-047",
+  "ayni_veri_seti": false,
+  "metrikler": {},
+  "uyari": "Üst deney farklı bir veri seti sürümüyle koşulmuş; karşılaştırma geçersiz."
+ }
+}
