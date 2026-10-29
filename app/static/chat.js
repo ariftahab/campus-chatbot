@@ -28,16 +28,14 @@ function addUserMessage(text) {
   div.textContent = text; // textContent: kullanıcının yazdığı HTML olarak yorumlanmaz
 }
 
+// Yalnız cevapta atıf yapılan kaynaklar gösterilir (renderAnswer'ın "Kaynaklar" listesi); context'e giren diğer
+// chunk'lar sohbette listelenmez, /admin'de değerlendirme için durur.
 function addBotMessage(body) {
-  const chips = body.sources.map((s) =>
-    `<button class="source-chip" data-chunk="${s.chunk_id}" title="${escapeHtml(s.label)}">${escapeHtml(s.label)}</button>`
-  ).join("");
   const rewrite = body.rewritten_query
     ? `<span class="rewrite" title="Takip sorusu, geçmişe bakılarak bağımsız hale getirildi (query rewriting)">Aranan: ${escapeHtml(body.rewritten_query)}</span>`
     : "";
   const div = addEl("msg-bot", `
     <div class="answer">${renderAnswer(body.answer, body.sources)}</div>
-    <div class="sources">${chips}</div>
     <div class="meta">
       <span>${(body.latency_ms / 1000).toFixed(1)} sn</span>
       ${rewrite}
